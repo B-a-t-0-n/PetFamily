@@ -11,7 +11,7 @@ namespace PetFamily.Domain
 
         }
 
-        private Pet(string s)
+        private Pet(string nickname, string typeOfAnimals, string? description, string BreedOfPet, string? Color, string? HealthInformation, )
         {
 
         }

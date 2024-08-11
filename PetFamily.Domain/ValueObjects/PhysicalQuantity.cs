@@ -26,15 +26,15 @@ namespace PetFamily.Domain.ValueObjects
         public static Result<PhysicalQuantity> Create(string type, double value)
         {
             if (string.IsNullOrWhiteSpace(type))
-                Result.Failure("type is null or white space");
+                Result.Failure<PhysicalQuantity>("type is null or white space");
 
             var typeInput = type.Trim().ToLower();
 
             if (_all.Any(p => p.Type.ToLower() == typeInput) == false)
-                Result.Failure("error type");
+                Result.Failure<PhysicalQuantity>("error type");
 
             if (value < 0)
-                Result.Failure("value < 0");
+                Result.Failure<PhysicalQuantity>("value < 0");
 
             var physicalQuantity = new PhysicalQuantity(typeInput, value);
 

@@ -16,10 +16,10 @@ namespace PetFamily.Domain.ValueObjects
         public static Result<DetailsForAssistance> Create(string name, string descriptuon)
         {
             if (string.IsNullOrWhiteSpace(name))
-                Result.Failure("name is null or white space");
+                Result.Failure<DetailsForAssistance>("name is null or white space");
 
             if (string.IsNullOrWhiteSpace(descriptuon))
-                Result.Failure("descriptuon is null or white space");
+                Result.Failure<DetailsForAssistance>("descriptuon is null or white space");
 
             var detailsForAssistance = new DetailsForAssistance(name, descriptuon);
 

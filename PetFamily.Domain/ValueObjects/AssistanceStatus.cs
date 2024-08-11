@@ -20,12 +20,12 @@ namespace PetFamily.Domain.ValueObjects
         public static Result<AssistanceStatus> Create(string status)
         {
             if (string.IsNullOrWhiteSpace(status))
-                Result.Failure("status is null or white space");
+                Result.Failure<AssistanceStatus>("status is null or white space");
 
             var statusInput = status.Trim().ToLower();
 
             if (_all.Any(s => s.Status.ToLower() == statusInput) == false)
-                Result.Failure("error status");
+                Result.Failure<AssistanceStatus>("error status");
 
             var assistanceStatus = new AssistanceStatus(statusInput);
 
