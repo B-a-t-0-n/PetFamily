@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.ValueObjects;
 
 namespace PetFamily.Domain
 {
@@ -21,37 +22,33 @@ namespace PetFamily.Domain
 
         public string TypeOfAnimals { get; protected set; } = default!;
 
-        public string Description { get; protected set; } = default!;
+        public string? Description { get; protected set; }
 
         public string BreedOfPet { get; protected set; } = default!;
 
-        public string Color { get; protected set; } = default!;
+        public string? Color { get; protected set; }
 
-        public string HealthInformation { get; protected set; } = default!;
+        public string? HealthInformation { get; protected set; }
 
         public string Address { get; protected set; } = default!;
 
-        public double Weight { get; protected set; } = default!;
+        public PhysicalQuantity Weight { get; protected set; } = default!;
 
-        public PhysicalQuantity PhysicalQuantityWeight { get; protected set; } = default!;
+        public PhysicalQuantity Height { get; protected set; } = default!;
 
-        public double Height { get; protected set; } = default!;
+        public PhoneNumber? PhoneNumber { get; protected set; } 
 
-        public PhysicalQuantity PhysicalQuantityHeight { get; protected set; } = default!;
+        public bool IsCastrated { get; protected set; }
 
-        public string PhoneNumber { get; protected set; } = default!;
+        public DateTime? DateOfBirth { get; protected set; }
 
-        public bool IsCastrated { get; protected set; } = default!;
-
-        public DateTime DateOfBirth { get; protected set; } = default!;
-
-        public bool IsVaccinated { get; protected set; } = default!;
+        public bool IsVaccinated { get; protected set; }
 
         public AssistanceStatus AssistanceStatus { get; protected set; } = default!;
 
         public DetailsForAssistance DetailsForAssistance { get; protected set; } = default!;
 
-        public DateTime DateOfCreation { get; protected set; } = default!;
+        public DateTime DateOfCreation { get; protected set; }
 
         public static Result<Pet> Create()
         {
