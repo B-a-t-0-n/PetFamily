@@ -10,8 +10,8 @@ namespace PetFamily.Domain.ValueObjects
             Link = link;
         }
 
-        public string Name { get; protected set; } = default!;
-        public string Link { get; protected set; } = default!;
+        public string Name { get; } = default!;
+        public string Link { get; } = default!;
 
         public static Result<SocialNetwork> Create(string name, string link)
         {

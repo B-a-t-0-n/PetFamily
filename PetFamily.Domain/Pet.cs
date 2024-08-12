@@ -5,6 +5,7 @@ namespace PetFamily.Domain
 {
     public class Pet
     {
+        private readonly List<DetailsForAssistance> _detailsForAssistance = [];
         private readonly List<PetPhoto> _petPhotos = [];
 
         //ef core
@@ -14,9 +15,9 @@ namespace PetFamily.Domain
         }
 
         private Pet(string nickname, string typeOfAnimals, string? description, string breedOfPet, string? color,
-                    string? healthInformation, Address address, PhysicalQuantity weight, PhysicalQuantity height,
+                    string? healthInformation, Address address, double weight, double height,
                     PhoneNumber? phoneNumber, bool isCastrated, DateTime? dateOfBirth, bool isVaccinated,
-                    AssistanceStatus assistanceStatus, DetailsForAssistance detailsForAssistance, DateTime dateOfCreation)
+                    AssistanceStatus assistanceStatus, DateTime dateOfCreation)
         {
             Nickname = nickname;
             TypeOfAnimals = typeOfAnimals;
@@ -32,43 +33,47 @@ namespace PetFamily.Domain
             DateOfBirth = dateOfBirth;
             IsVaccinated = isVaccinated;
             AssistanceStatus = assistanceStatus;
-            DetailsForAssistance = detailsForAssistance;
             DateOfCreation = dateOfCreation;
         }
 
-        public Guid Id { get; protected set; }
+        public Guid Id { get; private set; }
 
-        public string Nickname { get; protected set; } = default!;
+        public string Nickname { get; private set; } = default!;
 
-        public string TypeOfAnimals { get; protected set; } = default!;
+        public string TypeOfAnimals { get; private set; } = default!;
 
-        public string? Description { get; protected set; }
+        public string? Description { get; private set; }
 
-        public string BreedOfPet { get; protected set; } = default!;
+        public string BreedOfPet { get; private set; } = default!;
 
-        public string? Color { get; protected set; }
+        public string? Color { get; private set; }
 
-        public string? HealthInformation { get; protected set; }
+        public string? HealthInformation { get; private set; }
 
-        public Address Address { get; protected set; } = default!;
+        public Address Address { get; private set; } = default!;
 
-        public PhysicalQuantity Weight { get; protected set; } = default!;
+        public double Weight { get; private set; } = default!;
 
-        public PhysicalQuantity Height { get; protected set; } = default!;
+        public double Height { get; private set; } = default!;
 
-        public PhoneNumber? PhoneNumber { get; protected set; } 
+        public PhoneNumber? PhoneNumber { get; private set; } 
 
-        public bool IsCastrated { get; protected set; }
+        public bool IsCastrated { get; private set; }
 
-        public DateTime? DateOfBirth { get; protected set; }
+        public DateTime? DateOfBirth { get; private set; }
 
-        public bool IsVaccinated { get; protected set; }
+        public bool IsVaccinated { get; private set; }
 
-        public AssistanceStatus AssistanceStatus { get; protected set; } = default!;
+        public AssistanceStatus AssistanceStatus { get; private set; } = default!;
 
-        public DetailsForAssistance DetailsForAssistance { get; protected set; } = default!;
+        public IReadOnlyList<DetailsForAssistance> DetailsForAssistance => _detailsForAssistance;
 
-        public DateTime DateOfCreation { get; protected set; }
+        public DateTime DateOfCreation { get; private set; }
+
+        public void AddDetailsForAssistance(DetailsForAssistance detailsForAssistance)
+        {
+            _detailsForAssistance.Add(detailsForAssistance);
+        }
 
         public IReadOnlyList<PetPhoto> PetPhotos => _petPhotos;
 
@@ -78,9 +83,9 @@ namespace PetFamily.Domain
         }
 
         public static Result<Pet> Create(string nickname, string typeOfAnimals, string? description, string breedOfPet, string? color,
-                                         string? healthInformation, Address address, PhysicalQuantity weight, PhysicalQuantity height,
+                                         string? healthInformation, Address address, double weight, double height,
                                          PhoneNumber? phoneNumber, bool isCastrated, DateTime? dateOfBirth, bool isVaccinated,
-                                         AssistanceStatus assistanceStatus, DetailsForAssistance detailsForAssistance)
+                                         AssistanceStatus assistanceStatus)
         {
             if (string.IsNullOrWhiteSpace(nickname))
                 Result.Failure<Pet>("nickname is null or white space");
@@ -91,10 +96,16 @@ namespace PetFamily.Domain
             if (string.IsNullOrWhiteSpace(breedOfPet))
                 Result.Failure<Pet>("breedOfPet is null or white space");
 
+            if (weight < 0)
+                Result.Failure<Pet>("weight < 0");
+
+            if (height < 0)
+                Result.Failure<Pet>("height < 0");
+
             var dateOfCreation = DateTime.Now;
 
             var pet = new Pet(nickname, typeOfAnimals, description, breedOfPet, color, healthInformation, address, weight, height, phoneNumber, isCastrated,
-                              dateOfBirth, isVaccinated, assistanceStatus, detailsForAssistance, dateOfCreation);
+                              dateOfBirth, isVaccinated, assistanceStatus, dateOfCreation);
 
             return Result.Success(pet);
         }

@@ -12,7 +12,7 @@ namespace PetFamily.Domain.ValueObjects
             Number = number;
         }
 
-        public string Number { get; protected set; }
+        public string Number { get; }
 
         public static Result<PhoneNumber> Create(string number)
         {

@@ -12,10 +12,10 @@ namespace PetFamily.Domain.ValueObjects
             Flat = flat;
         }
 
-        public string Сity { get; protected set; } = default!;
-        public string Street { get; protected set; } = default!;
-        public string House { get; protected set; } = default!;
-        public string Flat { get; protected set; } = default!;
+        public string Сity { get; } = default!;
+        public string Street { get; } = default!;
+        public string House { get; } = default!;
+        public string Flat { get; } = default!;
 
         public static Result<Address> Create(string city, string street, string house, string flat)
         {
