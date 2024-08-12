@@ -25,21 +25,21 @@ namespace PetFamily.Domain
             DetailsForAssistance = detailsForAssistance;
         }
 
-        public Guid Id { get; protected set; }
+        public Guid Id { get; private set; }
 
-        public FullName FullName { get; protected set; } = default!;
+        public FullName FullName { get; private set; } = default!;
 
-        public string? Description { get; protected set; }
+        public string? Description { get; private set; }
 
-        public int YearsExperience { get; protected set; }
+        public int YearsExperience { get; private set; }
 
-        public NumberPets NumberPets { get; protected set; } = default!;
+        public NumberPets NumberPets { get; private set; } = default!;
 
-        public PhoneNumber PhoneNumber { get; protected set; } = default!;
+        public PhoneNumber PhoneNumber { get; private set; } = default!;
 
         public IReadOnlyList<SocialNetwork> SocialNetwork => _socialNetwork;
 
-        public DetailsForAssistance? DetailsForAssistance { get; protected set; }
+        public DetailsForAssistance? DetailsForAssistance { get; private set; }
 
         public IReadOnlyList<Pet> Pets => _pets;
 

@@ -12,9 +12,9 @@ namespace PetFamily.Domain.ValueObjects
             Patronymic = patronymic;
         }
 
-        public string Name { get; protected set; } = default!;
-        public string Surname { get; protected set; } = default!;
-        public string Patronymic { get; protected set; } = default!;
+        public string Name { get; } = default!;
+        public string Surname { get; } = default!;
+        public string Patronymic { get; } = default!;
 
         public static Result<FullName> Create(string name, string surname, string patronymic)
         {

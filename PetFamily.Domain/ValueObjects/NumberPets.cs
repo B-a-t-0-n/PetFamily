@@ -11,9 +11,9 @@ namespace PetFamily.Domain.ValueObjects
             BeingTreated = beingTreated;
         }
 
-        public int FoundAHouse { get; protected set; }
-        public int LookingForHouse { get; protected set; }
-        public int BeingTreated { get; protected set; }
+        public int FoundAHouse { get; }
+        public int LookingForHouse { get; }
+        public int BeingTreated { get; }
 
         public static Result<NumberPets> Create(int foundAHouse, int lookingForHouse, int beingTreated)
         {
