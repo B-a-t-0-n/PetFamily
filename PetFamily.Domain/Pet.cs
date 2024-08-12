@@ -6,6 +6,7 @@ namespace PetFamily.Domain
     public class Pet
     {
         private readonly List<DetailsForAssistance> _detailsForAssistance = [];
+        private readonly List<PetPhoto> _petPhotos = [];
 
         //ef core
         private Pet()
@@ -72,6 +73,13 @@ namespace PetFamily.Domain
         public void AddDetailsForAssistance(DetailsForAssistance detailsForAssistance)
         {
             _detailsForAssistance.Add(detailsForAssistance);
+        }
+
+        public IReadOnlyList<PetPhoto> PetPhotos => _petPhotos;
+
+        public void AddPet(PetPhoto petPhoto)
+        {
+            _petPhotos.Add(petPhoto);
         }
 
         public static Result<Pet> Create(string nickname, string typeOfAnimals, string? description, string breedOfPet, string? color,
