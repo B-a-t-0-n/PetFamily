@@ -10,18 +10,18 @@ namespace PetFamily.Domain.ValueObjects
             Description = descriptuon;
         }
 
-        public string Name { get; protected set; } = default!;
-        public string Description { get; protected set; } = default!;
+        public string Name { get; } = default!;
+        public string Description { get; } = default!;
 
-        public static Result<DetailsForAssistance> Create(string name, string descriptuon)
+        public static Result<DetailsForAssistance> Create(string name, string description)
         {
             if (string.IsNullOrWhiteSpace(name))
                 Result.Failure<DetailsForAssistance>("name is null or white space");
 
-            if (string.IsNullOrWhiteSpace(descriptuon))
-                Result.Failure<DetailsForAssistance>("descriptuon is null or white space");
+            if (string.IsNullOrWhiteSpace(description))
+                Result.Failure<DetailsForAssistance>("description is null or white space");
 
-            var detailsForAssistance = new DetailsForAssistance(name, descriptuon);
+            var detailsForAssistance = new DetailsForAssistance(name, description);
 
             return detailsForAssistance;
         }

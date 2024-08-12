@@ -15,7 +15,7 @@ namespace PetFamily.Domain.ValueObjects
             Status = status;
         }
 
-        public string Status { get; protected set; }
+        public string Status { get; }
 
         public static Result<AssistanceStatus> Create(string status)
         {
