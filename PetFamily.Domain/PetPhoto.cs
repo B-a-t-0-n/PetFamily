@@ -16,9 +16,9 @@ namespace PetFamily.Domain
             IsMain = isMain;
         }
 
-        public Guid Id { get; protected set; }
-        public string Path { get; protected set; } = default!;
-        public bool IsMain { get; protected set; }
+        public Guid Id { get; private set; }
+        public string Path { get; private set; } = default!;
+        public bool IsMain { get; private set; }
 
         public static Result<PetPhoto> Create(string path, bool isMain)
         {

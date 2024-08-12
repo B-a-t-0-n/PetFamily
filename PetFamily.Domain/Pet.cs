@@ -66,16 +66,16 @@ namespace PetFamily.Domain
 
         public AssistanceStatus AssistanceStatus { get; private set; } = default!;
 
+        public DateTime DateOfCreation { get; private set; }
+
         public IReadOnlyList<DetailsForAssistance> DetailsForAssistance => _detailsForAssistance;
 
-        public DateTime DateOfCreation { get; private set; }
+        public IReadOnlyList<PetPhoto> PetPhotos => _petPhotos;
 
         public void AddDetailsForAssistance(DetailsForAssistance detailsForAssistance)
         {
             _detailsForAssistance.Add(detailsForAssistance);
         }
-
-        public IReadOnlyList<PetPhoto> PetPhotos => _petPhotos;
 
         public void AddPet(PetPhoto petPhoto)
         {
