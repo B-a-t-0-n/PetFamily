@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using ValueObject = PetFamily.Domain.Shared.ValueObject;
 
 namespace PetFamily.Domain.ValueObjects
 {

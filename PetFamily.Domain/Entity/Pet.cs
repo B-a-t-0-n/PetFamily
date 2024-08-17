@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.ValueObjects;
 
-namespace PetFamily.Domain
+namespace PetFamily.Domain.Entity
 {
     public class Pet
     {
@@ -56,7 +56,7 @@ namespace PetFamily.Domain
 
         public double Height { get; private set; } = default!;
 
-        public PhoneNumber? PhoneNumber { get; private set; } 
+        public PhoneNumber? PhoneNumber { get; private set; }
 
         public bool IsCastrated { get; private set; }
 

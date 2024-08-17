@@ -1,21 +1,20 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.ValueObjects;
 
-namespace PetFamily.Domain
+namespace PetFamily.Domain.Entity
 {
     public class Volunteer
     {
-        private readonly List<SocialNetwork> _socialNetwork = [];
         private readonly List<Pet> _pets = [];
 
         //ef core
-        private Volunteer() 
+        private Volunteer()
         {
-            
+
         }
 
         private Volunteer(FullName fullName, string? description, int yearsExperience, NumberPets numberPets, PhoneNumber phoneNumber,
-                          DetailsForAssistance? detailsForAssistance)
+                          DetailsForAssistance? detailsForAssistance, VolunteerSocialNetwork? socialNetwork)
         {
             FullName = fullName;
             Description = description;
@@ -23,6 +22,7 @@ namespace PetFamily.Domain
             NumberPets = numberPets;
             PhoneNumber = phoneNumber;
             DetailsForAssistance = detailsForAssistance;
+            SocialNetwork = socialNetwork;
         }
 
         public Guid Id { get; private set; }
@@ -37,16 +37,12 @@ namespace PetFamily.Domain
 
         public PhoneNumber PhoneNumber { get; private set; } = default!;
 
-        public IReadOnlyList<SocialNetwork> SocialNetwork => _socialNetwork;
+        public VolunteerSocialNetwork? SocialNetwork { get; private set; }
 
         public DetailsForAssistance? DetailsForAssistance { get; private set; }
 
         public IReadOnlyList<Pet> Pets => _pets;
 
-        public void AddSocialNetwork(SocialNetwork socialNetwork)
-        {
-            _socialNetwork.Add(socialNetwork);
-        }
 
         public void AddPet(Pet pet)
         {
@@ -54,21 +50,12 @@ namespace PetFamily.Domain
         }
 
         public static Result<Volunteer> Create(FullName fullName, string? description, int yearsExperience, NumberPets numberPets, PhoneNumber phoneNumber,
-                                               DetailsForAssistance? detailsForAssistance)
+                                               DetailsForAssistance? detailsForAssistance, VolunteerSocialNetwork? socialNetwork)
         {
             if (yearsExperience < 0)
                 Result.Failure<Volunteer>("yearsExperience < 0");
 
-            if (fullName == null)
-                Result.Failure<Volunteer>("fullName = null");
-
-            if (numberPets == null)
-                Result.Failure<Volunteer>("numberPets = null");
-
-            if (phoneNumber == null)
-                Result.Failure<Volunteer>("phoneNumber = null");
-
-            var volunteer = new Volunteer(fullName!, description, yearsExperience, numberPets!, phoneNumber!, detailsForAssistance);
+            var volunteer = new Volunteer(fullName!, description, yearsExperience, numberPets!, phoneNumber!, detailsForAssistance, socialNetwork);
 
             return Result.Success(volunteer);
         }
