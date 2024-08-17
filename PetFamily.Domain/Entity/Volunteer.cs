@@ -43,7 +43,6 @@ namespace PetFamily.Domain.Entity
 
         public IReadOnlyList<Pet> Pets => _pets;
 
-
         public void AddPet(Pet pet)
         {
             _pets.Add(pet);

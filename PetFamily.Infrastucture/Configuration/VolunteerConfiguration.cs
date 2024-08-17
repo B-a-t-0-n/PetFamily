@@ -9,7 +9,7 @@ namespace PetFamily.Infrastucture.Configuration
     {
         public void Configure(EntityTypeBuilder<Volunteer> builder)
         {
-            builder.ToTable("Volunteer");
+            builder.ToTable("volunteer");
 
             builder.HasKey(i => i.Id);
 
@@ -81,7 +81,7 @@ namespace PetFamily.Infrastucture.Configuration
             {
                 vb.ToJson();
 
-                vb.OwnsMany(s => s.SocialNetwork, sb => 
+                vb.OwnsMany(s => s.SocialNetwork, sb =>
                 {
                     sb.Property(i => i.Name)
                         .IsRequired()

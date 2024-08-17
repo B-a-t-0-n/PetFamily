@@ -5,7 +5,6 @@ namespace PetFamily.Domain.Entity
 {
     public class Pet
     {
-        private readonly List<DetailsForAssistance> _detailsForAssistance = [];
         private readonly List<PetPhoto> _petPhotos = [];
 
         //ef core
@@ -17,7 +16,7 @@ namespace PetFamily.Domain.Entity
         private Pet(string nickname, string typeOfAnimals, string? description, string breedOfPet, string? color,
                     string? healthInformation, Address address, double weight, double height,
                     PhoneNumber? phoneNumber, bool isCastrated, DateTime? dateOfBirth, bool isVaccinated,
-                    AssistanceStatus assistanceStatus, DateTime dateOfCreation)
+                    AssistanceStatus assistanceStatus, DateTime dateOfCreation, PetDetailsForAssistance detailsForAssistance)
         {
             Nickname = nickname;
             TypeOfAnimals = typeOfAnimals;
@@ -34,6 +33,7 @@ namespace PetFamily.Domain.Entity
             IsVaccinated = isVaccinated;
             AssistanceStatus = assistanceStatus;
             DateOfCreation = dateOfCreation;
+            DetailsForAssistance = detailsForAssistance;
         }
 
         public Guid Id { get; private set; }
@@ -68,14 +68,9 @@ namespace PetFamily.Domain.Entity
 
         public DateTime DateOfCreation { get; private set; }
 
-        public IReadOnlyList<DetailsForAssistance> DetailsForAssistance => _detailsForAssistance;
+        public PetDetailsForAssistance DetailsForAssistance { get; private set; }
 
         public IReadOnlyList<PetPhoto> PetPhotos => _petPhotos;
-
-        public void AddDetailsForAssistance(DetailsForAssistance detailsForAssistance)
-        {
-            _detailsForAssistance.Add(detailsForAssistance);
-        }
 
         public void AddPet(PetPhoto petPhoto)
         {
@@ -85,7 +80,7 @@ namespace PetFamily.Domain.Entity
         public static Result<Pet> Create(string nickname, string typeOfAnimals, string? description, string breedOfPet, string? color,
                                          string? healthInformation, Address address, double weight, double height,
                                          PhoneNumber? phoneNumber, bool isCastrated, DateTime? dateOfBirth, bool isVaccinated,
-                                         AssistanceStatus assistanceStatus)
+                                         AssistanceStatus assistanceStatus, PetDetailsForAssistance detailsForAssistance)
         {
             if (string.IsNullOrWhiteSpace(nickname))
                 Result.Failure<Pet>("nickname is null or white space");
@@ -105,7 +100,7 @@ namespace PetFamily.Domain.Entity
             var dateOfCreation = DateTime.Now;
 
             var pet = new Pet(nickname, typeOfAnimals, description, breedOfPet, color, healthInformation, address, weight, height, phoneNumber, isCastrated,
-                              dateOfBirth, isVaccinated, assistanceStatus, dateOfCreation);
+                              dateOfBirth, isVaccinated, assistanceStatus, dateOfCreation, detailsForAssistance);
 
             return Result.Success(pet);
         }
