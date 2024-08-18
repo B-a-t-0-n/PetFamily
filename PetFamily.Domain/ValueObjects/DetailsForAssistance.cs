@@ -5,6 +5,7 @@ namespace PetFamily.Domain.ValueObjects
 {
     public class DetailsForAssistance : ValueObject
     {
+        private DetailsForAssistance() { }
         private DetailsForAssistance(string name, string descriptuon)
         {
             Name = name;

@@ -5,6 +5,7 @@ namespace PetFamily.Domain.ValueObjects
 {
     public class Address : ValueObject
     {
+        private Address() { }
         private Address(string city, string street, string house, string flat)
         {
             Сity = city;

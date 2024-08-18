@@ -8,12 +8,13 @@ namespace PetFamily.Domain.ValueObjects
     {
         private const string PHONE_REGEX = @"^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$";
 
+        private PhoneNumber() { }
         private PhoneNumber(string number)
         {
             Number = number;
         }
 
-        public string Number { get; }
+        public string Number { get; } = default!;
 
         public static Result<PhoneNumber> Create(string number)
         {

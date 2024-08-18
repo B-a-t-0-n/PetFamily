@@ -5,6 +5,7 @@ namespace PetFamily.Domain.ValueObjects
 {
     public class NumberPets : ValueObject
     {
+        private NumberPets() { }
         private NumberPets(int foundAHouse, int lookingForHouse, int beingTreated)
         {
             FoundAHouse = foundAHouse;

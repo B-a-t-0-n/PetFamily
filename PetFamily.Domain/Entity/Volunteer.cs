@@ -14,7 +14,7 @@ namespace PetFamily.Domain.Entity
         }
 
         private Volunteer(FullName fullName, string? description, int yearsExperience, NumberPets numberPets, PhoneNumber phoneNumber,
-                          DetailsForAssistance? detailsForAssistance, VolunteerSocialNetwork? socialNetwork)
+                          DetailsForAssistance detailsForAssistance, VolunteerSocialNetwork? socialNetwork)
         {
             FullName = fullName;
             Description = description;
@@ -39,7 +39,7 @@ namespace PetFamily.Domain.Entity
 
         public VolunteerSocialNetwork? SocialNetwork { get; private set; }
 
-        public DetailsForAssistance? DetailsForAssistance { get; private set; }
+        public DetailsForAssistance DetailsForAssistance { get; private set; } = default!;
 
         public IReadOnlyList<Pet> Pets => _pets;
 
@@ -49,7 +49,7 @@ namespace PetFamily.Domain.Entity
         }
 
         public static Result<Volunteer> Create(FullName fullName, string? description, int yearsExperience, NumberPets numberPets, PhoneNumber phoneNumber,
-                                               DetailsForAssistance? detailsForAssistance, VolunteerSocialNetwork? socialNetwork)
+                                               DetailsForAssistance detailsForAssistance, VolunteerSocialNetwork? socialNetwork)
         {
             if (yearsExperience < 0)
                 Result.Failure<Volunteer>("yearsExperience < 0");

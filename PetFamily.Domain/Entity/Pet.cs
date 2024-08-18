@@ -15,7 +15,7 @@ namespace PetFamily.Domain.Entity
 
         private Pet(string nickname, string typeOfAnimals, string? description, string breedOfPet, string? color,
                     string? healthInformation, Address address, double weight, double height,
-                    PhoneNumber? phoneNumber, bool isCastrated, DateTime? dateOfBirth, bool isVaccinated,
+                    PhoneNumber phoneNumber, bool isCastrated, DateTime? dateOfBirth, bool isVaccinated,
                     AssistanceStatus assistanceStatus, DateTime dateOfCreation, PetDetailsForAssistance detailsForAssistance)
         {
             Nickname = nickname;
@@ -56,7 +56,7 @@ namespace PetFamily.Domain.Entity
 
         public double Height { get; private set; } = default!;
 
-        public PhoneNumber? PhoneNumber { get; private set; }
+        public PhoneNumber PhoneNumber { get; private set; } = default!;
 
         public bool IsCastrated { get; private set; }
 
@@ -68,7 +68,7 @@ namespace PetFamily.Domain.Entity
 
         public DateTime DateOfCreation { get; private set; }
 
-        public PetDetailsForAssistance DetailsForAssistance { get; private set; }
+        public PetDetailsForAssistance DetailsForAssistance { get; private set; } = default!;
 
         public IReadOnlyList<PetPhoto> PetPhotos => _petPhotos;
 
@@ -79,7 +79,7 @@ namespace PetFamily.Domain.Entity
 
         public static Result<Pet> Create(string nickname, string typeOfAnimals, string? description, string breedOfPet, string? color,
                                          string? healthInformation, Address address, double weight, double height,
-                                         PhoneNumber? phoneNumber, bool isCastrated, DateTime? dateOfBirth, bool isVaccinated,
+                                         PhoneNumber phoneNumber, bool isCastrated, DateTime? dateOfBirth, bool isVaccinated,
                                          AssistanceStatus assistanceStatus, PetDetailsForAssistance detailsForAssistance)
         {
             if (string.IsNullOrWhiteSpace(nickname))

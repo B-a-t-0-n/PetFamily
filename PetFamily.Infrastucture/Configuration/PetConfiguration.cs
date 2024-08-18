@@ -69,7 +69,7 @@ namespace PetFamily.Infrastucture.Configuration
 
             builder.ComplexProperty(p => p.PhoneNumber, pb =>
             {
-                pb.IsRequired(false);
+                pb.IsRequired();
 
                 pb.Property(a => a!.Number)
                     .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)

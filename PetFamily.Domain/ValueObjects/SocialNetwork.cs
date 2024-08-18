@@ -5,6 +5,7 @@ namespace PetFamily.Domain.ValueObjects
 {
     public class SocialNetwork : ValueObject
     {
+        private SocialNetwork() { }
         private SocialNetwork(string name, string link)
         {
             Name = name;

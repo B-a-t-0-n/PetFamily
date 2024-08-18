@@ -5,18 +5,19 @@ namespace PetFamily.Domain.ValueObjects
 {
     public class AssistanceStatus : ValueObject
     {
-        public static readonly AssistanceStatus NeedsHelp = new(nameof(NeedsHelp));
-        public static readonly AssistanceStatus LookingForHome = new(nameof(LookingForHome));
-        public static readonly AssistanceStatus FoundAHouse = new(nameof(FoundAHouse));
+        private static readonly AssistanceStatus[] _all = [NeedsHelp!, LookingForHome!, FoundAHouse!];
 
-        private static readonly AssistanceStatus[] _all = [NeedsHelp, LookingForHome, FoundAHouse];
-
+        private AssistanceStatus() { }
         private AssistanceStatus(string status)
         {
             Status = status;
         }
 
-        public string Status { get; }
+        public static readonly AssistanceStatus NeedsHelp = new(nameof(NeedsHelp));
+        public static readonly AssistanceStatus LookingForHome = new(nameof(LookingForHome));
+        public static readonly AssistanceStatus FoundAHouse = new(nameof(FoundAHouse));
+
+        public string Status { get; } = default!;
 
         public static Result<AssistanceStatus> Create(string status)
         {

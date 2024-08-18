@@ -66,7 +66,7 @@ namespace PetFamily.Infrastucture.Configuration
 
             builder.ComplexProperty(v => v.DetailsForAssistance, db =>
             {
-                db.IsRequired(false);
+                db.IsRequired();
 
                 db.Property(d => d!.Name)
                     .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)

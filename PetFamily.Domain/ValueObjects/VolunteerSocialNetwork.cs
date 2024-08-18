@@ -5,12 +5,13 @@ namespace PetFamily.Domain.ValueObjects
 {
     public class VolunteerSocialNetwork : ValueObject
     {
+        private VolunteerSocialNetwork() { }
         private VolunteerSocialNetwork(IReadOnlyList<SocialNetwork> socialNetwork)
         {
             SocialNetwork = socialNetwork;
         }
 
-        public IReadOnlyList<SocialNetwork> SocialNetwork { get; }
+        public IReadOnlyList<SocialNetwork> SocialNetwork { get; } = default!;
 
         public static Result<VolunteerSocialNetwork> Create(IReadOnlyList<SocialNetwork> socialNetwork)
         {

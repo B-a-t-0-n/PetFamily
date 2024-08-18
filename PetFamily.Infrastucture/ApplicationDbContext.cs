@@ -18,6 +18,11 @@ namespace PetFamily.Infrastucture
             optionsBuilder.UseLoggerFactory(CreateLogerFactory());
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        }
+
         private ILoggerFactory CreateLogerFactory() => LoggerFactory.Create(builder => {  builder.AddConsole(); });
         }
 }
