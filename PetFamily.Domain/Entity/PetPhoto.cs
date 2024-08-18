@@ -1,11 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 
-namespace PetFamily.Domain
+namespace PetFamily.Domain.Entity
 {
     public class PetPhoto
     {
         //ef core
-        private PetPhoto() 
+        private PetPhoto()
         {
 
         }

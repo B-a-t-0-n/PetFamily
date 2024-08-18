@@ -1,11 +1,10 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.ValueObjects;
 
-namespace PetFamily.Domain
+namespace PetFamily.Domain.Entity
 {
     public class Pet
     {
-        private readonly List<DetailsForAssistance> _detailsForAssistance = [];
         private readonly List<PetPhoto> _petPhotos = [];
 
         //ef core
@@ -16,8 +15,8 @@ namespace PetFamily.Domain
 
         private Pet(string nickname, string typeOfAnimals, string? description, string breedOfPet, string? color,
                     string? healthInformation, Address address, double weight, double height,
-                    PhoneNumber? phoneNumber, bool isCastrated, DateTime? dateOfBirth, bool isVaccinated,
-                    AssistanceStatus assistanceStatus, DateTime dateOfCreation)
+                    PhoneNumber phoneNumber, bool isCastrated, DateTime? dateOfBirth, bool isVaccinated,
+                    AssistanceStatus assistanceStatus, DateTime dateOfCreation, PetDetailsForAssistance detailsForAssistance)
         {
             Nickname = nickname;
             TypeOfAnimals = typeOfAnimals;
@@ -34,6 +33,7 @@ namespace PetFamily.Domain
             IsVaccinated = isVaccinated;
             AssistanceStatus = assistanceStatus;
             DateOfCreation = dateOfCreation;
+            DetailsForAssistance = detailsForAssistance;
         }
 
         public Guid Id { get; private set; }
@@ -56,7 +56,7 @@ namespace PetFamily.Domain
 
         public double Height { get; private set; } = default!;
 
-        public PhoneNumber? PhoneNumber { get; private set; } 
+        public PhoneNumber PhoneNumber { get; private set; } = default!;
 
         public bool IsCastrated { get; private set; }
 
@@ -68,14 +68,9 @@ namespace PetFamily.Domain
 
         public DateTime DateOfCreation { get; private set; }
 
-        public IReadOnlyList<DetailsForAssistance> DetailsForAssistance => _detailsForAssistance;
+        public PetDetailsForAssistance DetailsForAssistance { get; private set; } = default!;
 
         public IReadOnlyList<PetPhoto> PetPhotos => _petPhotos;
-
-        public void AddDetailsForAssistance(DetailsForAssistance detailsForAssistance)
-        {
-            _detailsForAssistance.Add(detailsForAssistance);
-        }
 
         public void AddPet(PetPhoto petPhoto)
         {
@@ -84,8 +79,8 @@ namespace PetFamily.Domain
 
         public static Result<Pet> Create(string nickname, string typeOfAnimals, string? description, string breedOfPet, string? color,
                                          string? healthInformation, Address address, double weight, double height,
-                                         PhoneNumber? phoneNumber, bool isCastrated, DateTime? dateOfBirth, bool isVaccinated,
-                                         AssistanceStatus assistanceStatus)
+                                         PhoneNumber phoneNumber, bool isCastrated, DateTime? dateOfBirth, bool isVaccinated,
+                                         AssistanceStatus assistanceStatus, PetDetailsForAssistance detailsForAssistance)
         {
             if (string.IsNullOrWhiteSpace(nickname))
                 Result.Failure<Pet>("nickname is null or white space");
@@ -105,7 +100,7 @@ namespace PetFamily.Domain
             var dateOfCreation = DateTime.Now;
 
             var pet = new Pet(nickname, typeOfAnimals, description, breedOfPet, color, healthInformation, address, weight, height, phoneNumber, isCastrated,
-                              dateOfBirth, isVaccinated, assistanceStatus, dateOfCreation);
+                              dateOfBirth, isVaccinated, assistanceStatus, dateOfCreation, detailsForAssistance);
 
             return Result.Success(pet);
         }

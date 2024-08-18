@@ -1,10 +1,10 @@
 ﻿using CSharpFunctionalExtensions;
-using System;
-using System.Collections.Generic;
+using ValueObject = PetFamily.Domain.Shared.ValueObject;
 namespace PetFamily.Domain.ValueObjects
 {
     public class FullName : ValueObject
     {
+        private FullName() { }
         private FullName(string name, string surname, string patronymic)
         {
             Name = name;
