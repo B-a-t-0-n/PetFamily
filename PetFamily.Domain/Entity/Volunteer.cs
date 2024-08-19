@@ -3,18 +3,16 @@ using PetFamily.Domain.ValueObjects;
 
 namespace PetFamily.Domain.Entity
 {
-    public class Volunteer
+    public class Volunteer : Shared.Entity<VolunteerId>
     {
         private readonly List<Pet> _pets = [];
 
         //ef core
-        private Volunteer()
-        {
+        private Volunteer(VolunteerId id) : base(id) { }
 
-        }
-
-        private Volunteer(FullName fullName, string? description, int yearsExperience, NumberPets numberPets, PhoneNumber phoneNumber,
-                          DetailsForAssistance detailsForAssistance, VolunteerSocialNetwork? socialNetwork)
+        private Volunteer(VolunteerId id, FullName fullName, string? description, int yearsExperience, NumberPets numberPets, PhoneNumber phoneNumber,
+                          DetailsForAssistance detailsForAssistance, VolunteerSocialNetwork? socialNetwork) 
+                : base(id)
         {
             FullName = fullName;
             Description = description;
@@ -24,8 +22,6 @@ namespace PetFamily.Domain.Entity
             DetailsForAssistance = detailsForAssistance;
             SocialNetwork = socialNetwork;
         }
-
-        public Guid Id { get; private set; }
 
         public FullName FullName { get; private set; } = default!;
 
@@ -48,13 +44,13 @@ namespace PetFamily.Domain.Entity
             _pets.Add(pet);
         }
 
-        public static Result<Volunteer> Create(FullName fullName, string? description, int yearsExperience, NumberPets numberPets, PhoneNumber phoneNumber,
+        public static Result<Volunteer> Create(VolunteerId id, FullName fullName, string? description, int yearsExperience, NumberPets numberPets, PhoneNumber phoneNumber,
                                                DetailsForAssistance detailsForAssistance, VolunteerSocialNetwork? socialNetwork)
         {
             if (yearsExperience < 0)
                 Result.Failure<Volunteer>("yearsExperience < 0");
 
-            var volunteer = new Volunteer(fullName!, description, yearsExperience, numberPets!, phoneNumber!, detailsForAssistance, socialNetwork);
+            var volunteer = new Volunteer(id, fullName!, description, yearsExperience, numberPets!, phoneNumber!, detailsForAssistance, socialNetwork);
 
             return Result.Success(volunteer);
         }

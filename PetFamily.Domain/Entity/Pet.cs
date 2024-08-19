@@ -3,20 +3,18 @@ using PetFamily.Domain.ValueObjects;
 
 namespace PetFamily.Domain.Entity
 {
-    public class Pet
+    public class Pet : Shared.Entity<PetId>
     {
         private readonly List<PetPhoto> _petPhotos = [];
 
         //ef core
-        private Pet()
-        {
+        private Pet(PetId id) : base(id) { }
 
-        }
-
-        private Pet(string nickname, string typeOfAnimals, string? description, string breedOfPet, string? color,
+        private Pet(PetId id, string nickname, string typeOfAnimals, string? description, string breedOfPet, string? color,
                     string? healthInformation, Address address, double weight, double height,
                     PhoneNumber phoneNumber, bool isCastrated, DateTime? dateOfBirth, bool isVaccinated,
                     AssistanceStatus assistanceStatus, DateTime dateOfCreation, PetDetailsForAssistance detailsForAssistance)
+                    :base(id)
         {
             Nickname = nickname;
             TypeOfAnimals = typeOfAnimals;
@@ -75,7 +73,7 @@ namespace PetFamily.Domain.Entity
             _petPhotos.Add(petPhoto);
         }
 
-        public static Result<Pet> Create(string nickname, string typeOfAnimals, string? description, string breedOfPet, string? color,
+        public static Result<Pet> Create(PetId id, string nickname, string typeOfAnimals, string? description, string breedOfPet, string? color,
                                          string? healthInformation, Address address, double weight, double height,
                                          PhoneNumber phoneNumber, bool isCastrated, DateTime? dateOfBirth, bool isVaccinated,
                                          AssistanceStatus assistanceStatus, PetDetailsForAssistance detailsForAssistance)
@@ -97,7 +95,7 @@ namespace PetFamily.Domain.Entity
 
             var dateOfCreation = DateTime.Now;
 
-            var pet = new Pet(nickname, typeOfAnimals, description, breedOfPet, color, healthInformation, address, weight, height, phoneNumber, isCastrated,
+            var pet = new Pet(id, nickname, typeOfAnimals, description, breedOfPet, color, healthInformation, address, weight, height, phoneNumber, isCastrated,
                               dateOfBirth, isVaccinated, assistanceStatus, dateOfCreation, detailsForAssistance);
 
             return Result.Success(pet);

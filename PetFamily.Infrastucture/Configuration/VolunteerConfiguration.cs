@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Entity;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.ValueObjects;
 
 namespace PetFamily.Infrastucture.Configuration
 {
@@ -12,6 +13,11 @@ namespace PetFamily.Infrastucture.Configuration
             builder.ToTable("volunteer");
 
             builder.HasKey(i => i.Id);
+
+            builder.Property(v => v.Id)
+                .HasConversion(
+                    id => id.Value,
+                    value => VolunteerId.Create(value));
 
             builder.ComplexProperty(v => v.FullName, fnb =>
             {

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PetFamily.Domain.Entity;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.ValueObjects;
 
 namespace PetFamily.Infrastucture.Configuration
 {
@@ -12,6 +13,11 @@ namespace PetFamily.Infrastucture.Configuration
             builder.ToTable("pet_photo");
 
             builder.HasKey(i => i.Id);
+
+            builder.Property(p => p.Id)
+                .HasConversion(
+                    id => id.Value,
+                    value => PetPhotoId.Create(value));
 
             builder.Property(p => p.IsMain)
                     .IsRequired()
