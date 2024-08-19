@@ -36,8 +36,6 @@ namespace PetFamily.Domain.Entity
             DetailsForAssistance = detailsForAssistance;
         }
 
-        public Guid Id { get; private set; }
-
         public string Nickname { get; private set; } = default!;
 
         public string TypeOfAnimals { get; private set; } = default!;
