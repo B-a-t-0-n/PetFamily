@@ -1,8 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.Domain.ValueObjects;
+using PetFamily.Domain.Shared.IDs;
 using System.IO;
 
-namespace PetFamily.Domain.Entity
+namespace PetFamily.Domain.PetMenegment.Entity
 {
     public class PetPhoto : Shared.Entity<PetPhotoId>
     {

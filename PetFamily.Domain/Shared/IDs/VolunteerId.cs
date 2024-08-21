@@ -1,10 +1,9 @@
 ﻿using ValueObject = PetFamily.Domain.Shared.ValueObject;
 
-namespace PetFamily.Domain.ValueObjects
+namespace PetFamily.Domain.Shared.IDs
 {
     public class VolunteerId : ValueObject
     {
-        private VolunteerId() { }
         private VolunteerId(Guid value)
         {
             Value = value;
@@ -17,7 +16,7 @@ namespace PetFamily.Domain.ValueObjects
         public static VolunteerId Empty() => new VolunteerId(Guid.Empty);
 
         public static VolunteerId Create(Guid id) => new(id);
-         
+
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Value;

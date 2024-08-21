@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using ValueObject = PetFamily.Domain.Shared.ValueObject;
 
-namespace PetFamily.Domain.ValueObjects
+namespace PetFamily.Domain.PetMenegment.ValueObjects
 {
     public class NumberPets : ValueObject
     {

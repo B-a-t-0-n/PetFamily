@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using ValueObject = PetFamily.Domain.Shared.ValueObject;
 
-namespace PetFamily.Domain.ValueObjects
+namespace PetFamily.Domain.PetMenegment.ValueObjects
 {
     public class VolunteerSocialNetwork : ValueObject
     {
@@ -26,7 +26,7 @@ namespace PetFamily.Domain.ValueObjects
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return SocialNetwork;
-            
+
         }
     }
 }

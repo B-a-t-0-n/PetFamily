@@ -1,7 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.Domain.ValueObjects;
+using PetFamily.Domain.PetMenegment.ValueObjects;
+using PetFamily.Domain.Shared.IDs;
 
-namespace PetFamily.Domain.Entity
+namespace PetFamily.Domain.PetMenegment.Entity
 {
     public class Pet : Shared.Entity<PetId>
     {
@@ -10,11 +11,24 @@ namespace PetFamily.Domain.Entity
         //ef core
         private Pet(PetId id) : base(id) { }
 
-        private Pet(PetId id, string nickname, string typeOfAnimals, string? description, string breedOfPet, string? color,
-                    string? healthInformation, Address address, double weight, double height,
-                    PhoneNumber phoneNumber, bool isCastrated, DateTime? dateOfBirth, bool isVaccinated,
-                    AssistanceStatus assistanceStatus, DateTime dateOfCreation, PetDetailsForAssistance detailsForAssistance)
-                    :base(id)
+        private Pet(PetId id,
+            string nickname,
+            string typeOfAnimals,
+            string? description,
+            string breedOfPet,
+            string? color,
+            string? healthInformation,
+            Address address,
+            double weight,
+            double height,
+            PhoneNumber phoneNumber,
+            bool isCastrated,
+            DateTime? dateOfBirth,
+            bool isVaccinated,
+            AssistanceStatus assistanceStatus,
+            DateTime dateOfCreation,
+            PetDetailsForAssistance detailsForAssistance
+            ) : base(id)
         {
             Nickname = nickname;
             TypeOfAnimals = typeOfAnimals;
@@ -73,10 +87,22 @@ namespace PetFamily.Domain.Entity
             _petPhotos.Add(petPhoto);
         }
 
-        public static Result<Pet> Create(PetId id, string nickname, string typeOfAnimals, string? description, string breedOfPet, string? color,
-                                         string? healthInformation, Address address, double weight, double height,
-                                         PhoneNumber phoneNumber, bool isCastrated, DateTime? dateOfBirth, bool isVaccinated,
-                                         AssistanceStatus assistanceStatus, PetDetailsForAssistance detailsForAssistance)
+        public static Result<Pet> Create(PetId id,
+            string nickname,
+            string typeOfAnimals,
+            string? description,
+            string breedOfPet,
+            string? color,
+            string? healthInformation,
+            Address address,
+            double weight,
+            double height,
+            PhoneNumber phoneNumber,
+            bool isCastrated,
+            DateTime? dateOfBirth,
+            bool isVaccinated,
+            AssistanceStatus assistanceStatus,
+            PetDetailsForAssistance detailsForAssistance)
         {
             if (string.IsNullOrWhiteSpace(nickname))
                 Result.Failure<Pet>("nickname is null or white space");

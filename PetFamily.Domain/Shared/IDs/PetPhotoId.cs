@@ -1,10 +1,9 @@
 ﻿using ValueObject = PetFamily.Domain.Shared.ValueObject;
 
-namespace PetFamily.Domain.ValueObjects
+namespace PetFamily.Domain.Shared.IDs
 {
     public class PetPhotoId : ValueObject
     {
-        private PetPhotoId() { }
         private PetPhotoId(Guid value)
         {
             Value = value;

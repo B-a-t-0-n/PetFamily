@@ -1,7 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.Domain.ValueObjects;
+using PetFamily.Domain.PetMenegment.ValueObjects;
+using PetFamily.Domain.Shared.IDs;
 
-namespace PetFamily.Domain.Entity
+namespace PetFamily.Domain.PetMenegment.Entity
 {
     public class Volunteer : Shared.Entity<VolunteerId>
     {
@@ -10,9 +11,15 @@ namespace PetFamily.Domain.Entity
         //ef core
         private Volunteer(VolunteerId id) : base(id) { }
 
-        private Volunteer(VolunteerId id, FullName fullName, string? description, int yearsExperience, NumberPets numberPets, PhoneNumber phoneNumber,
-                          DetailsForAssistance detailsForAssistance, VolunteerSocialNetwork? socialNetwork) 
-                : base(id)
+        private Volunteer(VolunteerId id,
+            FullName fullName,
+            string? description,
+            int yearsExperience,
+            NumberPets numberPets,
+            PhoneNumber phoneNumber,
+            DetailsForAssistance detailsForAssistance,
+            VolunteerSocialNetwork? socialNetwork
+            ) : base(id)
         {
             FullName = fullName;
             Description = description;
@@ -44,8 +51,14 @@ namespace PetFamily.Domain.Entity
             _pets.Add(pet);
         }
 
-        public static Result<Volunteer> Create(VolunteerId id, FullName fullName, string? description, int yearsExperience, NumberPets numberPets, PhoneNumber phoneNumber,
-                                               DetailsForAssistance detailsForAssistance, VolunteerSocialNetwork? socialNetwork)
+        public static Result<Volunteer> Create(VolunteerId id,
+            FullName fullName,
+            string? description,
+            int yearsExperience,
+            NumberPets numberPets,
+            PhoneNumber phoneNumber,
+            DetailsForAssistance detailsForAssistance,
+            VolunteerSocialNetwork? socialNetwork)
         {
             if (yearsExperience < 0)
                 Result.Failure<Volunteer>("yearsExperience < 0");
