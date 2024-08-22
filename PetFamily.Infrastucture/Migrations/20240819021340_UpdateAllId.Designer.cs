@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetFamily.Infrastucture;
@@ -12,9 +13,11 @@ using PetFamily.Infrastucture;
 namespace PetFamily.Infrastucture.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240819021340_UpdateAllId")]
+    partial class UpdateAllId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,7 +26,7 @@ namespace PetFamily.Infrastucture.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("PetFamily.Domain.PetMenegment.Entity.Pet", b =>
+            modelBuilder.Entity("PetFamily.Domain.Entity.Pet", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -90,7 +93,7 @@ namespace PetFamily.Infrastucture.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("volunteer_id");
 
-                    b.ComplexProperty<Dictionary<string, object>>("Address", "PetFamily.Domain.PetMenegment.Entity.Pet.Address#Address", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("Address", "PetFamily.Domain.Entity.Pet.Address#Address", b1 =>
                         {
                             b1.IsRequired();
 
@@ -119,7 +122,7 @@ namespace PetFamily.Infrastucture.Migrations
                                 .HasColumnName("city");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("AssistanceStatus", "PetFamily.Domain.PetMenegment.Entity.Pet.AssistanceStatus#AssistanceStatus", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("AssistanceStatus", "PetFamily.Domain.Entity.Pet.AssistanceStatus#AssistanceStatus", b1 =>
                         {
                             b1.IsRequired();
 
@@ -130,7 +133,7 @@ namespace PetFamily.Infrastucture.Migrations
                                 .HasColumnName("status");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "PetFamily.Domain.PetMenegment.Entity.Pet.PhoneNumber#PhoneNumber", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "PetFamily.Domain.Entity.Pet.PhoneNumber#PhoneNumber", b1 =>
                         {
                             b1.IsRequired();
 
@@ -150,7 +153,7 @@ namespace PetFamily.Infrastucture.Migrations
                     b.ToTable("pet", (string)null);
                 });
 
-            modelBuilder.Entity("PetFamily.Domain.PetMenegment.Entity.PetPhoto", b =>
+            modelBuilder.Entity("PetFamily.Domain.Entity.PetPhoto", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -180,7 +183,7 @@ namespace PetFamily.Infrastucture.Migrations
                     b.ToTable("pet_photo", (string)null);
                 });
 
-            modelBuilder.Entity("PetFamily.Domain.PetMenegment.Entity.Volunteer", b =>
+            modelBuilder.Entity("PetFamily.Domain.Entity.Volunteer", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -195,7 +198,7 @@ namespace PetFamily.Infrastucture.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("years_experience");
 
-                    b.ComplexProperty<Dictionary<string, object>>("DetailsForAssistance", "PetFamily.Domain.PetMenegment.Entity.Volunteer.DetailsForAssistance#DetailsForAssistance", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("DetailsForAssistance", "PetFamily.Domain.Entity.Volunteer.DetailsForAssistance#DetailsForAssistance", b1 =>
                         {
                             b1.IsRequired();
 
@@ -212,7 +215,7 @@ namespace PetFamily.Infrastucture.Migrations
                                 .HasColumnName("name_details_for_assistance");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("FullName", "PetFamily.Domain.PetMenegment.Entity.Volunteer.FullName#FullName", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("FullName", "PetFamily.Domain.Entity.Volunteer.FullName#FullName", b1 =>
                         {
                             b1.IsRequired();
 
@@ -235,7 +238,7 @@ namespace PetFamily.Infrastucture.Migrations
                                 .HasColumnName("surname");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("NumberPets", "PetFamily.Domain.PetMenegment.Entity.Volunteer.NumberPets#NumberPets", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("NumberPets", "PetFamily.Domain.Entity.Volunteer.NumberPets#NumberPets", b1 =>
                         {
                             b1.IsRequired();
 
@@ -258,7 +261,7 @@ namespace PetFamily.Infrastucture.Migrations
                                 .HasColumnName("looking_for_house");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "PetFamily.Domain.PetMenegment.Entity.Volunteer.PhoneNumber#PhoneNumber", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "PetFamily.Domain.Entity.Volunteer.PhoneNumber#PhoneNumber", b1 =>
                         {
                             b1.IsRequired();
 
@@ -275,14 +278,14 @@ namespace PetFamily.Infrastucture.Migrations
                     b.ToTable("volunteer", (string)null);
                 });
 
-            modelBuilder.Entity("PetFamily.Domain.PetMenegment.Entity.Pet", b =>
+            modelBuilder.Entity("PetFamily.Domain.Entity.Pet", b =>
                 {
-                    b.HasOne("PetFamily.Domain.PetMenegment.Entity.Volunteer", null)
+                    b.HasOne("PetFamily.Domain.Entity.Volunteer", null)
                         .WithMany("Pets")
                         .HasForeignKey("volunteer_id")
                         .HasConstraintName("fk_pet_volunteer_volunteer_id");
 
-                    b.OwnsOne("PetFamily.Domain.PetMenegment.ValueObjects.PetDetailsForAssistance", "DetailsForAssistance", b1 =>
+                    b.OwnsOne("PetFamily.Domain.ValueObjects.PetDetailsForAssistance", "DetailsForAssistance", b1 =>
                         {
                             b1.Property<Guid>("PetId")
                                 .HasColumnType("uuid")
@@ -298,7 +301,7 @@ namespace PetFamily.Infrastucture.Migrations
                                 .HasForeignKey("PetId")
                                 .HasConstraintName("fk_pet_pet_id");
 
-                            b1.OwnsMany("PetFamily.Domain.PetMenegment.ValueObjects.DetailsForAssistance", "DetailsForAssistance", b2 =>
+                            b1.OwnsMany("PetFamily.Domain.ValueObjects.DetailsForAssistance", "DetailsForAssistance", b2 =>
                                 {
                                     b2.Property<Guid>("PetDetailsForAssistancePetId")
                                         .HasColumnType("uuid");
@@ -334,17 +337,17 @@ namespace PetFamily.Infrastucture.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PetFamily.Domain.PetMenegment.Entity.PetPhoto", b =>
+            modelBuilder.Entity("PetFamily.Domain.Entity.PetPhoto", b =>
                 {
-                    b.HasOne("PetFamily.Domain.PetMenegment.Entity.Pet", null)
+                    b.HasOne("PetFamily.Domain.Entity.Pet", null)
                         .WithMany("PetPhotos")
                         .HasForeignKey("pet_id")
                         .HasConstraintName("fk_pet_photo_pet_pet_id");
                 });
 
-            modelBuilder.Entity("PetFamily.Domain.PetMenegment.Entity.Volunteer", b =>
+            modelBuilder.Entity("PetFamily.Domain.Entity.Volunteer", b =>
                 {
-                    b.OwnsOne("PetFamily.Domain.PetMenegment.ValueObjects.VolunteerSocialNetwork", "SocialNetwork", b1 =>
+                    b.OwnsOne("PetFamily.Domain.ValueObjects.VolunteerSocialNetwork", "SocialNetwork", b1 =>
                         {
                             b1.Property<Guid>("VolunteerId")
                                 .HasColumnType("uuid")
@@ -360,7 +363,7 @@ namespace PetFamily.Infrastucture.Migrations
                                 .HasForeignKey("VolunteerId")
                                 .HasConstraintName("fk_volunteer_volunteer_id");
 
-                            b1.OwnsMany("PetFamily.Domain.PetMenegment.ValueObjects.SocialNetwork", "SocialNetwork", b2 =>
+                            b1.OwnsMany("PetFamily.Domain.ValueObjects.SocialNetwork", "SocialNetwork", b2 =>
                                 {
                                     b2.Property<Guid>("VolunteerSocialNetworkVolunteerId")
                                         .HasColumnType("uuid");
@@ -395,12 +398,12 @@ namespace PetFamily.Infrastucture.Migrations
                     b.Navigation("SocialNetwork");
                 });
 
-            modelBuilder.Entity("PetFamily.Domain.PetMenegment.Entity.Pet", b =>
+            modelBuilder.Entity("PetFamily.Domain.Entity.Pet", b =>
                 {
                     b.Navigation("PetPhotos");
                 });
 
-            modelBuilder.Entity("PetFamily.Domain.PetMenegment.Entity.Volunteer", b =>
+            modelBuilder.Entity("PetFamily.Domain.Entity.Volunteer", b =>
                 {
                     b.Navigation("Pets");
                 });
