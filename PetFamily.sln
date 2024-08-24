@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetFamily.Infrastucture", "
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{BA16179C-1CBD-4133-87F3-DAFC7082E0F4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E362E188-3A48-4F04-A4E6-A89E1FEBF9D7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution items", "solution items", "{6D5BE197-1EFB-4638-B204-6CE97E01A9B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +46,13 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2B5C190E-6F8D-4089-80BA-E81DE343DA0E} = {E362E188-3A48-4F04-A4E6-A89E1FEBF9D7}
+		{1E047092-910F-4343-BEC8-4E13C284C74C} = {E362E188-3A48-4F04-A4E6-A89E1FEBF9D7}
+		{644C9DA5-7400-4712-A9A2-93FDFF456238} = {E362E188-3A48-4F04-A4E6-A89E1FEBF9D7}
+		{EED4BD24-3D4E-49B8-813A-373069640E23} = {E362E188-3A48-4F04-A4E6-A89E1FEBF9D7}
+		{BA16179C-1CBD-4133-87F3-DAFC7082E0F4} = {6D5BE197-1EFB-4638-B204-6CE97E01A9B1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8B0A64B4-9387-42A2-B108-E98CEDD11722}

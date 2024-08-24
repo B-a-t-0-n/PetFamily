@@ -32,7 +32,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
 
         public FullName FullName { get; private set; } = default!;
 
-        public Description Description { get; private set; }
+        public Description Description { get; private set; } = default!;
 
         public YearsExperience YearsExperience { get; private set; } = default!;
 
