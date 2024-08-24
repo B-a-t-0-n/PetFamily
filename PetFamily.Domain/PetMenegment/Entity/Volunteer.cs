@@ -13,8 +13,8 @@ namespace PetFamily.Domain.PetMenegment.Entity
 
         private Volunteer(VolunteerId id,
             FullName fullName,
-            string? description,
-            int yearsExperience,
+            Description description,
+            YearsExperience yearsExperience,
             NumberPets numberPets,
             PhoneNumber phoneNumber,
             DetailsForAssistance detailsForAssistance,
@@ -32,9 +32,9 @@ namespace PetFamily.Domain.PetMenegment.Entity
 
         public FullName FullName { get; private set; } = default!;
 
-        public string? Description { get; private set; }
+        public Description Description { get; private set; }
 
-        public int YearsExperience { get; private set; }
+        public YearsExperience YearsExperience { get; private set; } = default!;
 
         public NumberPets NumberPets { get; private set; } = default!;
 
@@ -53,16 +53,13 @@ namespace PetFamily.Domain.PetMenegment.Entity
 
         public static Result<Volunteer> Create(VolunteerId id,
             FullName fullName,
-            string? description,
-            int yearsExperience,
+            Description description,
+            YearsExperience yearsExperience,
             NumberPets numberPets,
             PhoneNumber phoneNumber,
             DetailsForAssistance detailsForAssistance,
             VolunteerSocialNetwork? socialNetwork)
         {
-            if (yearsExperience < 0)
-                Result.Failure<Volunteer>("yearsExperience < 0");
-
             var volunteer = new Volunteer(id, fullName!, description, yearsExperience, numberPets!, phoneNumber!, detailsForAssistance, socialNetwork);
 
             return Result.Success(volunteer);

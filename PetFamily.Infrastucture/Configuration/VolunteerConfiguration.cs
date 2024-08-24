@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.PetMenegment.Entity;
+using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.IDs;
 
@@ -37,12 +38,20 @@ namespace PetFamily.Infrastucture.Configuration
                     .HasColumnName("patronymic");
             });
 
-            builder.Property(v => v.Description)
-                    .HasMaxLength(Constants.MAX_HIGHT_TEXT_LENGTH)
+            builder.ComplexProperty(v => v.Description, db =>
+            {
+                db.Property(p => p!.Value)
+                    .IsRequired(false)
+                    .HasMaxLength(Description.MAX_HIGHT_DESCRIPTION_LENGTH)
                     .HasColumnName("description");
+            });
 
-            builder.Property(v => v.YearsExperience)
+            builder.ComplexProperty(v => v.YearsExperience, yb =>
+            {
+                yb.Property(p => p!.Value)
+                    .IsRequired()
                     .HasColumnName("years_experience");
+            });
 
             builder.ComplexProperty(v => v.NumberPets, npb =>
             {
@@ -66,7 +75,7 @@ namespace PetFamily.Infrastucture.Configuration
             {
                 pnb.Property(p => p.Number)
                     .IsRequired()
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                    .HasMaxLength(PhoneNumber.MAX_HIGHT_PHONE_NUMBER_LENGTH)
                     .HasColumnName("phone_number");
             });
 
@@ -79,7 +88,7 @@ namespace PetFamily.Infrastucture.Configuration
                     .HasColumnName("name_details_for_assistance");
 
                 db.Property(d => d!.Description)
-                   .HasMaxLength(Constants.MAX_HIGHT_TEXT_LENGTH)
+                   .HasMaxLength(DetailsForAssistance.MAX_HIGHT_DESCRIPTION_LENGTH)
                    .HasColumnName("description_details_for_assistance");
             });
 
@@ -91,7 +100,7 @@ namespace PetFamily.Infrastucture.Configuration
                 {
                     sb.Property(i => i.Name)
                         .IsRequired()
-                        .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+                        .HasMaxLength(SocialNetwork.MAX_HIGHT_NAME_LENGTH);
 
                     sb.Property(i => i.Link)
                         .IsRequired()
