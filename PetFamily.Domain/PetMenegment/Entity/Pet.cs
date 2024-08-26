@@ -48,11 +48,11 @@ namespace PetFamily.Domain.PetMenegment.Entity
 
         public Nickname Nickname { get; private set; } = default!;
 
-        public string TypeOfAnimals { get; private set; } = default!;//
+        public string TypeOfAnimals { get; private set; } = default!;
 
         public Description Description { get; private set; }
 
-        public string BreedOfPet { get; private set; } = default!;//
+        public string BreedOfPet { get; private set; } = default!;
 
         public Color Color { get; private set; }
 
@@ -106,8 +106,22 @@ namespace PetFamily.Domain.PetMenegment.Entity
             if (string.IsNullOrWhiteSpace(breedOfPet))
                 Result.Failure<Pet>("breedOfPet is null or white space");
 
-            var pet = new Pet(id, nickname, typeOfAnimals, description, breedOfPet, color, healthInformation, address, size, phoneNumber, isCastrated,
-                              dateOfBirth, isVaccinated, assistanceStatus, dateOfCreation, detailsForAssistance);
+            var pet = new Pet(id,
+                nickname,
+                typeOfAnimals,
+                description,
+                breedOfPet,
+                color,
+                healthInformation,
+                address,
+                size,
+                phoneNumber, 
+                isCastrated,
+                dateOfBirth,
+                isVaccinated,
+                assistanceStatus,
+                dateOfCreation,
+                detailsForAssistance);
 
             return Result.Success(pet);
         }

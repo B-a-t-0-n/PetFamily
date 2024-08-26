@@ -40,6 +40,8 @@ namespace PetFamily.Infrastucture.Configuration
 
             builder.ComplexProperty(v => v.Description, db =>
             {
+                db.IsRequired(false);
+
                 db.Property(p => p!.Value)
                     .IsRequired(false)
                     .HasMaxLength(Description.MAX_HIGHT_DESCRIPTION_LENGTH)
