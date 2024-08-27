@@ -27,5 +27,5 @@ namespace PetFamily.Domain.SpeciesMenegment.Entity
             return Result.Success(pet);
         }
     }
-    
+
 }
