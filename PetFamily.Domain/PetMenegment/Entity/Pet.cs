@@ -45,7 +45,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
         }
 
         public Nickname Nickname { get; private set; } = default!;
-
+        
         public SpeciesAndBreed SpeciesAndBreed { get; private set; } = default!;
 
         public Description Description { get; private set; } = default!;
@@ -95,8 +95,28 @@ namespace PetFamily.Domain.PetMenegment.Entity
             DateTime dateOfCreation,
             PetDetailsForAssistance detailsForAssistance)
         {
-            var pet = new Pet(id, nickname, speciesAndBreed, description, color, healthInformation, address, size, phoneNumber, isCastrated,
-                              dateOfBirth, isVaccinated, assistanceStatus, dateOfCreation, detailsForAssistance);
+            if (string.IsNullOrWhiteSpace(typeOfAnimals))
+                Result.Failure<Pet>("typeOfAnimals is null or white space");
+
+            if (string.IsNullOrWhiteSpace(breedOfPet))
+                Result.Failure<Pet>("breedOfPet is null or white space");
+
+            var pet = new Pet(id,
+                nickname,
+                typeOfAnimals,
+                description,
+                breedOfPet,
+                color,
+                healthInformation,
+                address,
+                size,
+                phoneNumber, 
+                isCastrated,
+                dateOfBirth,
+                isVaccinated,
+                assistanceStatus,
+                dateOfCreation,
+                detailsForAssistance);
 
             return Result.Success(pet);
         }
