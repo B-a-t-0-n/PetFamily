@@ -13,9 +13,8 @@ namespace PetFamily.Domain.PetMenegment.Entity
 
         private Pet(PetId id,
             Nickname nickname,
-            string typeOfAnimals,
+            SpeciesAndBreed speciesAndBreed,
             Description description,
-            string breedOfPet,
             Color color,
             HealthInformation healthInformation,
             Address address,
@@ -30,11 +29,10 @@ namespace PetFamily.Domain.PetMenegment.Entity
             ) : base(id)
         {
             Nickname = nickname;
-            TypeOfAnimals = typeOfAnimals;
             Description = description;
-            BreedOfPet = breedOfPet;
             Color = color;
             HealthInformation = healthInformation;
+            SpeciesAndBreed = speciesAndBreed;
             Address = address;
             Size = size;
             PhoneNumber = phoneNumber;
@@ -47,16 +45,14 @@ namespace PetFamily.Domain.PetMenegment.Entity
         }
 
         public Nickname Nickname { get; private set; } = default!;
+        
+        public SpeciesAndBreed SpeciesAndBreed { get; private set; } = default!;
 
-        public string TypeOfAnimals { get; private set; } = default!;
+        public Description Description { get; private set; } = default!;
 
-        public Description Description { get; private set; }
+        public Color Color { get; private set; } = default!;
 
-        public string BreedOfPet { get; private set; } = default!;
-
-        public Color Color { get; private set; }
-
-        public HealthInformation HealthInformation { get; private set; }
+        public HealthInformation HealthInformation { get; private set; } = default!;
 
         public Address Address { get; private set; } = default!;
 
@@ -85,9 +81,8 @@ namespace PetFamily.Domain.PetMenegment.Entity
 
         public static Result<Pet> Create(PetId id,
             Nickname nickname,
-            string typeOfAnimals,
+            SpeciesAndBreed speciesAndBreed,
             Description description,
-            string breedOfPet,
             Color color,
             HealthInformation healthInformation,
             Address address,

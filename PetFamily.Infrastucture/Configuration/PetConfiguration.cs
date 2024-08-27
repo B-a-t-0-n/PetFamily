@@ -29,9 +29,19 @@ namespace PetFamily.Infrastucture.Configuration
                     .HasColumnName("nickname");
             });
 
-            builder.Property(p => p.TypeOfAnimals)
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
-                    .HasColumnName("type_of_animals");
+            builder.ComplexProperty(p => p.SpeciesAndBreed, pb =>
+            {
+                pb.IsRequired();
+
+                pb.Property(n => n.SpeciesId)
+                    .HasConversion(
+                        id => id.Value,
+                        value => SpeciesId.Create(value))
+                    .HasColumnName("SpeciesId");
+
+                pb.Property(n => n.BreedId)
+                    .HasColumnName("breed_id");
+            });
 
             builder.ComplexProperty(p => p.Description, pb =>
             {
@@ -42,10 +52,6 @@ namespace PetFamily.Infrastucture.Configuration
                     .HasMaxLength(Description.MAX_HIGHT_DESCRIPTION_LENGTH)
                     .HasColumnName("description");
             });
-
-            builder.Property(p => p.BreedOfPet)
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
-                    .HasColumnName("breed_of_pet");
 
             builder.ComplexProperty(p => p.Color, pb =>
             {
