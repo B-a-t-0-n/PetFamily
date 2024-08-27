@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.PetMenegment.Entity;
 using PetFamily.Domain.Shared.IDs;
+using PetFamily.Domain.PetMenegment.ValueObjects;
 
 namespace PetFamily.Infrastucture.Configuration
 {
@@ -19,37 +20,55 @@ namespace PetFamily.Infrastucture.Configuration
                     id => id.Value,
                     value => PetId.Create(value));
 
-            builder.Property(p => p.Nickname)
+            builder.ComplexProperty(p => p.Nickname, pb =>
+            {
+                pb.IsRequired();
+
+                pb.Property(n => n.Value)
                     .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
                     .HasColumnName("nickname");
+            });
 
             builder.Property(p => p.TypeOfAnimals)
                     .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
                     .HasColumnName("type_of_animals");
 
-            builder.Property(p => p.Description)
+            builder.ComplexProperty(p => p.Description, pb =>
+            {
+                pb.IsRequired(false);
+
+                pb.Property(n => n!.Value)
                     .IsRequired(false)
-                    .HasMaxLength(Constants.MAX_HIGHT_TEXT_LENGTH)
+                    .HasMaxLength(Description.MAX_HIGHT_DESCRIPTION_LENGTH)
                     .HasColumnName("description");
+            });
 
             builder.Property(p => p.BreedOfPet)
                     .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
                     .HasColumnName("breed_of_pet");
 
-            builder.Property(p => p.Color)
+            builder.ComplexProperty(p => p.Color, pb =>
+            {
+                pb.IsRequired(false);
+
+                pb.Property(n => n!.Value)
                     .IsRequired(false)
                     .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
                     .HasColumnName("color");
+            });
 
-            builder.Property(p => p.HealthInformation)
+            builder.ComplexProperty(p => p.HealthInformation, pb =>
+            {
+                pb.IsRequired(false);
+
+                pb.Property(n => n!.Value)
                     .IsRequired(false)
                     .HasMaxLength(Constants.MAX_HIGHT_TEXT_LENGTH)
                     .HasColumnName("health_information");
+            });
 
             builder.ComplexProperty(p => p.Address, ab =>
             {
-                ab.IsRequired();
-
                 ab.Property(a => a.Сity)
                     .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
                     .HasColumnName("city");
@@ -63,23 +82,34 @@ namespace PetFamily.Infrastucture.Configuration
                     .HasColumnName("house");
 
                 ab.Property(a => a.Flat)
+                    .IsRequired(false)
                     .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
                     .HasColumnName("flat");
+
+                ab.Property(a => a.ApartmentNumber)
+                   .IsRequired(false)
+                   .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                   .HasColumnName("apartment_number");
             });
 
-            builder.Property(p => p.Weight)
-                    .HasColumnName("weight");
+            builder.ComplexProperty(p => p.Size, pb =>
+            {
+                pb.IsRequired();
 
-            builder.Property(p => p.Height)
+                pb.Property(s => s.Height)
                     .HasColumnName("height");
+
+                pb.Property(s => s.Weight)
+                    .HasColumnName("height");
+            });
 
             builder.ComplexProperty(p => p.PhoneNumber, pb =>
             {
                 pb.IsRequired();
 
                 pb.Property(a => a!.Number)
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
-                    .HasColumnName("phoneNumber");
+                    .HasMaxLength(PhoneNumber.MAX_HIGHT_PHONE_NUMBER_LENGTH)
+                    .HasColumnName("phone_number");
             });
 
             builder.Property(p => p.IsCastrated)
@@ -112,11 +142,11 @@ namespace PetFamily.Infrastucture.Configuration
                 {
                     db.Property(i => i.Name)
                         .IsRequired()
-                        .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+                        .HasMaxLength(DetailsForAssistance.MAX_HIGHT_DESCRIPTION_LENGTH);
 
                     db.Property(i => i.Description)
                         .IsRequired()
-                        .HasMaxLength(Constants.MAX_HIGHT_TEXT_LENGTH);
+                        .HasMaxLength(DetailsForAssistance.MAX_HIGHT_DESCRIPTION_LENGTH);
                 });
             });
 

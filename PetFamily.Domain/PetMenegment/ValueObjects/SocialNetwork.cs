@@ -5,6 +5,8 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
 {
     public class SocialNetwork : ValueObject
     {
+        public const int MAX_HIGHT_NAME_LENGTH = 50;
+
         private SocialNetwork() { }
         private SocialNetwork(string name, string link)
         {
@@ -19,6 +21,9 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
         {
             if (string.IsNullOrWhiteSpace(name))
                 Result.Failure<SocialNetwork>("name is null or white space");
+
+            if (name.Length > MAX_HIGHT_NAME_LENGTH)
+                Result.Failure<SocialNetwork>($"name > {MAX_HIGHT_NAME_LENGTH}");
 
             if (string.IsNullOrWhiteSpace(link))
                 Result.Failure<SocialNetwork>("link is null or white space");

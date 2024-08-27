@@ -12,15 +12,14 @@ namespace PetFamily.Domain.PetMenegment.Entity
         private Pet(PetId id) : base(id) { }
 
         private Pet(PetId id,
-            string nickname,
+            Nickname nickname,
             string typeOfAnimals,
-            string? description,
+            Description description,
             string breedOfPet,
-            string? color,
-            string? healthInformation,
+            Color color,
+            HealthInformation healthInformation,
             Address address,
-            double weight,
-            double height,
+            Size size,
             PhoneNumber phoneNumber,
             bool isCastrated,
             DateTime? dateOfBirth,
@@ -37,8 +36,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
             Color = color;
             HealthInformation = healthInformation;
             Address = address;
-            Weight = weight;
-            Height = height;
+            Size = size;
             PhoneNumber = phoneNumber;
             IsCastrated = isCastrated;
             DateOfBirth = dateOfBirth;
@@ -48,23 +46,21 @@ namespace PetFamily.Domain.PetMenegment.Entity
             DetailsForAssistance = detailsForAssistance;
         }
 
-        public string Nickname { get; private set; } = default!;
+        public Nickname Nickname { get; private set; } = default!;
 
         public string TypeOfAnimals { get; private set; } = default!;
 
-        public string? Description { get; private set; }
+        public Description Description { get; private set; }
 
         public string BreedOfPet { get; private set; } = default!;
 
-        public string? Color { get; private set; }
+        public Color Color { get; private set; }
 
-        public string? HealthInformation { get; private set; }
+        public HealthInformation HealthInformation { get; private set; }
 
         public Address Address { get; private set; } = default!;
 
-        public double Weight { get; private set; } = default!;
-
-        public double Height { get; private set; } = default!;
+        public Size Size { get; private set; } = default!;
 
         public PhoneNumber PhoneNumber { get; private set; } = default!;
 
@@ -88,41 +84,44 @@ namespace PetFamily.Domain.PetMenegment.Entity
         }
 
         public static Result<Pet> Create(PetId id,
-            string nickname,
+            Nickname nickname,
             string typeOfAnimals,
-            string? description,
+            Description description,
             string breedOfPet,
-            string? color,
-            string? healthInformation,
+            Color color,
+            HealthInformation healthInformation,
             Address address,
-            double weight,
-            double height,
+            Size size,
             PhoneNumber phoneNumber,
             bool isCastrated,
             DateTime? dateOfBirth,
             bool isVaccinated,
             AssistanceStatus assistanceStatus,
+            DateTime dateOfCreation,
             PetDetailsForAssistance detailsForAssistance)
         {
-            if (string.IsNullOrWhiteSpace(nickname))
-                Result.Failure<Pet>("nickname is null or white space");
-
             if (string.IsNullOrWhiteSpace(typeOfAnimals))
                 Result.Failure<Pet>("typeOfAnimals is null or white space");
 
             if (string.IsNullOrWhiteSpace(breedOfPet))
                 Result.Failure<Pet>("breedOfPet is null or white space");
 
-            if (weight < 0)
-                Result.Failure<Pet>("weight < 0");
-
-            if (height < 0)
-                Result.Failure<Pet>("height < 0");
-
-            var dateOfCreation = DateTime.Now;
-
-            var pet = new Pet(id, nickname, typeOfAnimals, description, breedOfPet, color, healthInformation, address, weight, height, phoneNumber, isCastrated,
-                              dateOfBirth, isVaccinated, assistanceStatus, dateOfCreation, detailsForAssistance);
+            var pet = new Pet(id,
+                nickname,
+                typeOfAnimals,
+                description,
+                breedOfPet,
+                color,
+                healthInformation,
+                address,
+                size,
+                phoneNumber, 
+                isCastrated,
+                dateOfBirth,
+                isVaccinated,
+                assistanceStatus,
+                dateOfCreation,
+                detailsForAssistance);
 
             return Result.Success(pet);
         }

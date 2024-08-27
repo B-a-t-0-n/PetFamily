@@ -6,6 +6,8 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
 {
     public class PhoneNumber : ValueObject
     {
+        public const int MAX_HIGHT_PHONE_NUMBER_LENGTH = 20;
+
         private const string PHONE_REGEX = @"^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$";
 
         private PhoneNumber() { }
@@ -20,6 +22,9 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
         {
             if (string.IsNullOrWhiteSpace(number))
                 Result.Failure<PhoneNumber>("number is null or white space");
+
+            if (number.Length > MAX_HIGHT_PHONE_NUMBER_LENGTH)
+                Result.Failure<PhoneNumber>($"number > {MAX_HIGHT_PHONE_NUMBER_LENGTH}");
 
             if (Regex.IsMatch(number, PHONE_REGEX) == false)
                 Result.Failure<PhoneNumber>("number does not match PHONE_REGEX");
