@@ -17,6 +17,7 @@ namespace PetFamily.Domain.SpeciesMenegment.Entity
         }
 
         public Name Name { get; private set; } = default!;
+
         public IReadOnlyList<Breed> breeds => _breeds;
 
         public static Result<Species> Create(SpeciesId id, Name name)
@@ -26,5 +27,5 @@ namespace PetFamily.Domain.SpeciesMenegment.Entity
             return Result.Success(pet);
         }
     }
-    
+
 }
