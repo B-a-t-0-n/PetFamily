@@ -17,6 +17,8 @@ namespace PetFamily.Domain.Shared.IDs
 
         public static PetId Create(Guid id) => new(id);
 
+        public static implicit operator Guid(PetId id) => id.Value;
+
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Value;

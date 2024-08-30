@@ -16,7 +16,7 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
         public static Result<PetDetailsForAssistance> Create(IReadOnlyList<DetailsForAssistance> detailsForAssistance)
         {
             if (detailsForAssistance == null)
-                Result.Failure<PetDetailsForAssistance>("detailsForAssistance is null");
+                return Result.Failure<PetDetailsForAssistance>("detailsForAssistance is null");
 
             var volunteerSocialNetwork = new PetDetailsForAssistance(detailsForAssistance!);
 

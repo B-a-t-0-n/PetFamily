@@ -40,8 +40,6 @@ namespace PetFamily.Infrastucture.Configuration
 
             builder.ComplexProperty(v => v.Description, db =>
             {
-                db.IsRequired(false);
-
                 db.Property(p => p!.Value)
                     .IsRequired(false)
                     .HasMaxLength(Description.MAX_HIGHT_DESCRIPTION_LENGTH)
@@ -81,17 +79,20 @@ namespace PetFamily.Infrastucture.Configuration
                     .HasColumnName("phone_number");
             });
 
-            builder.ComplexProperty(v => v.DetailsForAssistance, db =>
+            builder.OwnsOne(v => v.DetailsForAssistance, vb =>
             {
-                db.IsRequired();
+                vb.ToJson();
 
-                db.Property(d => d!.Name)
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
-                    .HasColumnName("name_details_for_assistance");
+                vb.OwnsMany(s => s.DetailsForAssistance, sb =>
+                {
+                    sb.Property(i => i.Name)
+                        .IsRequired(false)
+                        .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
 
-                db.Property(d => d!.Description)
-                   .HasMaxLength(DetailsForAssistance.MAX_HIGHT_DESCRIPTION_LENGTH)
-                   .HasColumnName("description_details_for_assistance");
+                    sb.Property(i => i.Description)
+                        .IsRequired(false)
+                        .HasMaxLength(DetailsForAssistance.MAX_HIGHT_DESCRIPTION_LENGTH);
+                });
             });
 
             builder.OwnsOne(v => v.SocialNetwork, vb =>
@@ -101,11 +102,11 @@ namespace PetFamily.Infrastucture.Configuration
                 vb.OwnsMany(s => s.SocialNetwork, sb =>
                 {
                     sb.Property(i => i.Name)
-                        .IsRequired()
+                        .IsRequired(false)
                         .HasMaxLength(SocialNetwork.MAX_HIGHT_NAME_LENGTH);
 
                     sb.Property(i => i.Link)
-                        .IsRequired()
+                        .IsRequired(false)
                         .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
                 });
             });

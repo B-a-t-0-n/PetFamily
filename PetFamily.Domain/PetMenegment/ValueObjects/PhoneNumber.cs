@@ -21,13 +21,13 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
         public static Result<PhoneNumber> Create(string number)
         {
             if (string.IsNullOrWhiteSpace(number))
-                Result.Failure<PhoneNumber>("number is null or white space");
+                return Result.Failure<PhoneNumber>("number is null or white space");
 
             if (number.Length > MAX_HIGHT_PHONE_NUMBER_LENGTH)
-                Result.Failure<PhoneNumber>($"number > {MAX_HIGHT_PHONE_NUMBER_LENGTH}");
+                return Result.Failure<PhoneNumber>($"number > {MAX_HIGHT_PHONE_NUMBER_LENGTH}");
 
             if (Regex.IsMatch(number, PHONE_REGEX) == false)
-                Result.Failure<PhoneNumber>("number does not match PHONE_REGEX");
+                return Result.Failure<PhoneNumber>("number does not match PHONE_REGEX");
 
             var phoneNumber = new PhoneNumber(number);
 

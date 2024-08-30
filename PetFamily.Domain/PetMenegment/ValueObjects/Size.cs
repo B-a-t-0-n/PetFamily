@@ -19,10 +19,10 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
         public static Result<Size> Create(double height, double weight)
         {
             if (weight < 0)
-                Result.Failure<Size>("weight < 0");
+                return Result.Failure<Size>("weight < 0");
 
             if (height < 0)
-                Result.Failure<Size>("height < 0");
+                return Result.Failure<Size>("height < 0");
 
             var size = new Size(height, weight);
 

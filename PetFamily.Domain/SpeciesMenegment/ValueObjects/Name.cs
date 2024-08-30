@@ -17,10 +17,10 @@ namespace PetFamily.Domain.SpeciesMenegment.ValueObjects
         public static Result<Name> Create(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                Result.Failure<Name>("Name is null or white space");
+                return Result.Failure<Name>("Name is null or white space");
 
             if (value.Length > Constants.MAX_LOW_TEXT_LENGTH)
-                Result.Failure<Name>($"Name > {Constants.MAX_LOW_TEXT_LENGTH}");
+                return Result.Failure<Name>($"Name > {Constants.MAX_LOW_TEXT_LENGTH}");
 
             var name = new Name(value);
 

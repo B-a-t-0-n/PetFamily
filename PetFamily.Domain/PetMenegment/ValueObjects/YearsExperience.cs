@@ -16,7 +16,7 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
         public static Result<YearsExperience> Create(int value)
         {
             if (value < 0)
-                Result.Failure<YearsExperience>($"years experience < 0");
+                return Result.Failure<YearsExperience>($"years experience < 0");
 
             var yearsExperience = new YearsExperience(value);
 

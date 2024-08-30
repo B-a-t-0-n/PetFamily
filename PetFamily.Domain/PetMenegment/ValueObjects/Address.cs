@@ -25,28 +25,28 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
         public static Result<Address> Create(string city, string street, string house, string? flat, string? apartmentNumber)
         {
             if (string.IsNullOrWhiteSpace(city))
-                Result.Failure<Address>("city is null or white space");
+                return Result.Failure<Address>("city is null or white space");
 
             if (city.Length > Constants.MAX_LOW_TEXT_LENGTH)
-                Result.Failure<Address>($"city > {Constants.MAX_LOW_TEXT_LENGTH}");
+                return Result.Failure<Address>($"city > {Constants.MAX_LOW_TEXT_LENGTH}");
 
             if (string.IsNullOrWhiteSpace(street))
-                Result.Failure<Address>("street is null or white space");
+                return Result.Failure<Address>("street is null or white space");
 
             if (street.Length > Constants.MAX_LOW_TEXT_LENGTH)
-                Result.Failure<Address>($"street > {Constants.MAX_LOW_TEXT_LENGTH}");
+                return Result.Failure<Address>($"street > {Constants.MAX_LOW_TEXT_LENGTH}");
 
             if (string.IsNullOrWhiteSpace(house))
-                Result.Failure<Address>("house is null or white space");
+                return Result.Failure<Address>("house is null or white space");
 
             if (house.Length > Constants.MAX_LOW_TEXT_LENGTH)
-                Result.Failure<Address>($"house > {Constants.MAX_LOW_TEXT_LENGTH}");
+                return Result.Failure<Address>($"house > {Constants.MAX_LOW_TEXT_LENGTH}");
 
             if (flat != null && flat!.Length > Constants.MAX_LOW_TEXT_LENGTH)
-                Result.Failure<Address>($"flat > {Constants.MAX_LOW_TEXT_LENGTH}");
+                return Result.Failure<Address>($"flat > {Constants.MAX_LOW_TEXT_LENGTH}");
 
             if (apartmentNumber != null && apartmentNumber!.Length > Constants.MAX_LOW_TEXT_LENGTH)
-                Result.Failure<Address>($"apartmentNumber > {Constants.MAX_LOW_TEXT_LENGTH}");
+                return Result.Failure<Address>($"apartmentNumber > {Constants.MAX_LOW_TEXT_LENGTH}");
 
             var address = new Address(city, street, house, flat, apartmentNumber);
 
