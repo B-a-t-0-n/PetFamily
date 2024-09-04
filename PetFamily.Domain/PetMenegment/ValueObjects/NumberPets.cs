@@ -20,13 +20,13 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
         public static Result<NumberPets> Create(int foundAHouse, int lookingForHouse, int beingTreated)
         {
             if (foundAHouse < 0)
-                Result.Failure<NumberPets>("foundAHouse < 0");
+                return Result.Failure<NumberPets>("foundAHouse < 0");
 
             if (lookingForHouse < 0)
-                Result.Failure<NumberPets>("lookingForHouse < 0");
+                return Result.Failure<NumberPets>("lookingForHouse < 0");
 
             if (beingTreated < 0)
-                Result.Failure<NumberPets>("beingTreated < 0");
+                return Result.Failure<NumberPets>("beingTreated < 0");
 
             var numberPets = new NumberPets(foundAHouse, lookingForHouse, beingTreated);
 

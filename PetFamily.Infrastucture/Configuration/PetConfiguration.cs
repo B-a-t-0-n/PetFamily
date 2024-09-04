@@ -45,8 +45,6 @@ namespace PetFamily.Infrastucture.Configuration
 
             builder.ComplexProperty(p => p.Description, pb =>
             {
-                pb.IsRequired(false);
-
                 pb.Property(n => n!.Value)
                     .IsRequired(false)
                     .HasMaxLength(Description.MAX_HIGHT_DESCRIPTION_LENGTH)
@@ -55,7 +53,6 @@ namespace PetFamily.Infrastucture.Configuration
 
             builder.ComplexProperty(p => p.Color, pb =>
             {
-                pb.IsRequired(false);
 
                 pb.Property(n => n!.Value)
                     .IsRequired(false)
@@ -65,8 +62,6 @@ namespace PetFamily.Infrastucture.Configuration
 
             builder.ComplexProperty(p => p.HealthInformation, pb =>
             {
-                pb.IsRequired(false);
-
                 pb.Property(n => n!.Value)
                     .IsRequired(false)
                     .HasMaxLength(Constants.MAX_HIGHT_TEXT_LENGTH)

@@ -95,17 +95,10 @@ namespace PetFamily.Domain.PetMenegment.Entity
             DateTime dateOfCreation,
             PetDetailsForAssistance detailsForAssistance)
         {
-            if (string.IsNullOrWhiteSpace(typeOfAnimals))
-                Result.Failure<Pet>("typeOfAnimals is null or white space");
-
-            if (string.IsNullOrWhiteSpace(breedOfPet))
-                Result.Failure<Pet>("breedOfPet is null or white space");
-
             var pet = new Pet(id,
                 nickname,
-                typeOfAnimals,
+                speciesAndBreed,
                 description,
-                breedOfPet,
                 color,
                 healthInformation,
                 address,

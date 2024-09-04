@@ -9,28 +9,22 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
         public const int MAX_HIGHT_DESCRIPTION_LENGTH = 6000;
 
         private DetailsForAssistance() { }
-        private DetailsForAssistance(string name, string descriptuon)
+        private DetailsForAssistance(string? name, string? descriptuon)
         {
             Name = name;
             Description = descriptuon;
         }
 
-        public string Name { get; } = default!;
-        public string Description { get; } = default!;
+        public string? Name { get; } = default!;
+        public string? Description { get; } = default!;
 
-        public static Result<DetailsForAssistance> Create(string name, string description)
+        public static Result<DetailsForAssistance> Create(string? name, string? description)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                Result.Failure<DetailsForAssistance>("name is null or white space");
+            if (name != null && name.Length > Constants.MAX_LOW_TEXT_LENGTH)
+                return Result.Failure<DetailsForAssistance>($"name > {Constants.MAX_LOW_TEXT_LENGTH}");
 
-            if (name.Length > Constants.MAX_LOW_TEXT_LENGTH)
-                Result.Failure<DetailsForAssistance>($"name > {Constants.MAX_LOW_TEXT_LENGTH}");
-
-            if (string.IsNullOrWhiteSpace(description))
-                Result.Failure<DetailsForAssistance>("description is null or white space");
-
-            if (description.Length > MAX_HIGHT_DESCRIPTION_LENGTH)
-                Result.Failure<DetailsForAssistance>($"description > {MAX_HIGHT_DESCRIPTION_LENGTH}");
+            if (description != null && description.Length > MAX_HIGHT_DESCRIPTION_LENGTH)
+                return Result.Failure<DetailsForAssistance>($"description > {MAX_HIGHT_DESCRIPTION_LENGTH}");
 
             var detailsForAssistance = new DetailsForAssistance(name, description);
 
@@ -39,8 +33,8 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            yield return Name;
-            yield return Description;
+            yield return Name == null ? "" : Name; ;
+            yield return Description == null ? "" : Description; ;
         }
     }
 }

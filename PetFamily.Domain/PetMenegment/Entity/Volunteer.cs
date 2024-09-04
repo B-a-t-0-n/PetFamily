@@ -17,7 +17,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
             YearsExperience yearsExperience,
             NumberPets numberPets,
             PhoneNumber phoneNumber,
-            DetailsForAssistance detailsForAssistance,
+            VolunteerDetailsForAssistance? detailsForAssistance,
             VolunteerSocialNetwork? socialNetwork
             ) : base(id)
         {
@@ -42,7 +42,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
 
         public VolunteerSocialNetwork? SocialNetwork { get; private set; }
 
-        public DetailsForAssistance DetailsForAssistance { get; private set; } = default!;
+        public VolunteerDetailsForAssistance? DetailsForAssistance { get; private set; } = default!;
 
         public IReadOnlyList<Pet> Pets => _pets;
 
@@ -57,7 +57,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
             YearsExperience yearsExperience,
             NumberPets numberPets,
             PhoneNumber phoneNumber,
-            DetailsForAssistance detailsForAssistance,
+            VolunteerDetailsForAssistance? detailsForAssistance,
             VolunteerSocialNetwork? socialNetwork)
         {
             var volunteer = new Volunteer(id, fullName!, description, yearsExperience, numberPets!, phoneNumber!, detailsForAssistance, socialNetwork);

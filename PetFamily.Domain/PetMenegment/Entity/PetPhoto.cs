@@ -21,9 +21,9 @@ namespace PetFamily.Domain.PetMenegment.Entity
         public static Result<PetPhoto> Create(PetPhotoId id, string path, bool isMain)
         {
             if (string.IsNullOrWhiteSpace(path))
-                Result.Failure<PetPhoto>("path is null or white space");
+                return Result.Failure<PetPhoto>("path is null or white space");
 
-            var pet = new PetPhoto(id, path, isMain);
+            var pet = new PetPhoto(id , path, isMain);
 
             return Result.Success(pet);
         }

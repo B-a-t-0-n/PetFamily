@@ -17,10 +17,10 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
         public static Result<HealthInformation> Create(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                Result.Failure<HealthInformation>("HealthInformation is null or white space");
+                return Result.Failure<HealthInformation>("HealthInformation is null or white space");
 
             if (value.Length > Constants.MAX_HIGHT_TEXT_LENGTH)
-                Result.Failure<HealthInformation>($"HealthInformation > {Constants.MAX_HIGHT_TEXT_LENGTH}");
+                return Result.Failure<HealthInformation>($"HealthInformation > {Constants.MAX_HIGHT_TEXT_LENGTH}");
 
             var healthInformation = new HealthInformation(value);
 

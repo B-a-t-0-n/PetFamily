@@ -1,32 +1,13 @@
-﻿using CSharpFunctionalExtensions;
-using ValueObject = PetFamily.Domain.Shared.ValueObject;
-
-namespace PetFamily.Domain.PetMenegment.ValueObjects
+﻿namespace PetFamily.Domain.PetMenegment.ValueObjects
 {
-    public class VolunteerSocialNetwork : ValueObject
+    public class VolunteerSocialNetwork
     {
         private VolunteerSocialNetwork() { }
-        private VolunteerSocialNetwork(IReadOnlyList<SocialNetwork> socialNetwork)
+        public VolunteerSocialNetwork(IReadOnlyList<SocialNetwork>? socialNetwork)
         {
             SocialNetwork = socialNetwork;
         }
 
-        public IReadOnlyList<SocialNetwork> SocialNetwork { get; } = default!;
-
-        public static Result<VolunteerSocialNetwork> Create(IReadOnlyList<SocialNetwork> socialNetwork)
-        {
-            if (socialNetwork == null)
-                Result.Failure<DetailsForAssistance>("socialNetwork is null");
-
-            var volunteerSocialNetwork = new VolunteerSocialNetwork(socialNetwork!);
-
-            return volunteerSocialNetwork;
-        }
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return SocialNetwork;
-
-        }
+        public IReadOnlyList<SocialNetwork>? SocialNetwork { get; }
     }
 }

@@ -9,11 +9,13 @@
 
         public Guid Value { get; }
 
-        public static BreedId NewPetId() => new BreedId(Guid.NewGuid());
+        public static BreedId NewBreedId() => new BreedId(Guid.NewGuid());
 
         public static BreedId Empty() => new BreedId(Guid.Empty);
 
         public static BreedId Create(Guid id) => new(id);
+
+        public static implicit operator Guid(BreedId id) => id.Value;
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
