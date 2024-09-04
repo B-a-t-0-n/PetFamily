@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.PetMenegment.ValueObjects;
+using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.IDs;
 
 namespace PetFamily.Domain.PetMenegment.Entity
@@ -51,7 +52,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
             _pets.Add(pet);
         }
 
-        public static Result<Volunteer> Create(VolunteerId id,
+        public static Result<Volunteer, Error> Create(VolunteerId id,
             FullName fullName,
             Description description,
             YearsExperience yearsExperience,
@@ -62,7 +63,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
         {
             var volunteer = new Volunteer(id, fullName!, description, yearsExperience, numberPets!, phoneNumber!, detailsForAssistance, socialNetwork);
 
-            return Result.Success(volunteer);
+            return volunteer;
         }
 
     }

@@ -14,13 +14,13 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
 
         public string? Value { get; } = default!;
 
-        public static Result<Color> Create(string? value)
+        public static Result<Color, Error> Create(string? value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                return Result.Failure<Color>("Color is null or white space");
+                return Errors.General.ValueIsInvalid("color");
 
             if (value != null && value.Length > Constants.MAX_LOW_TEXT_LENGTH)
-                return Result.Failure<Color>($"Color > {Constants.MAX_LOW_TEXT_LENGTH}");
+                return Errors.General.ValueIsRequired("color");
 
             var color = new Color(value);
 

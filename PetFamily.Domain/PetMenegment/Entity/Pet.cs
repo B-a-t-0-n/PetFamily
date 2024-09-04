@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.PetMenegment.ValueObjects;
+using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.IDs;
 
 namespace PetFamily.Domain.PetMenegment.Entity
@@ -79,7 +80,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
             _petPhotos.Add(petPhoto);
         }
 
-        public static Result<Pet> Create(PetId id,
+        public static Result<Pet, Error> Create(PetId id,
             Nickname nickname,
             SpeciesAndBreed speciesAndBreed,
             Description description,
@@ -111,7 +112,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
                 dateOfCreation,
                 detailsForAssistance);
 
-            return Result.Success(pet);
+            return pet;
         }
     }
 }

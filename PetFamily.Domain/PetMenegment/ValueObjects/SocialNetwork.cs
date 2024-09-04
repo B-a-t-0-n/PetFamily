@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using ValueObject = PetFamily.Domain.Shared.ValueObject;
 
 namespace PetFamily.Domain.PetMenegment.ValueObjects
@@ -17,11 +18,11 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
         public string? Name { get; } = default!;
         public string? Link { get; } = default!;
 
-        public static Result<SocialNetwork> Create(string? name, string? link)
+        public static Result<SocialNetwork, Error> Create(string? name, string? link)
         {
 
             if (name != null && name.Length > MAX_HIGHT_NAME_LENGTH)
-                return Result.Failure<SocialNetwork>($"name > {MAX_HIGHT_NAME_LENGTH}");
+                return Errors.General.ValueIsRequired("name");
 
             var socialNetwork = new SocialNetwork(name, link);
 

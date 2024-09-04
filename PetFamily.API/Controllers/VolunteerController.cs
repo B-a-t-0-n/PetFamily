@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PetFamily.API.Extensions;
 using PetFamily.Application.Volunteers.CreateVolunteer;
 using PetFamily.Application.Volunteers.CreateVolunteer.Requests;
 
@@ -16,8 +17,9 @@ namespace PetFamily.API.Controllers
         {
             var result = await handler.Handle(request, cancellationToken);
             
+
             if(result.IsFailure)
-                return BadRequest(result.Error);
+                return result.Error.ToResponse();
 
             return Ok(result.Value);
         }

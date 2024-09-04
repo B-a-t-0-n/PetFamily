@@ -14,13 +14,13 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
 
         public string? Value { get; } = default!;
 
-        public static Result<HealthInformation> Create(string value)
+        public static Result<HealthInformation, Error> Create(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                return Result.Failure<HealthInformation>("HealthInformation is null or white space");
+                return Errors.General.ValueIsInvalid("healthInformation");
 
             if (value.Length > Constants.MAX_HIGHT_TEXT_LENGTH)
-                return Result.Failure<HealthInformation>($"HealthInformation > {Constants.MAX_HIGHT_TEXT_LENGTH}");
+                return Errors.General.ValueIsRequired("healthInformation");
 
             var healthInformation = new HealthInformation(value);
 

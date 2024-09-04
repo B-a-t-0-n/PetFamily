@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using System.Text.RegularExpressions;
 using ValueObject = PetFamily.Domain.Shared.ValueObject;
 
@@ -18,16 +19,16 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
 
         public string Number { get; } = default!;
 
-        public static Result<PhoneNumber> Create(string number)
+        public static Result<PhoneNumber, Error> Create(string number)
         {
             if (string.IsNullOrWhiteSpace(number))
-                return Result.Failure<PhoneNumber>("number is null or white space");
+                return Errors.General.ValueIsInvalid("number");
 
             if (number.Length > MAX_HIGHT_PHONE_NUMBER_LENGTH)
-                return Result.Failure<PhoneNumber>($"number > {MAX_HIGHT_PHONE_NUMBER_LENGTH}");
+                return Errors.General.ValueIsRequired("number");
 
             if (Regex.IsMatch(number, PHONE_REGEX) == false)
-                return Result.Failure<PhoneNumber>("number does not match PHONE_REGEX");
+                return Errors.General.ValueIsInvalid("number");
 
             var phoneNumber = new PhoneNumber(number);
 

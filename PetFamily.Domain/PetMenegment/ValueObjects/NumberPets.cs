@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using ValueObject = PetFamily.Domain.Shared.ValueObject;
 
 namespace PetFamily.Domain.PetMenegment.ValueObjects
@@ -17,16 +18,16 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
         public int LookingForHouse { get; }
         public int BeingTreated { get; }
 
-        public static Result<NumberPets> Create(int foundAHouse, int lookingForHouse, int beingTreated)
+        public static Result<NumberPets, Error> Create(int foundAHouse, int lookingForHouse, int beingTreated)
         {
             if (foundAHouse < 0)
-                return Result.Failure<NumberPets>("foundAHouse < 0");
+                return Errors.General.ValueIsRequired("foundAHouse");
 
             if (lookingForHouse < 0)
-                return Result.Failure<NumberPets>("lookingForHouse < 0");
+                return Errors.General.ValueIsRequired("lookingForHouse");
 
             if (beingTreated < 0)
-                return Result.Failure<NumberPets>("beingTreated < 0");
+                return Errors.General.ValueIsRequired("beingTreated");
 
             var numberPets = new NumberPets(foundAHouse, lookingForHouse, beingTreated);
 

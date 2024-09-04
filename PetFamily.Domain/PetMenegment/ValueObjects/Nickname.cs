@@ -14,13 +14,13 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
 
         public string Value { get; } = default!;
 
-        public static Result<Nickname> Create(string value)
+        public static Result<Nickname, Error> Create(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                return Result.Failure<Nickname>("Nickname is null or white space");
+                return Errors.General.ValueIsInvalid("nickname");
 
             if (value.Length > Constants.MAX_LOW_TEXT_LENGTH)
-                return Result.Failure<Nickname>($"Nickname > {Constants.MAX_LOW_TEXT_LENGTH}");
+                return Errors.General.ValueIsRequired("nickname");
 
             var name = new Nickname(value);
 
