@@ -54,9 +54,7 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
                 }
             }
 
-            var volunteerDetailsForAssistancekResult = VolunteerDetailsForAssistance.Create(detailsForAssistances);
-            if (volunteerDetailsForAssistancekResult.IsFailure)
-                return volunteerDetailsForAssistancekResult.Error;
+            var volunteerDetailsForAssistancekResult = new VolunteerDetailsForAssistance(detailsForAssistances);
             
             var socialNetworks = new List<SocialNetwork>();
 
@@ -72,9 +70,7 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
                 }
             }
 
-            var volunteerSocialNetworkResult = VolunteerSocialNetwork.Create(socialNetworks);
-            if (volunteerSocialNetworkResult.IsFailure)
-                return volunteerSocialNetworkResult.Error;
+            var volunteerSocialNetworkResult = new VolunteerSocialNetwork(socialNetworks);
 
             var volunteerResult = Volunteer.Create(volunteerId,
                 fullNameResult.Value,
@@ -82,8 +78,8 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
                 yearsExperienceResult.Value,
                 numberPetsResult.Value,
                 phoneNumderResult.Value,
-                volunteerDetailsForAssistancekResult.Value,
-                volunteerSocialNetworkResult.Value);
+                volunteerDetailsForAssistancekResult,
+                volunteerSocialNetworkResult);
 
             if (volunteerResult.IsFailure)
                 return volunteerResult.Error;
