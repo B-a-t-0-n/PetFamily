@@ -53,24 +53,6 @@ namespace PetFamily.Infrastucture.Configuration
                     .HasColumnName("years_experience");
             });
 
-            builder.ComplexProperty(v => v.NumberPets, npb =>
-            {
-                npb.Property(n => n.BeingTreated)
-                    .IsRequired()
-                    .HasDefaultValue(0)
-                    .HasColumnName("being_treated");
-
-                npb.Property(n => n.FoundAHouse)
-                    .IsRequired()
-                    .HasDefaultValue(0)
-                    .HasColumnName("found_a_house");
-
-                npb.Property(n => n.LookingForHouse)
-                    .IsRequired()
-                    .HasDefaultValue(0)
-                    .HasColumnName("looking_for_house");
-            });
-
             builder.ComplexProperty(v => v.PhoneNumber, pnb =>
             {
                 pnb.Property(p => p.Number)

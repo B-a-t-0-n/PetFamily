@@ -33,10 +33,6 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
             if (yearsExperienceResult.IsFailure)
                 return yearsExperienceResult.Error;
 
-            var numberPetsResult = NumberPets.Create(request.NumberPets.FoundAHouse, request.NumberPets.LookingForHouse, request.NumberPets.BeingTreated);
-            if (numberPetsResult.IsFailure)
-                return numberPetsResult.Error;
-
             var phoneNumderResult = PhoneNumber.Create(request.PhoneNumber);
             if (phoneNumderResult.IsFailure)
                 return phoneNumderResult.Error;
@@ -77,7 +73,6 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
                 fullNameResult.Value,
                 descriptionResult.Value,
                 yearsExperienceResult.Value,
-                numberPetsResult.Value,
                 phoneNumderResult.Value,
                 volunteerDetailsForAssistancekResult,
                 volunteerSocialNetworkResult);
