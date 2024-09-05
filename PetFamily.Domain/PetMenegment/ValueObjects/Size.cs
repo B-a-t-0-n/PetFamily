@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.PetMenegment.Entity;
+using PetFamily.Domain.Shared;
 using ValueObject = PetFamily.Domain.Shared.ValueObject;
 
 namespace PetFamily.Domain.PetMenegment.ValueObjects
@@ -16,13 +17,13 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
         public double Height { get; } = default!;
         public double Weight { get; } = default!;
 
-        public static Result<Size> Create(double height, double weight)
+        public static Result<Size, Error> Create(double height, double weight)
         {
             if (weight < 0)
-                return Result.Failure<Size>("weight < 0");
+                return Errors.General.ValueIsRequired("weight");
 
             if (height < 0)
-                return Result.Failure<Size>("height < 0");
+                return Errors.General.ValueIsRequired("height");
 
             var size = new Size(height, weight);
 

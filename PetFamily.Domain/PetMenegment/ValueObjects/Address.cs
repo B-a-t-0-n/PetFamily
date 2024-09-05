@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Shared;
 using ValueObject = PetFamily.Domain.Shared.ValueObject;
+using Error = PetFamily.Domain.Shared.Error;
 
 namespace PetFamily.Domain.PetMenegment.ValueObjects
 {
@@ -22,31 +23,31 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
         public string? Flat { get; }
         public string? ApartmentNumber { get; }
 
-        public static Result<Address> Create(string city, string street, string house, string? flat, string? apartmentNumber)
+        public static Result<Address, Error> Create(string city, string street, string house, string? flat, string? apartmentNumber)
         {
             if (string.IsNullOrWhiteSpace(city))
-                return Result.Failure<Address>("city is null or white space");
+                return Errors.General.ValueIsInvalid("city");
 
             if (city.Length > Constants.MAX_LOW_TEXT_LENGTH)
-                return Result.Failure<Address>($"city > {Constants.MAX_LOW_TEXT_LENGTH}");
+                return Errors.General.ValueIsRequired("city");
 
             if (string.IsNullOrWhiteSpace(street))
-                return Result.Failure<Address>("street is null or white space");
+                return Errors.General.ValueIsInvalid("street");
 
             if (street.Length > Constants.MAX_LOW_TEXT_LENGTH)
-                return Result.Failure<Address>($"street > {Constants.MAX_LOW_TEXT_LENGTH}");
+                return Errors.General.ValueIsRequired("street");
 
             if (string.IsNullOrWhiteSpace(house))
-                return Result.Failure<Address>("house is null or white space");
+                return Errors.General.ValueIsInvalid("house");
 
             if (house.Length > Constants.MAX_LOW_TEXT_LENGTH)
-                return Result.Failure<Address>($"house > {Constants.MAX_LOW_TEXT_LENGTH}");
+                return Errors.General.ValueIsRequired("house");
 
             if (flat != null && flat!.Length > Constants.MAX_LOW_TEXT_LENGTH)
-                return Result.Failure<Address>($"flat > {Constants.MAX_LOW_TEXT_LENGTH}");
+                return Errors.General.ValueIsRequired("flat");
 
             if (apartmentNumber != null && apartmentNumber!.Length > Constants.MAX_LOW_TEXT_LENGTH)
-                return Result.Failure<Address>($"apartmentNumber > {Constants.MAX_LOW_TEXT_LENGTH}");
+                return Errors.General.ValueIsRequired("apartmentNumber");
 
             var address = new Address(city, street, house, flat, apartmentNumber);
 

@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using ValueObject = PetFamily.Domain.Shared.ValueObject;
 
 namespace PetFamily.Domain.PetMenegment.ValueObjects
@@ -19,15 +20,15 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
 
         public string Status { get; } = default!;
 
-        public static Result<AssistanceStatus> Create(string status)
+        public static Result<AssistanceStatus, Error> Create(string status)
         {
             if (string.IsNullOrWhiteSpace(status))
-                return Result.Failure<AssistanceStatus>("status is null or white space");
+                return Errors.General.ValueIsInvalid("status");
 
             var statusInput = status.Trim().ToLower();
 
             if (_all.Any(s => s.Status.ToLower() == statusInput) == false)
-                return Result.Failure<AssistanceStatus>("error status");
+                return Errors.General.ValueIsInvalid("status");
 
             var assistanceStatus = new AssistanceStatus(statusInput);
 

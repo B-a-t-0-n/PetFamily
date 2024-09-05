@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using ValueObject = PetFamily.Domain.Shared.ValueObject;
 
 namespace PetFamily.Domain.PetMenegment.ValueObjects
@@ -13,10 +14,10 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
 
         public int Value { get; } = default!;
 
-        public static Result<YearsExperience> Create(int value)
+        public static Result<YearsExperience, Error> Create(int value)
         {
             if (value < 0)
-                return Result.Failure<YearsExperience>($"years experience < 0");
+                return Errors.General.ValueIsRequired("yearsExperience");
 
             var yearsExperience = new YearsExperience(value);
 

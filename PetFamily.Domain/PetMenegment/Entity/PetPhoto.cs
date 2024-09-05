@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.IDs;
 using System.IO;
 
@@ -18,14 +19,14 @@ namespace PetFamily.Domain.PetMenegment.Entity
         public string Path { get; private set; } = default!;
         public bool IsMain { get; private set; }
 
-        public static Result<PetPhoto> Create(PetPhotoId id, string path, bool isMain)
+        public static Result<PetPhoto, Error> Create(PetPhotoId id, string path, bool isMain)
         {
             if (string.IsNullOrWhiteSpace(path))
-                return Result.Failure<PetPhoto>("path is null or white space");
+                return Errors.General.ValueIsInvalid("path");
 
             var pet = new PetPhoto(id , path, isMain);
 
-            return Result.Success(pet);
+            return pet;
         }
     }
 }

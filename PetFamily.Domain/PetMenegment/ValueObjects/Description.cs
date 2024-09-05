@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using ValueObject = PetFamily.Domain.Shared.ValueObject;
 
 namespace PetFamily.Domain.PetMenegment.ValueObjects
@@ -15,13 +16,13 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
 
         public string? Value { get; } = default!;
 
-        public static Result<Description> Create(string? value)
+        public static Result<Description, Error> Create(string? value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                return Result.Failure<Description>("description is null or white space");
+                return Errors.General.ValueIsInvalid("description");
 
             if (value.Length > MAX_HIGHT_DESCRIPTION_LENGTH)
-                return Result.Failure<Description>($"description > {MAX_HIGHT_DESCRIPTION_LENGTH}");
+                return Errors.General.ValueIsRequired("description");
 
             var description = new Description(value);
 

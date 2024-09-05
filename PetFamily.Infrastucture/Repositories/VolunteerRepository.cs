@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using PetFamily.Domain.PetMenegment.Entity;
+using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.IDs;
 
 namespace PetFamily.Infrastucture.Repositories
@@ -23,7 +24,7 @@ namespace PetFamily.Infrastucture.Repositories
             return volunteer.Id;
         }
 
-        public async Task<Result<Volunteer>> GetById(VolunteerId id)
+        public async Task<Result<Volunteer, Error>> GetById(VolunteerId id)
         {
             var volunteer = await _dbContext.Volunteers
                 .Include(v => v.Pets)
@@ -31,9 +32,9 @@ namespace PetFamily.Infrastucture.Repositories
                 .FirstOrDefaultAsync(v => v.Id == id);
 
             if (volunteer is null)
-                return Result.Failure<Volunteer>("volunteer is null");
+                return Errors.General.ValueIsInvalid("volunteer");
 
-            return Result.Success(volunteer);
+            return volunteer;
         }
     }
 }

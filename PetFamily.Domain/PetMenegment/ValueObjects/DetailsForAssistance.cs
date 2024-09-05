@@ -18,13 +18,13 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
         public string? Name { get; } = default!;
         public string? Description { get; } = default!;
 
-        public static Result<DetailsForAssistance> Create(string? name, string? description)
+        public static Result<DetailsForAssistance, Error> Create(string? name, string? description)
         {
             if (name != null && name.Length > Constants.MAX_LOW_TEXT_LENGTH)
-                return Result.Failure<DetailsForAssistance>($"name > {Constants.MAX_LOW_TEXT_LENGTH}");
+                return Errors.General.ValueIsRequired("name");
 
             if (description != null && description.Length > MAX_HIGHT_DESCRIPTION_LENGTH)
-                return Result.Failure<DetailsForAssistance>($"description > {MAX_HIGHT_DESCRIPTION_LENGTH}");
+                return Errors.General.ValueIsRequired("description");
 
             var detailsForAssistance = new DetailsForAssistance(name, description);
 

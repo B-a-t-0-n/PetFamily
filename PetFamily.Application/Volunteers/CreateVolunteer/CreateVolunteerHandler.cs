@@ -2,6 +2,7 @@
 using PetFamily.Application.Volunteers.CreateVolunteer.Requests;
 using PetFamily.Domain.PetMenegment.Entity;
 using PetFamily.Domain.PetMenegment.ValueObjects;
+using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.IDs;
 using PetFamily.Infrastucture.Repositories;
 
@@ -16,7 +17,7 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
             _volunteerRepository = volunteerRepository;
         }
 
-        public async Task<Result<Guid, string>> Handle(CreateVolunteerRequest request, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, Error>> Handle(CreateVolunteerRequest request, CancellationToken cancellationToken = default)
         {
             var volunteerId = VolunteerId.NewVolunteerId();
 
