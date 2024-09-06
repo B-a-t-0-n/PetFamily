@@ -16,7 +16,6 @@ namespace PetFamily.Domain.PetMenegment.Entity
             FullName fullName,
             Description description,
             YearsExperience yearsExperience,
-            NumberPets numberPets,
             PhoneNumber phoneNumber,
             VolunteerDetailsForAssistance? detailsForAssistance,
             VolunteerSocialNetwork? socialNetwork
@@ -25,7 +24,6 @@ namespace PetFamily.Domain.PetMenegment.Entity
             FullName = fullName;
             Description = description;
             YearsExperience = yearsExperience;
-            NumberPets = numberPets;
             PhoneNumber = phoneNumber;
             DetailsForAssistance = detailsForAssistance;
             SocialNetwork = socialNetwork;
@@ -37,8 +35,6 @@ namespace PetFamily.Domain.PetMenegment.Entity
 
         public YearsExperience YearsExperience { get; private set; } = default!;
 
-        public NumberPets NumberPets { get; private set; } = default!;
-
         public PhoneNumber PhoneNumber { get; private set; } = default!;
 
         public VolunteerSocialNetwork? SocialNetwork { get; private set; }
@@ -46,6 +42,18 @@ namespace PetFamily.Domain.PetMenegment.Entity
         public VolunteerDetailsForAssistance? DetailsForAssistance { get; private set; } = default!;
 
         public IReadOnlyList<Pet> Pets => _pets;
+
+        public int FoundAHousePets =>
+            _pets
+            .Count(p => p.AssistanceStatus == AssistanceStatus.FoundAHouse);
+
+        public int LookingForHomePets =>
+            _pets
+            .Count(p => p.AssistanceStatus == AssistanceStatus.LookingForHome);
+
+        public int NeedsHelpPets =>
+            _pets
+            .Count(p => p.AssistanceStatus == AssistanceStatus.NeedsHelp);
 
         public void AddPet(Pet pet)
         {
@@ -56,12 +64,11 @@ namespace PetFamily.Domain.PetMenegment.Entity
             FullName fullName,
             Description description,
             YearsExperience yearsExperience,
-            NumberPets numberPets,
             PhoneNumber phoneNumber,
             VolunteerDetailsForAssistance? detailsForAssistance,
             VolunteerSocialNetwork? socialNetwork)
         {
-            var volunteer = new Volunteer(id, fullName!, description, yearsExperience, numberPets!, phoneNumber!, detailsForAssistance, socialNetwork);
+            var volunteer = new Volunteer(id, fullName!, description, yearsExperience, phoneNumber!, detailsForAssistance, socialNetwork);
 
             return volunteer;
         }
