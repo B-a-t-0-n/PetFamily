@@ -45,18 +45,15 @@ namespace PetFamily.Domain.PetMenegment.Entity
 
         public int FoundAHousePets =>
             _pets
-            .Where(p => p.AssistanceStatus == AssistanceStatus.FoundAHouse)
-            .Count();
+            .Count(p => p.AssistanceStatus == AssistanceStatus.FoundAHouse);
 
         public int LookingForHomePets =>
             _pets
-            .Where(p => p.AssistanceStatus == AssistanceStatus.LookingForHome)
-            .Count();
+            .Count(p => p.AssistanceStatus == AssistanceStatus.LookingForHome);
 
         public int NeedsHelpPets =>
             _pets
-            .Where(p => p.AssistanceStatus == AssistanceStatus.NeedsHelp)
-            .Count();
+            .Count(p => p.AssistanceStatus == AssistanceStatus.NeedsHelp);
 
         public void AddPet(Pet pet)
         {
