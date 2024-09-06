@@ -16,7 +16,6 @@ namespace PetFamily.API.Controllers
             CancellationToken cancellationToken = default)
         {
             var result = await handler.Handle(request, cancellationToken);
-            
 
             if(result.IsFailure)
                 return result.Error.ToResponse();
