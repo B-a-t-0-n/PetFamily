@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.Application.Volunteers.CreateVolunteer;
 using PetFamily.Application.Volunteers.CreateVolunteer.Requests;
@@ -16,7 +17,6 @@ namespace PetFamily.API.Controllers
             CancellationToken cancellationToken = default)
         {
             var result = await handler.Handle(request, cancellationToken);
-            
 
             if(result.IsFailure)
                 return result.Error.ToResponse();

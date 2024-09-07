@@ -32,7 +32,7 @@ namespace PetFamily.Infrastucture.Repositories
                 .FirstOrDefaultAsync(v => v.Id == id);
 
             if (volunteer is null)
-                return Errors.General.ValueIsInvalid("volunteer");
+                return Errors.General.NotFound(id);
 
             return volunteer;
         }
