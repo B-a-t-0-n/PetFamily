@@ -11,7 +11,9 @@ namespace PetFamily.API.Extensions
         {
             var statusCode = GetStatusCodeForErrorType(error.Type);
 
-            var envelope = Envelope.Error(error);
+            var responceError = new ResponseError(error.Code, error.Message, null);
+
+            var envelope = Envelope.Error([responceError]);
 
             return new ObjectResult(envelope)
             {
