@@ -1,14 +1,13 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using PetFamily.Application.Volunteers.CreateVolunteer.Requests;
+using PetFamily.Application.Volunteers.Create.Requests;
 using PetFamily.Domain.PetMenegment.Entity;
 using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.IDs;
 using PetFamily.Infrastucture.Repositories;
-using System.Numerics;
 
-namespace PetFamily.Application.Volunteers.CreateVolunteer
+namespace PetFamily.Application.Volunteers.Create
 {
     public class CreateVolunteerHandler
     {
