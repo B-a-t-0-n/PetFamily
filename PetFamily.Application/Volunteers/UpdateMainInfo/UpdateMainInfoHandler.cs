@@ -1,7 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Volunteers.UpdateMainInfo.Requests;
-using PetFamily.Domain.PetMenegment.Entity;
 using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.IDs;
@@ -42,7 +41,11 @@ namespace PetFamily.Application.Volunteers.UpdateMainInfo
 
             var rezult = await _volunteerRepository.Save(volunteerResult.Value, cancellationToken);
 
-            _logger.LogInformation("updated main info volunteer {fullName} with id {id}", fullName, id);
+            _logger.LogInformation("updated main info volunteer {fullName} with id {id}",
+                fullName.Surname + " " +
+                fullName.Name + " " + 
+                fullName.Patronymic,
+                id.Value);
 
             return rezult;
         }

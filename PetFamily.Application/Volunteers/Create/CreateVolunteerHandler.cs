@@ -24,13 +24,13 @@ namespace PetFamily.Application.Volunteers.Create
         {
             var volunteerId = VolunteerId.NewVolunteerId();
 
-            var fullNameResult = FullName.Create(request.FullName.Name, request.FullName.Surname, request.FullName.Patronymic).Value;
+            var fullName = FullName.Create(request.FullName.Name, request.FullName.Surname, request.FullName.Patronymic).Value;
 
-            var descriptionResult = Description.Create(request.Description).Value;
+            var description = Description.Create(request.Description).Value;
 
-            var yearsExperienceResult = YearsExperience.Create(request.YearsExperience).Value;
+            var yearsExperience = YearsExperience.Create(request.YearsExperience).Value;
 
-            var phoneNumderResult = PhoneNumber.Create(request.PhoneNumber).Value;
+            var phoneNumder = PhoneNumber.Create(request.PhoneNumber).Value;
 
             var detailsForAssistances = new List<DetailsForAssistance>();
 
@@ -38,13 +38,13 @@ namespace PetFamily.Application.Volunteers.Create
             {
                 foreach (var detailsForAssistance in request.DetailsForAssistance)
                 {
-                    var socialNetworkResult = DetailsForAssistance.Create(detailsForAssistance.Name, detailsForAssistance.Description).Value;
+                    var socialNetwork = DetailsForAssistance.Create(detailsForAssistance.Name, detailsForAssistance.Description).Value;
 
-                    detailsForAssistances.Add(socialNetworkResult);
+                    detailsForAssistances.Add(socialNetwork);
                 }
             }
 
-            var volunteerDetailsForAssistancekResult = new VolunteerDetailsForAssistance(detailsForAssistances);
+            var volunteerDetailsForAssistancek = new VolunteerDetailsForAssistance(detailsForAssistances);
             
             var socialNetworks = new List<SocialNetwork>();
 
@@ -52,20 +52,20 @@ namespace PetFamily.Application.Volunteers.Create
             {
                 foreach (var socialnetwork in request.SocialNetworks)
                 {
-                    var socialNetworkResult = SocialNetwork.Create(socialnetwork.Name, socialnetwork.Link).Value;
+                    var socialNetwork = SocialNetwork.Create(socialnetwork.Name, socialnetwork.Link).Value;
 
-                    socialNetworks.Add(socialNetworkResult);
+                    socialNetworks.Add(socialNetwork);
                 }
             }
 
             var volunteerSocialNetworkResult = new VolunteerSocialNetwork(socialNetworks);
 
             var volunteerResult = Volunteer.Create(volunteerId,
-                fullNameResult,
-                descriptionResult,
-                yearsExperienceResult,
-                phoneNumderResult,
-                volunteerDetailsForAssistancekResult,
+                fullName,
+                description,
+                yearsExperience,
+                phoneNumder,
+                volunteerDetailsForAssistancek,
                 volunteerSocialNetworkResult);
 
             if (volunteerResult.IsFailure)
@@ -73,7 +73,9 @@ namespace PetFamily.Application.Volunteers.Create
 
             await _volunteerRepository.Add(volunteerResult.Value, cancellationToken);
 
-            _logger.LogInformation("created volunteer {fullNameResult} with id {volunteerId}", fullNameResult, volunteerId);
+            _logger.LogInformation("created volunteer {fullNameResult} with id {volunteerId}", 
+                $"{fullName.Surname} {fullName.Name} {fullName.Patronymic}",
+                volunteerId.Value);
 
             return (Guid)volunteerResult.Value.Id;
         }
