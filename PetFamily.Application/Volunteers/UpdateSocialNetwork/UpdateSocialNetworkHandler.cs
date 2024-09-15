@@ -45,10 +45,10 @@ namespace PetFamily.Application.Volunteers.UpdateSocialNetwork
 
             var rezult = await _volunteerRepository.Save(volunteerResult.Value, cancellationToken);
 
-            _logger.LogInformation("updated social network volunteer {fullName} with id {id}",
-                volunteerResult.Value.FullName.Surname + " " +
-                volunteerResult.Value.FullName.Name + " " +
-                volunteerResult.Value.FullName.Patronymic ,
+            _logger.LogInformation("updated social network volunteer {Surname} {Name} {Patronymic} with id {id}",
+                volunteerResult.Value.FullName.Surname,
+                volunteerResult.Value.FullName.Name,
+                volunteerResult.Value.FullName.Patronymic,
                 id.Value);
 
             return rezult;

@@ -73,8 +73,10 @@ namespace PetFamily.Application.Volunteers.Create
 
             await _volunteerRepository.Add(volunteerResult.Value, cancellationToken);
 
-            _logger.LogInformation("created volunteer {fullNameResult} with id {volunteerId}", 
-                $"{fullName.Surname} {fullName.Name} {fullName.Patronymic}",
+            _logger.LogInformation("created volunteer {Surname} {Name} {Patronymic} with id {volunteerId}", 
+                fullName.Surname,
+                fullName.Name,
+                fullName.Patronymic,
                 volunteerId.Value);
 
             return (Guid)volunteerResult.Value.Id;
