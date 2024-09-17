@@ -1,4 +1,4 @@
-﻿namespace PetFamily.Application.Volunteers.CreateVolunteer.Dtos
+﻿namespace PetFamily.Application.Dtos
 {
     public record SocialNetworkDto(string? Name, string? Link);
 }

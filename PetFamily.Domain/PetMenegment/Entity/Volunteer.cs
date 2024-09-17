@@ -73,5 +73,26 @@ namespace PetFamily.Domain.PetMenegment.Entity
             return volunteer;
         }
 
+        public void UpdateMainInfo(FullName fullName,
+            Description description,
+            YearsExperience yearsExperience,
+            PhoneNumber phoneNumber)
+        {
+            FullName = fullName;
+            Description = description;
+            YearsExperience = yearsExperience;
+            PhoneNumber = phoneNumber;
+        }
+
+        public void UpdateSocialNetwork(VolunteerSocialNetwork socialNetwork)
+        {
+            SocialNetwork = socialNetwork;
+        }
+
+        public void UpdateDetailsForAssistance(VolunteerDetailsForAssistance detailsForAssistance)
+        {
+            DetailsForAssistance = detailsForAssistance;
+        }
+
     }
 }

@@ -1,14 +1,13 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using PetFamily.Application.Volunteers.CreateVolunteer.Requests;
+using PetFamily.Application.Volunteers.Create.Requests;
 using PetFamily.Domain.PetMenegment.Entity;
 using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.IDs;
 using PetFamily.Infrastucture.Repositories;
-using System.Numerics;
 
-namespace PetFamily.Application.Volunteers.CreateVolunteer
+namespace PetFamily.Application.Volunteers.Create
 {
     public class CreateVolunteerHandler
     {
@@ -25,13 +24,13 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
         {
             var volunteerId = VolunteerId.NewVolunteerId();
 
-            var fullNameResult = FullName.Create(request.FullName.Name, request.FullName.Surname, request.FullName.Patronymic).Value;
+            var fullName = FullName.Create(request.FullName.Name, request.FullName.Surname, request.FullName.Patronymic).Value;
 
-            var descriptionResult = Description.Create(request.Description).Value;
+            var description = Description.Create(request.Description).Value;
 
-            var yearsExperienceResult = YearsExperience.Create(request.YearsExperience).Value;
+            var yearsExperience = YearsExperience.Create(request.YearsExperience).Value;
 
-            var phoneNumderResult = PhoneNumber.Create(request.PhoneNumber).Value;
+            var phoneNumder = PhoneNumber.Create(request.PhoneNumber).Value;
 
             var detailsForAssistances = new List<DetailsForAssistance>();
 
@@ -39,13 +38,13 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
             {
                 foreach (var detailsForAssistance in request.DetailsForAssistance)
                 {
-                    var socialNetworkResult = DetailsForAssistance.Create(detailsForAssistance.Name, detailsForAssistance.Description).Value;
+                    var socialNetwork = DetailsForAssistance.Create(detailsForAssistance.Name, detailsForAssistance.Description).Value;
 
-                    detailsForAssistances.Add(socialNetworkResult);
+                    detailsForAssistances.Add(socialNetwork);
                 }
             }
 
-            var volunteerDetailsForAssistancekResult = new VolunteerDetailsForAssistance(detailsForAssistances);
+            var volunteerDetailsForAssistancek = new VolunteerDetailsForAssistance(detailsForAssistances);
             
             var socialNetworks = new List<SocialNetwork>();
 
@@ -53,20 +52,20 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
             {
                 foreach (var socialnetwork in request.SocialNetworks)
                 {
-                    var socialNetworkResult = SocialNetwork.Create(socialnetwork.Name, socialnetwork.Link).Value;
+                    var socialNetwork = SocialNetwork.Create(socialnetwork.Name, socialnetwork.Link).Value;
 
-                    socialNetworks.Add(socialNetworkResult);
+                    socialNetworks.Add(socialNetwork);
                 }
             }
 
             var volunteerSocialNetworkResult = new VolunteerSocialNetwork(socialNetworks);
 
             var volunteerResult = Volunteer.Create(volunteerId,
-                fullNameResult,
-                descriptionResult,
-                yearsExperienceResult,
-                phoneNumderResult,
-                volunteerDetailsForAssistancekResult,
+                fullName,
+                description,
+                yearsExperience,
+                phoneNumder,
+                volunteerDetailsForAssistancek,
                 volunteerSocialNetworkResult);
 
             if (volunteerResult.IsFailure)
@@ -74,7 +73,11 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
 
             await _volunteerRepository.Add(volunteerResult.Value, cancellationToken);
 
-            _logger.LogInformation("created volunteer {fullNameResult} with id {volunteerId}", fullNameResult, volunteerId);
+            _logger.LogInformation("created volunteer {Surname} {Name} {Patronymic} with id {volunteerId}", 
+                fullName.Surname,
+                fullName.Name,
+                fullName.Patronymic,
+                volunteerId.Value);
 
             return (Guid)volunteerResult.Value.Id;
         }
