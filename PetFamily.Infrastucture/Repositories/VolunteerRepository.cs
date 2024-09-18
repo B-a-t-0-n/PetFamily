@@ -45,5 +45,16 @@ namespace PetFamily.Infrastucture.Repositories
 
             return volunteer.Id;
         }
+
+        public async Task<Guid> Delete(Volunteer volunteer, CancellationToken cancellationToken = default)
+        {
+            _dbContext.Volunteers.Attach(volunteer);
+
+            volunteer.Delete();
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return volunteer.Id;
+        }
     }
 }

@@ -12,6 +12,8 @@ using PetFamily.Application.Volunteers.UpdateMainInfo.Requests;
 using PetFamily.Application.Volunteers.UpdateSocialNetwork;
 using PetFamily.Application.Volunteers.UpdateSocialNetwork.Dtos;
 using PetFamily.Application.Volunteers.UpdateSocialNetwork.Requests;
+using PetFamily.Application.Volunteers.Delete;
+using PetFamily.Application.Volunteers.Delete.Requests;
 
 namespace PetFamily.API.Controllers
 {
@@ -86,6 +88,27 @@ namespace PetFamily.API.Controllers
             CancellationToken cancellationToken = default)
         {
             var request = new UpdateDetailsForAssistanceRequest(id, dto);
+
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+            if (validationResult.IsValid == false)
+                return validationResult.ToValidationErrorResponse();
+
+            var result = await handler.Handle(request, cancellationToken);
+
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            return Ok(result.Value);
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult<Guid>> Delete(
+            [FromRoute] Guid id,
+            [FromServices] DeleteVolunteerHandler handler,
+            [FromServices] IValidator<DeleteVolunteerRequest> validator,
+            CancellationToken cancellationToken = default)
+        {
+            var request = new DeleteVolunteerRequest(id);
 
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
             if (validationResult.IsValid == false)

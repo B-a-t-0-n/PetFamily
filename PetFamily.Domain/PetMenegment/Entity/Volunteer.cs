@@ -5,8 +5,10 @@ using PetFamily.Domain.Shared.IDs;
 
 namespace PetFamily.Domain.PetMenegment.Entity
 {
-    public class Volunteer : Shared.Entity<VolunteerId>
+    public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
     {
+        private bool _isDeleted = false;
+         
         private readonly List<Pet> _pets = [];
 
         //ef core
@@ -94,5 +96,20 @@ namespace PetFamily.Domain.PetMenegment.Entity
             DetailsForAssistance = detailsForAssistance;
         }
 
+        public void Delete()
+        {
+            if(_isDeleted == false)
+            {
+                _isDeleted = true;
+            }
+        }
+
+        public void Restore()
+        {
+            if (_isDeleted)
+            {
+                _isDeleted = true;
+            }
+        }
     }
 }
