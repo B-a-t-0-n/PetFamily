@@ -20,8 +20,6 @@ namespace PetFamily.Infrastucture
             optionsBuilder.UseSnakeCaseNamingConvention();
             optionsBuilder.EnableSensitiveDataLogging();
             optionsBuilder.UseLoggerFactory(CreateLogerFactory());
-
-
             optionsBuilder.AddInterceptors(new SoftDeleteInterceptor());
         }
 

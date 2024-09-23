@@ -15,11 +15,9 @@ using PetFamily.Application.Volunteers.UpdateSocialNetwork.Requests;
 using PetFamily.Application.Volunteers.Delete;
 using PetFamily.Application.Volunteers.Delete.Requests;
 
-namespace PetFamily.API.Controllers
+namespace PetFamily.API.Controllers.Volunteer
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class VolunteerController : ControllerBase
+    public class VolunteerController : ApplicationController
     {
         [HttpPost]
         public async Task<ActionResult<Guid>> Create(
@@ -29,7 +27,7 @@ namespace PetFamily.API.Controllers
         {
             var result = await handler.Handle(request, cancellationToken);
 
-            if(result.IsFailure)
+            if (result.IsFailure)
                 return result.Error.ToResponse();
 
             return Ok(result.Value);
@@ -46,7 +44,7 @@ namespace PetFamily.API.Controllers
             var request = new UpdateMainInfoRequest(id, dto);
 
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
-            if(validationResult.IsValid == false)
+            if (validationResult.IsValid == false)
                 return validationResult.ToValidationErrorResponse();
 
             var result = await handler.Handle(request, cancellationToken);
