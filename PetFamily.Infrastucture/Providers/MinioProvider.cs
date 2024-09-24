@@ -55,19 +55,19 @@ namespace PetFamily.Infrastucture.Providers
             
         }
 
-        public async Task<Result<string, Error>> Deletefile(string bucketName, string objectName, CancellationToken cancellationToken = default)
+        public async Task<Result<string, Error>> Deletefile(FileMetadata fileMetadata, CancellationToken cancellationToken = default)
         {
             try
             {
-                var bucetExistArgs = new BucketExistsArgs().WithBucket(bucketName);
+                var bucetExistArgs = new BucketExistsArgs().WithBucket(fileMetadata.BucketName);
 
                 var bucketExist = await _minioClient.BucketExistsAsync(bucetExistArgs, cancellationToken);
                 if (bucketExist == false) 
-                    throw new Exception($"Bucket {bucketName} not exist");
+                    throw new Exception($"Bucket {fileMetadata.BucketName} not exist");
 
                 var removeObjectArgs = new RemoveObjectArgs()
-                    .WithBucket(bucketName)
-                    .WithObject(objectName);
+                    .WithBucket(fileMetadata.BucketName)
+                    .WithObject(fileMetadata.ObjectName);
 
                 await _minioClient.RemoveObjectAsync(removeObjectArgs, cancellationToken);
 
@@ -81,19 +81,19 @@ namespace PetFamily.Infrastucture.Providers
 
         }
 
-        public async Task<Result<string, Error>> GetfileURL(string bucketName, string objectName, CancellationToken cancellationToken = default)
+        public async Task<Result<string, Error>> GetfileURL(FileMetadata fileMetadata, CancellationToken cancellationToken = default)
         {
             try
             {
-                var bucetExistArgs = new BucketExistsArgs().WithBucket(bucketName);
+                var bucetExistArgs = new BucketExistsArgs().WithBucket(fileMetadata.BucketName);
 
                 var bucketExist = await _minioClient.BucketExistsAsync(bucetExistArgs, cancellationToken);
                 if (bucketExist == false)
-                    throw new Exception($"Bucket {bucketName} not exist");
+                    throw new Exception($"Bucket {fileMetadata.BucketName} not exist");
 
                 var presignedGetObjectArgs = new PresignedGetObjectArgs()
-                    .WithBucket(bucketName)
-                    .WithObject(objectName)
+                    .WithBucket(fileMetadata.BucketName)
+                    .WithObject(fileMetadata.ObjectName)
                     .WithExpiry(EXPIRY);
 
                 var url = await _minioClient.PresignedGetObjectAsync(presignedGetObjectArgs);

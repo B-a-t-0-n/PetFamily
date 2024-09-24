@@ -31,8 +31,9 @@ namespace PetFamily.API.Controllers
             [FromServices] IFileProvider fileProvider,
             CancellationToken cancellationToken = default)
         {
+            var fileMetadata = new FileMetadata("photos", id.ToString());
 
-            var result = await fileProvider.Deletefile("photos", id.ToString(), cancellationToken);
+            var result = await fileProvider.Deletefile(fileMetadata, cancellationToken);
 
             if (result.IsFailure)
                 return result.Error.ToResponse();
@@ -46,7 +47,9 @@ namespace PetFamily.API.Controllers
             [FromServices] IFileProvider fileProvider,
             CancellationToken cancellationToken = default)
         {
-            var result = await fileProvider.GetfileURL("photos", id.ToString(), cancellationToken);
+            var fileMetadata = new FileMetadata("photos", id.ToString());
+
+            var result = await fileProvider.GetfileURL(fileMetadata, cancellationToken);
 
             if (result.IsFailure)
                 return result.Error.ToResponse();
