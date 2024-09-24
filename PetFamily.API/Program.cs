@@ -6,7 +6,6 @@ using PetFamily.API.Validation;
 using PetFamily.API.Extensions;
 using Serilog;
 using Serilog.Events;
-using PetFamily.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +30,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSerilog();
 
 builder.Services
-    .AddInfrastructure()
+    .AddInfrastructure(builder.Configuration)
     .AddApplication();
 
 builder.Services.AddFluentValidationAutoValidation(configuration => 
