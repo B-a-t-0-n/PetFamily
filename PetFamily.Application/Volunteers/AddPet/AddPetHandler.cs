@@ -16,7 +16,10 @@ namespace PetFamily.Application.Volunteers.AddPet
         private readonly ILogger<AddPetHandler> _logger;
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        public AddPetHandler(IVolunteerRepository volunteerRepository, ILogger<AddPetHandler> logger, IDateTimeProvider dateTimeProvider)
+        public AddPetHandler(
+            IVolunteerRepository volunteerRepository,
+            ILogger<AddPetHandler> logger,
+            IDateTimeProvider dateTimeProvider)
         {
             _volunteerRepository = volunteerRepository;
             _logger = logger;
@@ -33,37 +36,39 @@ namespace PetFamily.Application.Volunteers.AddPet
 
             var petId = PetId.NewPetId();
 
-            var nickname = Nickname.Create(command.Nickname).Value;
+            var nickname = Nickname.Create(command.PetDto.Nickname).Value;
 
-            var speciesId = SpeciesId.Create(command.SpeciesAndBreed.SpeciesId);
-            var speciesAndBreed = SpeciesAndBreed.Create(speciesId, command.SpeciesAndBreed.BreedId).Value;
+            var speciesId = SpeciesId.Create(command.PetDto.SpeciesAndBreed.SpeciesId);
+            var speciesAndBreed = SpeciesAndBreed.Create(speciesId, command.PetDto.SpeciesAndBreed.BreedId).Value;
             
-            var description = Description.Create(command.Description).Value;
+            var description = Description.Create(command.PetDto.Description).Value;
 
-            var color = Color.Create(command.Color).Value;
+            var color = Color.Create(command.PetDto.Color).Value;
 
-            var healthInformation = HealthInformation.Create(command.HealthInformation).Value;
+            var healthInformation = HealthInformation.Create(command.PetDto.HealthInformation).Value;
 
             var address = Address.Create(
-                command.Address.City,
-                command.Address.Street,
-                command.Address.House,
-                command.Address.Flat,
-                command.Address.ApartmentNumber).Value;
+                command.PetDto.Address.City,
+                command.PetDto.Address.Street,
+                command.PetDto.Address.House,
+                command.PetDto.Address.Flat,
+                command.PetDto.Address.ApartmentNumber).Value;
 
-            var size = Size.Create(command.Size.Height, command.Size.Weight).Value;
+            var size = Size.Create(command.PetDto.Size.Height, command.PetDto.Size.Weight).Value;
 
-            var phoneNumber = PhoneNumber.Create(command.PhoneNumber).Value;
+            var phoneNumber = PhoneNumber.Create(command.PetDto.PhoneNumber).Value;
 
-            var assistanceStatus = AssistanceStatus.Create(command.AssistanceStatus).Value;
+            var assistanceStatus = AssistanceStatus.Create(command.PetDto.AssistanceStatus).Value;
 
             var detailsForAssistances = new List<DetailsForAssistance>();
 
-            if (command.DetailsForAssistance != null)
+            if (command.PetDto.DetailsForAssistance != null)
             {
-                foreach (var detailsForAssistance in command.DetailsForAssistance)
+                foreach (var detailsForAssistance in command.PetDto.DetailsForAssistance)
                 {
-                    var value = DetailsForAssistance.Create(detailsForAssistance.Name, detailsForAssistance.Description).Value;
+                    var value = DetailsForAssistance.Create(
+                        detailsForAssistance.Name,
+                        detailsForAssistance.Description).Value;
 
                     detailsForAssistances.Add(value);
                 }
@@ -81,9 +86,9 @@ namespace PetFamily.Application.Volunteers.AddPet
                 address,
                 size,
                 phoneNumber, 
-                command.IsCastrated,
-                command.DateOfBirth,
-                command.IsVaccinated,
+                command.PetDto.IsCastrated,
+                command.PetDto.DateOfBirth,
+                command.PetDto.IsVaccinated,
                 assistanceStatus,
                 _dateTimeProvider.UtcNow,
                 petDetailsForAssistance);
