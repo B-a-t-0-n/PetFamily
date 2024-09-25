@@ -3,18 +3,18 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Application.Volunteers.Create.Commands;
 using PetFamily.Domain.PetMenegment.Entity;
 using PetFamily.Domain.PetMenegment.ValueObjects;
-using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.IDs;
 using PetFamily.Infrastucture.Repositories;
+using PetFamily.Domain.Shared;
 
-namespace PetFamily.Application.Volunteers.Create
+namespace PetFamily.Application.Volunteers.AddPet
 {
-    public class CreateVolunteerHandler
+    public class AddPetHandler
     {
         private readonly IVolunteerRepository _volunteerRepository;
-        private readonly ILogger<CreateVolunteerHandler> _logger;
+        private readonly ILogger<AddPetHandler> _logger;
 
-        public CreateVolunteerHandler(IVolunteerRepository volunteerRepository, ILogger<CreateVolunteerHandler> logger) 
+        public AddPetHandler(IVolunteerRepository volunteerRepository, ILogger<AddPetHandler> logger)
         {
             _volunteerRepository = volunteerRepository;
             _logger = logger;
@@ -45,10 +45,10 @@ namespace PetFamily.Application.Volunteers.Create
             }
 
             var volunteerDetailsForAssistancek = new VolunteerDetailsForAssistance(detailsForAssistances);
-            
+
             var socialNetworks = new List<SocialNetwork>();
 
-            if(request.SocialNetworks != null)
+            if (request.SocialNetworks != null)
             {
                 foreach (var socialnetwork in request.SocialNetworks)
                 {
@@ -73,7 +73,7 @@ namespace PetFamily.Application.Volunteers.Create
 
             await _volunteerRepository.Add(volunteerResult.Value, cancellationToken);
 
-            _logger.LogInformation("created volunteer {Surname} {Name} {Patronymic} with id {volunteerId}", 
+            _logger.LogInformation("created volunteer {Surname} {Name} {Patronymic} with id {volunteerId}",
                 fullName.Surname,
                 fullName.Name,
                 fullName.Patronymic,

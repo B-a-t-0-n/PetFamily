@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.Application.FileProviders;
+using PetFamily.Application.FileProvider;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Application.Providers

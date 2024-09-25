@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
-using PetFamily.Application.FileProviders;
+using PetFamily.Application.FileProvider;
 using PetFamily.Application.Providers;
 
 namespace PetFamily.API.Controllers

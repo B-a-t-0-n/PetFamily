@@ -4,7 +4,7 @@ using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared.IDs;
 using PetFamily.Infrastucture.Repositories;
 using PetFamily.Domain.Shared;
-using PetFamily.Application.Volunteers.UpdateSocialNetwork.Requests;
+using PetFamily.Application.Volunteers.UpdateSocialNetwork.Commands;
 
 namespace PetFamily.Application.Volunteers.UpdateSocialNetwork
 {
@@ -19,7 +19,7 @@ namespace PetFamily.Application.Volunteers.UpdateSocialNetwork
             _logger = logger;
         }
 
-        public async Task<Result<Guid, Error>> Handle(UpdateSocialNetworkRequest request, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, Error>> Handle(UpdateSocialNetworkCommand request, CancellationToken cancellationToken = default)
         {
             var id = VolunteerId.Create(request.Id);
 

@@ -2,11 +2,11 @@
 using PetFamily.Application.Validation;
 using PetFamily.Domain.Shared;
 
-namespace PetFamily.Application.Volunteers.Delete.Requests
+namespace PetFamily.Application.Volunteers.Delete.Commands
 {
-    public class DeleteVolunteerRequestValidator : AbstractValidator<DeleteVolunteerRequest>
+    public class DeleteVolunteerCommandValidator : AbstractValidator<DeleteVolunteerCommand>
     {
-        public DeleteVolunteerRequestValidator()
+        public DeleteVolunteerCommandValidator()
         {
             RuleFor(u => u.Id).NotEmpty().WithError(Errors.General.ValueIsRequired());
         }

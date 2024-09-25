@@ -1,11 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using PetFamily.Application.Volunteers.UpdateSocialNetwork.Requests;
+using PetFamily.Application.Volunteers.UpdateSocialNetwork.Commands;
 using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared.IDs;
 using PetFamily.Infrastucture.Repositories;
 using PetFamily.Domain.Shared;
-using PetFamily.Application.Volunteers.UpdateDetailsForAssistance.Requests;
+using PetFamily.Application.Volunteers.UpdateDetailsForAssistance.Commands;
 
 namespace PetFamily.Application.Volunteers.UpdateDetailsForAssistance
 {
@@ -20,7 +20,7 @@ namespace PetFamily.Application.Volunteers.UpdateDetailsForAssistance
             _logger = logger;
         }
 
-        public async Task<Result<Guid, Error>> Handle(UpdateDetailsForAssistanceRequest request, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, Error>> Handle(UpdateDetailsForAssistanceCommand request, CancellationToken cancellationToken = default)
         {
             var id = VolunteerId.Create(request.Id);
 

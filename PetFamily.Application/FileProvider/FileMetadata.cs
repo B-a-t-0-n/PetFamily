@@ -1,4 +1,4 @@
-﻿namespace PetFamily.Application.FileProviders
+﻿namespace PetFamily.Application.FileProvider
 {
     public record FileMetadata(string BucketName, string ObjectName);
 }

@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using PetFamily.Application.Volunteers.UpdateMainInfo.Requests;
+using PetFamily.Application.Volunteers.UpdateMainInfo.Commands;
 using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.IDs;
@@ -19,7 +19,7 @@ namespace PetFamily.Application.Volunteers.UpdateMainInfo
             _logger = logger;
         }
 
-        public async Task<Result<Guid, Error>> Handle(UpdateMainInfoRequest request, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, Error>> Handle(UpdateMainInfoCommand request, CancellationToken cancellationToken = default)
         {
             var id = VolunteerId.Create(request.Id);
 

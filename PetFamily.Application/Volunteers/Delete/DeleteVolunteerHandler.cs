@@ -1,12 +1,12 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using PetFamily.Application.Volunteers.UpdateDetailsForAssistance.Requests;
+using PetFamily.Application.Volunteers.UpdateDetailsForAssistance.Commands;
 using PetFamily.Application.Volunteers.UpdateDetailsForAssistance;
 using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared.IDs;
 using PetFamily.Infrastucture.Repositories;
 using PetFamily.Domain.Shared;
-using PetFamily.Application.Volunteers.Delete.Requests;
+using PetFamily.Application.Volunteers.Delete.Commands;
 
 namespace PetFamily.Application.Volunteers.Delete
 {
@@ -21,7 +21,7 @@ namespace PetFamily.Application.Volunteers.Delete
             _logger = logger;
         }
 
-        public async Task<Result<Guid, Error>> Handle(DeleteVolunteerRequest request, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, Error>> Handle(DeleteVolunteerCommand request, CancellationToken cancellationToken = default)
         {
             var id = VolunteerId.Create(request.Id);
 

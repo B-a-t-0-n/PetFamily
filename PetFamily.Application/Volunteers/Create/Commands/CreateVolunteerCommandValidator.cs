@@ -2,11 +2,11 @@
 using PetFamily.Application.Validation;
 using PetFamily.Domain.PetMenegment.ValueObjects;
 
-namespace PetFamily.Application.Volunteers.Create.Requests
+namespace PetFamily.Application.Volunteers.Create.Commands
 {
-    public class CreateVolunteerRequestValidator : AbstractValidator<CreateVolunteerRequest> 
+    public class CreateVolunteerCommandValidator : AbstractValidator<CreateVolunteerCommand> 
     {
-        public CreateVolunteerRequestValidator()
+        public CreateVolunteerCommandValidator()
         {
             RuleFor(c => c.FullName).MustBeValueObject(x => FullName.Create(x.Name, x.Surname, x.Patronymic));
 
