@@ -14,7 +14,8 @@ namespace PetFamily.Domain.PetMenegment.Entity
         //ef core
         private Volunteer(VolunteerId id) : base(id) { }
 
-        private Volunteer(VolunteerId id,
+        private Volunteer(
+            VolunteerId id,
             FullName fullName,
             Description description,
             YearsExperience yearsExperience,
@@ -57,12 +58,8 @@ namespace PetFamily.Domain.PetMenegment.Entity
             _pets
             .Count(p => p.AssistanceStatus == AssistanceStatus.NeedsHelp);
 
-        public void AddPet(Pet pet)
-        {
-            _pets.Add(pet);
-        }
-
-        public static Result<Volunteer, Error> Create(VolunteerId id,
+        public static Result<Volunteer, Error> Create(
+            VolunteerId id,
             FullName fullName,
             Description description,
             YearsExperience yearsExperience,
@@ -75,7 +72,8 @@ namespace PetFamily.Domain.PetMenegment.Entity
             return volunteer;
         }
 
-        public void UpdateMainInfo(FullName fullName,
+        public void UpdateMainInfo(
+            FullName fullName,
             Description description,
             YearsExperience yearsExperience,
             PhoneNumber phoneNumber)
@@ -94,6 +92,12 @@ namespace PetFamily.Domain.PetMenegment.Entity
         public void UpdateDetailsForAssistance(VolunteerDetailsForAssistance detailsForAssistance)
         {
             DetailsForAssistance = detailsForAssistance;
+        }
+
+        public UnitResult<Error> AddPet(Pet pet)
+        {
+            _pets.Add(pet);
+            return Result.Success<Error>();
         }
 
         public void Delete()

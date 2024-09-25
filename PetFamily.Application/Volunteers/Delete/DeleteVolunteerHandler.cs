@@ -21,9 +21,9 @@ namespace PetFamily.Application.Volunteers.Delete
             _logger = logger;
         }
 
-        public async Task<Result<Guid, Error>> Handle(DeleteVolunteerCommand request, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, Error>> Handle(DeleteVolunteerCommand command, CancellationToken cancellationToken = default)
         {
-            var id = VolunteerId.Create(request.Id);
+            var id = VolunteerId.Create(command.Id);
 
             var volunteerResult = await _volunteerRepository.GetById(id);
             if (volunteerResult.IsFailure)

@@ -20,9 +20,9 @@ namespace PetFamily.Application.Volunteers.UpdateDetailsForAssistance
             _logger = logger;
         }
 
-        public async Task<Result<Guid, Error>> Handle(UpdateDetailsForAssistanceCommand request, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, Error>> Handle(UpdateDetailsForAssistanceCommand command, CancellationToken cancellationToken = default)
         {
-            var id = VolunteerId.Create(request.Id);
+            var id = VolunteerId.Create(command.Id);
 
             var volunteerResult = await _volunteerRepository.GetById(id);
             if (volunteerResult.IsFailure)
@@ -30,9 +30,9 @@ namespace PetFamily.Application.Volunteers.UpdateDetailsForAssistance
 
             var detailsForAssistanceList = new List<DetailsForAssistance>();
 
-            if (request.DetailsForAssistanceDto.DetailsForAssistance != null)
+            if (command.DetailsForAssistanceDto.DetailsForAssistance != null)
             {
-                foreach (var detailsForAssistanceItem in request.DetailsForAssistanceDto.DetailsForAssistance)
+                foreach (var detailsForAssistanceItem in command.DetailsForAssistanceDto.DetailsForAssistance)
                 {
                     var detailsForAssistance = DetailsForAssistance.Create(detailsForAssistanceItem.Name, detailsForAssistanceItem.Description).Value;
 

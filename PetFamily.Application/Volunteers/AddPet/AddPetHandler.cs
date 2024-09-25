@@ -1,11 +1,12 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using PetFamily.Application.Volunteers.Create.Commands;
 using PetFamily.Domain.PetMenegment.Entity;
 using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared.IDs;
 using PetFamily.Infrastucture.Repositories;
 using PetFamily.Domain.Shared;
+using PetFamily.Application.Volunteers.AddPet.Commands;
+using PetFamily.Application.Providers;
 
 namespace PetFamily.Application.Volunteers.AddPet
 {
@@ -13,73 +14,93 @@ namespace PetFamily.Application.Volunteers.AddPet
     {
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly ILogger<AddPetHandler> _logger;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public AddPetHandler(IVolunteerRepository volunteerRepository, ILogger<AddPetHandler> logger)
+        public AddPetHandler(IVolunteerRepository volunteerRepository, ILogger<AddPetHandler> logger, IDateTimeProvider dateTimeProvider)
         {
             _volunteerRepository = volunteerRepository;
             _logger = logger;
+            _dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task<Result<Guid, Error>> Handle(CreateVolunteerCommand request, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, Error>> Handle(AddPetCommand command, CancellationToken cancellationToken = default)
         {
-            var volunteerId = VolunteerId.NewVolunteerId();
+            var volunteerResult = await _volunteerRepository.GetById(
+                VolunteerId.Create(command.volunteerId), cancellationToken);
 
-            var fullName = FullName.Create(request.FullName.Name, request.FullName.Surname, request.FullName.Patronymic).Value;
+            if(volunteerResult.IsFailure)
+                return volunteerResult.Error;
 
-            var description = Description.Create(request.Description).Value;
+            var petId = PetId.NewPetId();
 
-            var yearsExperience = YearsExperience.Create(request.YearsExperience).Value;
+            var nickname = Nickname.Create(command.Nickname).Value;
 
-            var phoneNumder = PhoneNumber.Create(request.PhoneNumber).Value;
+            var speciesId = SpeciesId.Create(command.SpeciesAndBreed.SpeciesId);
+            var speciesAndBreed = SpeciesAndBreed.Create(speciesId, command.SpeciesAndBreed.BreedId).Value;
+            
+            var description = Description.Create(command.Description).Value;
+
+            var color = Color.Create(command.Color).Value;
+
+            var healthInformation = HealthInformation.Create(command.HealthInformation).Value;
+
+            var address = Address.Create(
+                command.Address.City,
+                command.Address.Street,
+                command.Address.House,
+                command.Address.Flat,
+                command.Address.ApartmentNumber).Value;
+
+            var size = Size.Create(command.Size.Height, command.Size.Weight).Value;
+
+            var phoneNumber = PhoneNumber.Create(command.PhoneNumber).Value;
+
+            var assistanceStatus = AssistanceStatus.Create(command.AssistanceStatus).Value;
 
             var detailsForAssistances = new List<DetailsForAssistance>();
 
-            if (request.DetailsForAssistance != null)
+            if (command.DetailsForAssistance != null)
             {
-                foreach (var detailsForAssistance in request.DetailsForAssistance)
+                foreach (var detailsForAssistance in command.DetailsForAssistance)
                 {
-                    var socialNetwork = DetailsForAssistance.Create(detailsForAssistance.Name, detailsForAssistance.Description).Value;
+                    var value = DetailsForAssistance.Create(detailsForAssistance.Name, detailsForAssistance.Description).Value;
 
-                    detailsForAssistances.Add(socialNetwork);
+                    detailsForAssistances.Add(value);
                 }
             }
 
-            var volunteerDetailsForAssistancek = new VolunteerDetailsForAssistance(detailsForAssistances);
+            var petDetailsForAssistance = new PetDetailsForAssistance(detailsForAssistances);
 
-            var socialNetworks = new List<SocialNetwork>();
-
-            if (request.SocialNetworks != null)
-            {
-                foreach (var socialnetwork in request.SocialNetworks)
-                {
-                    var socialNetwork = SocialNetwork.Create(socialnetwork.Name, socialnetwork.Link).Value;
-
-                    socialNetworks.Add(socialNetwork);
-                }
-            }
-
-            var volunteerSocialNetworkResult = new VolunteerSocialNetwork(socialNetworks);
-
-            var volunteerResult = Volunteer.Create(volunteerId,
-                fullName,
+            var petResult = Pet.Create(
+                petId,
+                nickname,
+                speciesAndBreed,
                 description,
-                yearsExperience,
-                phoneNumder,
-                volunteerDetailsForAssistancek,
-                volunteerSocialNetworkResult);
+                color,
+                healthInformation,
+                address,
+                size,
+                phoneNumber, 
+                command.IsCastrated,
+                command.DateOfBirth,
+                command.IsVaccinated,
+                assistanceStatus,
+                _dateTimeProvider.UtcNow,
+                petDetailsForAssistance);
 
-            if (volunteerResult.IsFailure)
-                return volunteerResult.Error;
+            if (petResult.IsFailure)
+                return petResult.Error;
 
-            await _volunteerRepository.Add(volunteerResult.Value, cancellationToken);
+            volunteerResult.Value.AddPet(petResult.Value);
 
-            _logger.LogInformation("created volunteer {Surname} {Name} {Patronymic} with id {volunteerId}",
-                fullName.Surname,
-                fullName.Name,
-                fullName.Patronymic,
-                volunteerId.Value);
+            await _volunteerRepository.Save(volunteerResult.Value, cancellationToken);
 
-            return (Guid)volunteerResult.Value.Id;
+            _logger.LogInformation("added pet {Nickname} with id {petId} volunteer with id {volunteerId}",
+                nickname,
+                petId.Value,
+                volunteerResult.Value.Id);
+
+            return (Guid)petResult.Value.Id;
         }
     }
 }

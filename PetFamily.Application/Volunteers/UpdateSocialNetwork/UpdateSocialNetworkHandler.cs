@@ -19,9 +19,9 @@ namespace PetFamily.Application.Volunteers.UpdateSocialNetwork
             _logger = logger;
         }
 
-        public async Task<Result<Guid, Error>> Handle(UpdateSocialNetworkCommand request, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, Error>> Handle(UpdateSocialNetworkCommand command, CancellationToken cancellationToken = default)
         {
-            var id = VolunteerId.Create(request.Id);
+            var id = VolunteerId.Create(command.Id);
 
             var volunteerResult = await _volunteerRepository.GetById(id);
             if (volunteerResult.IsFailure)
@@ -29,9 +29,9 @@ namespace PetFamily.Application.Volunteers.UpdateSocialNetwork
 
             var socialNetworks = new List<SocialNetwork>();
 
-            if (request.SocialNetworkDto.SocialNetwork != null)
+            if (command.SocialNetworkDto.SocialNetwork != null)
             {
-                foreach (var socialnetwork in request.SocialNetworkDto.SocialNetwork)
+                foreach (var socialnetwork in command.SocialNetworkDto.SocialNetwork)
                 {
                     var socialNetwork = SocialNetwork.Create(socialnetwork.Name, socialnetwork.Link).Value;
 

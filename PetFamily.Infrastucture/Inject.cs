@@ -17,6 +17,7 @@ namespace PetFamily.Infrastucture
         {
             services.AddScoped<ApplicationDbContext>();
             services.AddScoped<IVolunteerRepository, VolunteerRepository>();
+            services.AddTransient<IDateTimeProvider, DateTimeProvider>();
 
             services.AddMinio(configuration);
 
