@@ -13,8 +13,8 @@ using PetFamily.Infrastucture;
 namespace PetFamily.Infrastucture.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240905225247_deleteNumberPets")]
-    partial class deleteNumberPets
+    [Migration("20240930122730_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,6 +47,10 @@ namespace PetFamily.Infrastucture.Migrations
                     b.Property<bool>("IsVaccinated")
                         .HasColumnType("boolean")
                         .HasColumnName("is_vaccinated");
+
+                    b.Property<bool>("_isDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
 
                     b.Property<Guid?>("volunteer_id")
                         .HasColumnType("uuid")
@@ -196,15 +200,20 @@ namespace PetFamily.Infrastucture.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("is_main");
 
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("path");
-
                     b.Property<Guid?>("pet_id")
                         .HasColumnType("uuid")
                         .HasColumnName("pet_id");
+
+                    b.ComplexProperty<Dictionary<string, object>>("Path", "PetFamily.Domain.PetMenegment.Entity.PetPhoto.Path#PhotoPath", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<string>("PathToStorage")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
+                                .HasColumnName("path_to_storage");
+                        });
 
                     b.HasKey("Id")
                         .HasName("pk_pet_photo");
@@ -220,6 +229,10 @@ namespace PetFamily.Infrastucture.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<bool>("_isDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
 
                     b.ComplexProperty<Dictionary<string, object>>("Description", "PetFamily.Domain.PetMenegment.Entity.Volunteer.Description#Description", b1 =>
                         {

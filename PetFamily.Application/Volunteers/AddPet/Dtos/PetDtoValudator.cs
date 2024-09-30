@@ -24,7 +24,7 @@ namespace PetFamily.Application.Volunteers.AddPet.Dtos
 
             RuleFor(a => a.PhoneNumber).MustBeValueObject(PhoneNumber.Create);
 
-            RuleFor(a => a.AssistanceStatus).MustBeValueObject(AssistanceStatus+.Create);
+            RuleFor(a => a.AssistanceStatus).MustBeValueObject(AssistanceStatus.Create);
 
             RuleFor(a => a.IsCastrated).NotNull().WithError(Errors.General.ValueIsRequired());
 

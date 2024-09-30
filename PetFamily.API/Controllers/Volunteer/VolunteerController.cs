@@ -17,6 +17,9 @@ using PetFamily.Application.Volunteers.Delete.Commands;
 using PetFamily.Application.Volunteers.AddPet;
 using PetFamily.Application.Volunteers.AddPet.Commands;
 using PetFamily.Application.Volunteers.AddPet.Dtos;
+using PetFamily.Application.Volunteers.AddPetPtotos;
+using PetFamily.Application.Volunteers.AddPetPtotos.Commands;
+using PetFamily.Application.Dtos;
 
 namespace PetFamily.API.Controllers.Volunteer
 {
@@ -143,6 +146,50 @@ namespace PetFamily.API.Controllers.Volunteer
                 return result.Error.ToResponse();
 
             return Ok(result.Value);
+        }
+
+        [HttpPost("{volunteerId:guid}/{petId:guid}/add-pet-photos")]
+        public async Task<ActionResult<Guid>> AddPetPhotos(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromForm]IFormFileCollection files,
+            [FromServices] AddPetPhotosHandler handler,
+            [FromServices] IValidator<AddPetPhotosCommand> validator,
+            CancellationToken cancellationToken = default)
+        {
+            var filesDto = new List<FileDto>();
+
+            try
+            {
+                foreach (var file in files)
+                {
+                    var stream = file.OpenReadStream();
+
+                    var fileDto = new FileDto(stream, file.FileName, file.ContentType);
+
+                    filesDto.Add(fileDto);
+                }
+
+                var command = new AddPetPhotosCommand(volunteerId, petId, filesDto);
+
+                var validationResult = await validator.ValidateAsync(command, cancellationToken);
+                if (validationResult.IsValid == false)
+                    return validationResult.ToValidationErrorResponse();
+
+                var result = await handler.Handle(command, cancellationToken);
+
+                if (result.IsFailure)
+                    return result.Error.ToResponse();
+
+                return Ok(result.Value);
+            }
+            finally
+            {
+                foreach (var file in filesDto)
+                {
+                    await file.Content.DisposeAsync();
+                }
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ namespace PetFamily.Application.Volunteers.AddPet.Commands
     {
         public AddPetCommandValidator()
         {
-            RuleFor(a => a.volunteerId).NotEmpty().WithError(Errors.General.ValueIsRequired());
+            RuleFor(a => a.VolunteerId).NotEmpty().WithError(Errors.General.ValueIsRequired());
         }
     }
 }

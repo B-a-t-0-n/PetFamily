@@ -3,7 +3,7 @@
 namespace PetFamily.Application.Volunteers.AddPet.Commands
 {
     public record AddPetCommand(
-        Guid volunteerId,
+        Guid VolunteerId,
         PetDto PetDto);
 
 }

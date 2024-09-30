@@ -197,15 +197,20 @@ namespace PetFamily.Infrastucture.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("is_main");
 
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("path");
-
                     b.Property<Guid?>("pet_id")
                         .HasColumnType("uuid")
                         .HasColumnName("pet_id");
+
+                    b.ComplexProperty<Dictionary<string, object>>("Path", "PetFamily.Domain.PetMenegment.Entity.PetPhoto.Path#PhotoPath", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<string>("PathToStorage")
+                                .IsRequired()
+                                .HasMaxLength(3000)
+                                .HasColumnType("character varying(3000)")
+                                .HasColumnName("path_to_storage");
+                        });
 
                     b.HasKey("Id")
                         .HasName("pk_pet_photo");

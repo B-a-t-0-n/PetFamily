@@ -29,9 +29,9 @@ namespace PetFamily.Application.Volunteers.AddPet
         public async Task<Result<Guid, Error>> Handle(AddPetCommand command, CancellationToken cancellationToken = default)
         {
             var volunteerResult = await _volunteerRepository.GetById(
-                VolunteerId.Create(command.volunteerId), cancellationToken);
+                VolunteerId.Create(command.VolunteerId), cancellationToken);
 
-            if(volunteerResult.IsFailure)
+            if (volunteerResult.IsFailure)
                 return volunteerResult.Error;
 
             var petId = PetId.NewPetId();
