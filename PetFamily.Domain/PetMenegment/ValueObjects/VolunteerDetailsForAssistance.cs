@@ -8,6 +8,6 @@
             DetailsForAssistance = detailsForAssistance;
         }
 
-        public IReadOnlyList<DetailsForAssistance>? DetailsForAssistance { get; } = default!;
+        public IReadOnlyList<DetailsForAssistance>? DetailsForAssistance { get; }
     }
 }

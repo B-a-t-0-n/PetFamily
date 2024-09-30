@@ -24,10 +24,14 @@ namespace PetFamily.Infrastucture.Configuration
                     .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
                     .HasColumnName("is_main");
 
-            builder.Property(p => p.Path)
-                    .IsRequired()
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
-                    .HasColumnName("path");
+            builder.ComplexProperty(p => p.Path, pb =>
+            {
+                pb.IsRequired();
+
+                pb.Property(n => n.PathToStorage)
+                    .HasMaxLength(Constants.MAX_HIGHT_TEXT_LENGTH)
+                    .HasColumnName("path_to_storage");
+            });
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using PetFamily.Application.Volunteers.UpdateMainInfo.Requests;
+using PetFamily.Application.Volunteers.UpdateMainInfo.Commands;
 using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.IDs;
@@ -19,23 +19,23 @@ namespace PetFamily.Application.Volunteers.UpdateMainInfo
             _logger = logger;
         }
 
-        public async Task<Result<Guid, Error>> Handle(UpdateMainInfoRequest request, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, Error>> Handle(UpdateMainInfoCommand command, CancellationToken cancellationToken = default)
         {
-            var id = VolunteerId.Create(request.Id);
+            var id = VolunteerId.Create(command.Id);
 
             var volunteerResult = await _volunteerRepository.GetById(id);
             if(volunteerResult.IsFailure)
                 return volunteerResult.Error;
 
-            var fullName = FullName.Create(request.MainInfo.FullName.Name,
-                request.MainInfo.FullName.Surname,
-                request.MainInfo.FullName.Patronymic).Value;
+            var fullName = FullName.Create(command.MainInfo.FullName.Name,
+                command.MainInfo.FullName.Surname,
+                command.MainInfo.FullName.Patronymic).Value;
 
-            var description = Description.Create(request.MainInfo.Description).Value;
+            var description = Description.Create(command.MainInfo.Description).Value;
 
-            var yearsExperience = YearsExperience.Create(request.MainInfo.YearsExperience).Value;
+            var yearsExperience = YearsExperience.Create(command.MainInfo.YearsExperience).Value;
 
-            var phoneNumder= PhoneNumber.Create(request.MainInfo.PhoneNumber).Value;
+            var phoneNumder= PhoneNumber.Create(command.MainInfo.PhoneNumber).Value;
 
             volunteerResult.Value.UpdateMainInfo(fullName, description, yearsExperience, phoneNumder);
 

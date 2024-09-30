@@ -29,5 +29,5 @@ namespace PetFamily.Infrastucture
         }
 
         private ILoggerFactory CreateLogerFactory() => LoggerFactory.Create(builder => {  builder.AddConsole(); });
-        }
+    }
 }

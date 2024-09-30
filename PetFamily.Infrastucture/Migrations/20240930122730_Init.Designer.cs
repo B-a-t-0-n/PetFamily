@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetFamily.Infrastucture;
@@ -12,9 +13,11 @@ using PetFamily.Infrastucture;
 namespace PetFamily.Infrastucture.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240930122730_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -207,8 +210,8 @@ namespace PetFamily.Infrastucture.Migrations
 
                             b1.Property<string>("PathToStorage")
                                 .IsRequired()
-                                .HasMaxLength(3000)
-                                .HasColumnType("character varying(3000)")
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
                                 .HasColumnName("path_to_storage");
                         });
 
