@@ -2,5 +2,5 @@
 
 namespace PetFamily.Application.Volunteers.AddPetPtotos.Commands
 {
-    public record AddPetPhotosCommand(Guid VolunteerId, Guid PetId, IEnumerable<FileDto> Files);
+    public record AddPetPhotosCommand(Guid VolunteerId, Guid PetId, IEnumerable<CreateFileDto> Files);
 }

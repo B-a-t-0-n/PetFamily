@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Database;
 using PetFamily.Application.Volunteers.Create.Commands;
 using PetFamily.Domain.PetMenegment.Entity;
 using PetFamily.Domain.PetMenegment.ValueObjects;
@@ -13,11 +14,16 @@ namespace PetFamily.Application.Volunteers.Create
     {
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly ILogger<CreateVolunteerHandler> _logger;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateVolunteerHandler(IVolunteerRepository volunteerRepository, ILogger<CreateVolunteerHandler> logger) 
+        public CreateVolunteerHandler(
+            IVolunteerRepository volunteerRepository,
+            ILogger<CreateVolunteerHandler> logger,
+            IUnitOfWork unitOfWork) 
         {
             _volunteerRepository = volunteerRepository;
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Result<Guid, Error>> Handle(CreateVolunteerCommand command, CancellationToken cancellationToken = default)
@@ -43,8 +49,6 @@ namespace PetFamily.Application.Volunteers.Create
                     detailsForAssistances.Add(value);
                 }
             }
-
-            var volunteerDetailsForAssistancek = new VolunteerDetailsForAssistance(detailsForAssistances);
             
             var socialNetworks = new List<SocialNetwork>();
 
@@ -58,20 +62,19 @@ namespace PetFamily.Application.Volunteers.Create
                 }
             }
 
-            var volunteerSocialNetworkResult = new VolunteerSocialNetwork(socialNetworks);
-
             var volunteerResult = Volunteer.Create(volunteerId,
                 fullName,
                 description,
                 yearsExperience,
                 phoneNumder,
-                volunteerDetailsForAssistancek,
-                volunteerSocialNetworkResult);
+                detailsForAssistances,
+                socialNetworks);
 
             if (volunteerResult.IsFailure)
                 return volunteerResult.Error;
 
             await _volunteerRepository.Add(volunteerResult.Value, cancellationToken);
+            await _unitOfWork.SaveChanges(cancellationToken);
 
             _logger.LogInformation("created volunteer {Surname} {Name} {Patronymic} with id {volunteerId}", 
                 fullName.Surname,

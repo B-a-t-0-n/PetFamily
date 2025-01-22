@@ -20,6 +20,7 @@ using PetFamily.Application.Volunteers.AddPet.Dtos;
 using PetFamily.Application.Volunteers.AddPetPtotos;
 using PetFamily.Application.Volunteers.AddPetPtotos.Commands;
 using PetFamily.Application.Dtos;
+using PetFamily.API.Processors;
 
 namespace PetFamily.API.Controllers.Volunteer
 {
@@ -157,39 +158,20 @@ namespace PetFamily.API.Controllers.Volunteer
             [FromServices] IValidator<AddPetPhotosCommand> validator,
             CancellationToken cancellationToken = default)
         {
-            var filesDto = new List<FileDto>();
+            await using var fileProcessor = new FormFileProcessor();
+            var fileDtos = fileProcessor.Process(files);
 
-            try
-            {
-                foreach (var file in files)
-                {
-                    var stream = file.OpenReadStream();
+            var command = new AddPetPhotosCommand(volunteerId, petId, fileDtos);
 
-                    var fileDto = new FileDto(stream, file.FileName, file.ContentType);
+            var validationResult = await validator.ValidateAsync(command, cancellationToken);
+            if (validationResult.IsValid == false)
+                return validationResult.ToValidationErrorResponse();
 
-                    filesDto.Add(fileDto);
-                }
+            var result = await handler.Handle(command, cancellationToken);
+            if (result.IsFailure)
+                return result.Error.ToResponse();
 
-                var command = new AddPetPhotosCommand(volunteerId, petId, filesDto);
-
-                var validationResult = await validator.ValidateAsync(command, cancellationToken);
-                if (validationResult.IsValid == false)
-                    return validationResult.ToValidationErrorResponse();
-
-                var result = await handler.Handle(command, cancellationToken);
-
-                if (result.IsFailure)
-                    return result.Error.ToResponse();
-
-                return Ok(result.Value);
-            }
-            finally
-            {
-                foreach (var file in filesDto)
-                {
-                    await file.Content.DisposeAsync();
-                }
-            }
+            return Ok(result.Value);
         }
     }
 }

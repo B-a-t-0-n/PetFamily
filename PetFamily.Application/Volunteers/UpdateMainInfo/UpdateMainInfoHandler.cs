@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Database;
 using PetFamily.Application.Volunteers.UpdateMainInfo.Commands;
 using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared;
@@ -12,11 +13,17 @@ namespace PetFamily.Application.Volunteers.UpdateMainInfo
     {
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly ILogger<UpdateMainInfoHandler> _logger;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateMainInfoHandler(IVolunteerRepository volunteerRepository, ILogger<UpdateMainInfoHandler> logger)
+
+        public UpdateMainInfoHandler(
+            IVolunteerRepository volunteerRepository,
+            ILogger<UpdateMainInfoHandler> logger,
+            IUnitOfWork unitOfWork)
         {
             _volunteerRepository = volunteerRepository;
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Result<Guid, Error>> Handle(UpdateMainInfoCommand command, CancellationToken cancellationToken = default)
@@ -35,11 +42,11 @@ namespace PetFamily.Application.Volunteers.UpdateMainInfo
 
             var yearsExperience = YearsExperience.Create(command.MainInfo.YearsExperience).Value;
 
-            var phoneNumder= PhoneNumber.Create(command.MainInfo.PhoneNumber).Value;
+            var phoneNumder = PhoneNumber.Create(command.MainInfo.PhoneNumber).Value;
 
             volunteerResult.Value.UpdateMainInfo(fullName, description, yearsExperience, phoneNumder);
 
-            var rezult = await _volunteerRepository.Save(volunteerResult.Value, cancellationToken);
+            await _unitOfWork.SaveChanges(cancellationToken);
 
             _logger.LogInformation("updated main info volunteer {Surname} {Name} {Patronymic} with id {id}",
                 fullName.Surname,
@@ -47,7 +54,7 @@ namespace PetFamily.Application.Volunteers.UpdateMainInfo
                 fullName.Patronymic,
                 id.Value);
 
-            return rezult;
+            return id.Value;
         }
     }
 }

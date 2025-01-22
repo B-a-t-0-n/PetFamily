@@ -6,6 +6,7 @@ using PetFamily.Domain.Shared.IDs;
 using PetFamily.Infrastucture.Repositories;
 using PetFamily.Domain.Shared;
 using PetFamily.Application.Volunteers.UpdateDetailsForAssistance.Commands;
+using PetFamily.Application.Database;
 
 namespace PetFamily.Application.Volunteers.UpdateDetailsForAssistance
 {
@@ -13,11 +14,16 @@ namespace PetFamily.Application.Volunteers.UpdateDetailsForAssistance
     {
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly ILogger<UpdateDetailsForAssistanceHandler> _logger;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateDetailsForAssistanceHandler(IVolunteerRepository volunteerRepository, ILogger<UpdateDetailsForAssistanceHandler> logger)
+        public UpdateDetailsForAssistanceHandler(
+            IVolunteerRepository volunteerRepository,
+            ILogger<UpdateDetailsForAssistanceHandler> logger,
+            IUnitOfWork unitOfWork)
         {
             _volunteerRepository = volunteerRepository;
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Result<Guid, Error>> Handle(UpdateDetailsForAssistanceCommand command, CancellationToken cancellationToken = default)
@@ -40,11 +46,9 @@ namespace PetFamily.Application.Volunteers.UpdateDetailsForAssistance
                 }
             }
 
-            var volunteerDetailsForAssistance = new VolunteerDetailsForAssistance(detailsForAssistanceList);
+            volunteerResult.Value.UpdateDetailsForAssistance(detailsForAssistanceList);
 
-            volunteerResult.Value.UpdateDetailsForAssistance(volunteerDetailsForAssistance);
-
-            var rezult = await _volunteerRepository.Save(volunteerResult.Value, cancellationToken);
+            await _unitOfWork.SaveChanges(cancellationToken);
 
             _logger.LogInformation("updated details for assistance volunteer {Surname} {Name} {Patronymic} with id {id}",
                 volunteerResult.Value.FullName.Surname,
@@ -52,7 +56,7 @@ namespace PetFamily.Application.Volunteers.UpdateDetailsForAssistance
                 volunteerResult.Value.FullName.Patronymic,
                 id.Value);
 
-            return rezult;
+            return id.Value;
         }
     }
 }

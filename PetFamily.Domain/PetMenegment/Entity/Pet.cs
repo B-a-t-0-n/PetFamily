@@ -29,7 +29,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
             bool isVaccinated,
             AssistanceStatus assistanceStatus,
             DateTime dateOfCreation,
-            PetDetailsForAssistance detailsForAssistance
+            ValueObjectList<DetailsForAssistance>? detailsForAssistance
             ) : base(id)
         {
             Nickname = nickname;
@@ -74,7 +74,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
 
         public DateTime DateOfCreation { get; private set; }
 
-        public PetDetailsForAssistance DetailsForAssistance { get; private set; } = default!;
+        public ValueObjectList<DetailsForAssistance>? DetailsForAssistance { get; private set; } = default!;
 
         public IReadOnlyList<PetPhoto> PetPhotos => _petPhotos;
 
@@ -98,7 +98,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
             bool isVaccinated,
             AssistanceStatus assistanceStatus,
             DateTime dateOfCreation,
-            PetDetailsForAssistance detailsForAssistance)
+            ValueObjectList<DetailsForAssistance>? detailsForAssistance)
         {
             var pet = new Pet(id,
                 nickname,

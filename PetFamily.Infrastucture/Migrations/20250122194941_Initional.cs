@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PetFamily.Infrastucture.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class Initional : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -86,7 +86,7 @@ namespace PetFamily.Infrastucture.Migrations
                     height = table.Column<double>(type: "double precision", nullable: false),
                     breed_id = table.Column<Guid>(type: "uuid", nullable: false),
                     SpeciesId = table.Column<Guid>(type: "uuid", nullable: false),
-                    DetailsForAssistance = table.Column<string>(type: "jsonb", nullable: false)
+                    DetailsForAssistance = table.Column<string>(type: "jsonb", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -105,7 +105,7 @@ namespace PetFamily.Infrastucture.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     is_main = table.Column<bool>(type: "boolean", maxLength: 100, nullable: false),
                     pet_id = table.Column<Guid>(type: "uuid", nullable: true),
-                    path_to_storage = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
+                    path_to_storage = table.Column<string>(type: "character varying(3000)", maxLength: 3000, nullable: false)
                 },
                 constraints: table =>
                 {

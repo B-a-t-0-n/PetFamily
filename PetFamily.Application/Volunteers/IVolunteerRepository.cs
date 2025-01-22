@@ -9,7 +9,7 @@ namespace PetFamily.Infrastucture.Repositories
     {
         Task<Guid> Add(Volunteer volunteer, CancellationToken cancellationToken = default);
         Task<Result<Volunteer, Error>> GetById(VolunteerId id, CancellationToken cancellationToken = default);
-        Task<Guid> Save(Volunteer volunteer, CancellationToken cancellationToken = default);
-        Task<Guid> Delete(Volunteer volunteer, CancellationToken cancellationToken = default);
+        Guid Save(Volunteer volunteer, CancellationToken cancellationToken = default);
+        Guid Delete(Volunteer volunteer, CancellationToken cancellationToken = default);
     }
 }

@@ -8,8 +8,8 @@ using PetFamily.Application.FileProvider;
 using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Application.Providers;
 using PetFamily.Domain.PetMenegment.Entity;
-using System.Diagnostics;
-using PetFamily.Application.Dtos;
+using PetFamily.Application.Database;
+using System.Reflection;
 
 namespace PetFamily.Application.Volunteers.AddPetPtotos
 {
@@ -19,72 +19,80 @@ namespace PetFamily.Application.Volunteers.AddPetPtotos
 
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly IFileProvider _fileProvider;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<AddPetPhotosHandler> _logger;
 
         public AddPetPhotosHandler(
             IVolunteerRepository volunteerRepository,
+            IUnitOfWork unitOfWork,
             ILogger<AddPetPhotosHandler> logger,
             IFileProvider fileProvider)
         {
             _volunteerRepository = volunteerRepository;
             _logger = logger;
+            _unitOfWork = unitOfWork;
             _fileProvider = fileProvider;
         }
 
-        public async Task<Result<Guid, Error>> Handle(AddPetPhotosCommand command, CancellationToken cancellationToken = default)
+        public async Task<Result<IReadOnlyList<PhotoPath>, Error>> Handle(AddPetPhotosCommand command, CancellationToken cancellationToken = default)
         {
-            var volunteerResult = await _volunteerRepository.GetById(
-                VolunteerId.Create(command.VolunteerId), cancellationToken);
+            var transaction = await _unitOfWork.BeginTransaction(cancellationToken);
 
-            if (volunteerResult.IsFailure)
-                return volunteerResult.Error;
-
-            var petId = PetId.Create(command.PetId);
-
-            var pet = volunteerResult.Value.Pets.FirstOrDefault(p => p.Id == petId);
-            if (pet is null)
-                return Errors.General.NotFound(petId);
-
-            var files = new Dictionary<PhotoPath, FileContent>();
-
-            foreach (var file in command.Files)
+            try
             {
-                var extension = Path.GetExtension(file.FileName);
+                var volunteerResult = await _volunteerRepository.GetById(
+                    VolunteerId.Create(command.VolunteerId), cancellationToken);
 
-                var filePathResult = PhotoPath.Create(Guid.NewGuid().ToString(),extension);
-                if(filePathResult.IsFailure)
-                    return filePathResult.Error;
+                if (volunteerResult.IsFailure)
+                    return volunteerResult.Error;
 
-                var fileContent = new FileContent(file.Content, filePathResult.Value.PathToStorage);
+                var petId = PetId.Create(command.PetId);
 
-                files.Add(filePathResult.Value, fileContent);
+                var pet = volunteerResult.Value.Pets.FirstOrDefault(p => p.Id == petId);
+                if (pet is null)
+                    return Errors.General.NotFound(petId);
+
+                List<FileData> filesData = [];
+                foreach (var file in command.Files)
+                {
+                    var extension = Path.GetExtension(file.FileName);
+
+                    var photoPathResult = PhotoPath.Create(Guid.NewGuid().ToString(), extension);
+                    if (photoPathResult.IsFailure)
+                        return photoPathResult.Error;
+
+                    var fileContent = new FileData(file.Content, photoPathResult.Value, BUCKET_NAME);
+
+                    var petPhotoId = PetPhotoId.NewPetPhotoId();
+
+                    var photoResult = PetPhoto.Create(petPhotoId, photoPathResult.Value, false);
+                    if (photoResult.IsFailure)
+                        return photoResult.Error;
+
+                    pet.AddPetPhoto(photoResult.Value);
+
+                    filesData.Add(fileContent);
+                }
+
+                await _unitOfWork.SaveChanges(cancellationToken);
+
+                var uploadResult = await _fileProvider.UploadFiles(filesData, cancellationToken);
+
+                if (uploadResult.IsFailure)
+                    return uploadResult.Error;
+
+                transaction.Commit();
+
+                return uploadResult.Value.ToList();
             }
-
-            var fileData = new FileData(files.Values, BUCKET_NAME);
-
-            var uploadResult = await _fileProvider.Uploadfiles(fileData, cancellationToken);
-            if (uploadResult.IsFailure)
-                return uploadResult.Error;
-
-            foreach (var file in files)
+            catch (Exception ex)
             {
-                var petPhotoId = PetPhotoId.NewPetPhotoId();
+                _logger.LogError(ex,
+                    "Can not add pet photos to pet - {id} in transaction", command.PetId);
 
-                var photoResult = PetPhoto.Create(petPhotoId, file.Key, false);
-                if (photoResult.IsFailure)
-                    return photoResult.Error;
-
-                pet.AddPetPhoto(photoResult.Value);
+                transaction.Rollback();
+                return Error.Failure("Can not add pet photos to pet - {id}", "pet.petPhotos.failure");
             }
-            
-            await _volunteerRepository.Save(volunteerResult.Value, cancellationToken);
-
-            _logger.LogInformation("added pet photos {Nickname} with id {petId} volunteer with id {volunteerId}",
-                pet.Nickname,
-                petId.Value,
-                volunteerResult.Value.Id);
-
-            return (Guid)petId;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace PetFamily.Application.FileProvider
+﻿using PetFamily.Domain.PetMenegment.ValueObjects;
+
+namespace PetFamily.Application.FileProvider
 {
-    public record FileData(IEnumerable<FileContent> Files, string BucketName);
+    public record FileData(Stream Stream, PhotoPath FilePath, string BucketName);
 }

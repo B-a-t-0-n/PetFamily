@@ -7,6 +7,7 @@ using PetFamily.Infrastucture.Repositories;
 using PetFamily.Domain.Shared;
 using PetFamily.Application.Volunteers.AddPet.Commands;
 using PetFamily.Application.Providers;
+using PetFamily.Application.Database;
 
 namespace PetFamily.Application.Volunteers.AddPet
 {
@@ -15,15 +16,18 @@ namespace PetFamily.Application.Volunteers.AddPet
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly ILogger<AddPetHandler> _logger;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly IUnitOfWork _unitOfWork;
 
         public AddPetHandler(
             IVolunteerRepository volunteerRepository,
             ILogger<AddPetHandler> logger,
-            IDateTimeProvider dateTimeProvider)
+            IDateTimeProvider dateTimeProvider,
+            IUnitOfWork unitOfWork)
         {
             _volunteerRepository = volunteerRepository;
             _logger = logger;
             _dateTimeProvider = dateTimeProvider;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Result<Guid, Error>> Handle(AddPetCommand command, CancellationToken cancellationToken = default)
@@ -74,8 +78,6 @@ namespace PetFamily.Application.Volunteers.AddPet
                 }
             }
 
-            var petDetailsForAssistance = new PetDetailsForAssistance(detailsForAssistances);
-
             var petResult = Pet.Create(
                 petId,
                 nickname,
@@ -91,14 +93,14 @@ namespace PetFamily.Application.Volunteers.AddPet
                 command.PetDto.IsVaccinated,
                 assistanceStatus,
                 _dateTimeProvider.UtcNow,
-                petDetailsForAssistance);
+                detailsForAssistances);
 
             if (petResult.IsFailure)
                 return petResult.Error;
 
             volunteerResult.Value.AddPet(petResult.Value);
 
-            await _volunteerRepository.Save(volunteerResult.Value, cancellationToken);
+            await _unitOfWork.SaveChanges(cancellationToken);
 
             _logger.LogInformation("added pet {Nickname} with id {petId} volunteer with id {volunteerId}",
                 nickname,
