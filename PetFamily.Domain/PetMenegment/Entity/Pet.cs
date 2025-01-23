@@ -83,6 +83,11 @@ namespace PetFamily.Domain.PetMenegment.Entity
             _petPhotos.Add(petPhoto);
         }
 
+        public void DeletePetPhoto(PetPhoto petPhoto)
+        {
+            _petPhotos.Remove(petPhoto);
+        }
+
         public static Result<Pet, Error> Create(
             PetId id,
             Nickname nickname,

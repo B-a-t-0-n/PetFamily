@@ -21,6 +21,8 @@ using PetFamily.Application.Volunteers.AddPetPtotos;
 using PetFamily.Application.Volunteers.AddPetPtotos.Commands;
 using PetFamily.Application.Dtos;
 using PetFamily.API.Processors;
+using PetFamily.Application.Volunteers.DeletePetPhoto;
+using PetFamily.Application.Volunteers.DeletePetPhoto.Commands;
 
 namespace PetFamily.API.Controllers.Volunteer
 {
@@ -172,6 +174,29 @@ namespace PetFamily.API.Controllers.Volunteer
                 return result.Error.ToResponse();
 
             return Ok(result.Value);
+        }
+
+        [HttpDelete("{volunteerId:guid}/{petId:guid}/delete-pet-photo/{photoId:guid}")]
+        public async Task<ActionResult<Guid>> DeletePetPhoto(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromRoute] Guid photoId,
+            [FromServices] DeletePetPhotoHandler handler,
+            [FromServices] IValidator<DeletePetPhotoCommand> validator,
+            CancellationToken cancellationToken = default)
+        {
+            var command = new DeletePetPhotoCommand(volunteerId, petId, photoId);
+
+            var validationResult = await validator.ValidateAsync(command, cancellationToken);
+            if (validationResult.IsValid == false)
+                return validationResult.ToValidationErrorResponse();
+
+            var result = await handler.Handle(command, cancellationToken);
+
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            return Ok();
         }
     }
 }

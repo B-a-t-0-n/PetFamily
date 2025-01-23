@@ -4,6 +4,7 @@ using PetFamily.Application.Volunteers.AddPet;
 using PetFamily.Application.Volunteers.AddPetPtotos;
 using PetFamily.Application.Volunteers.Create;
 using PetFamily.Application.Volunteers.Delete;
+using PetFamily.Application.Volunteers.DeletePetPhoto;
 using PetFamily.Application.Volunteers.UpdateDetailsForAssistance;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
 using PetFamily.Application.Volunteers.UpdateSocialNetwork;
@@ -21,6 +22,7 @@ namespace PetFamily.Application
             services.AddScoped<DeleteVolunteerHandler>();
             services.AddScoped<AddPetHandler>();
             services.AddScoped<AddPetPhotosHandler>();
+            services.AddScoped<DeletePetPhotoHandler>();
 
             services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
 
