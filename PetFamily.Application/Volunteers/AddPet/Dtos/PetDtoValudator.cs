@@ -2,6 +2,7 @@
 using PetFamily.Application.Validation;
 using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.Shared.IDs;
 
 namespace PetFamily.Application.Volunteers.AddPet.Dtos
 {

@@ -8,23 +8,28 @@ using PetFamily.Domain.Shared;
 using PetFamily.Application.Volunteers.AddPet.Commands;
 using PetFamily.Application.Providers;
 using PetFamily.Application.Database;
+using PetFamily.Application.Species;
+using PetFamily.Domain.SpeciesMenegment.Entity;
 
 namespace PetFamily.Application.Volunteers.AddPet
 {
     public class AddPetHandler
     {
         private readonly IVolunteerRepository _volunteerRepository;
+        private readonly ISpeciesRepository _speciesRepository;
         private readonly ILogger<AddPetHandler> _logger;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IUnitOfWork _unitOfWork;
 
         public AddPetHandler(
             IVolunteerRepository volunteerRepository,
+            ISpeciesRepository speciesRepository,
             ILogger<AddPetHandler> logger,
             IDateTimeProvider dateTimeProvider,
             IUnitOfWork unitOfWork)
         {
             _volunteerRepository = volunteerRepository;
+            _speciesRepository = speciesRepository;
             _logger = logger;
             _dateTimeProvider = dateTimeProvider;
             _unitOfWork = unitOfWork;
@@ -42,9 +47,18 @@ namespace PetFamily.Application.Volunteers.AddPet
 
             var nickname = Nickname.Create(command.PetDto.Nickname).Value;
 
-            var speciesId = SpeciesId.Create(command.PetDto.SpeciesAndBreed.SpeciesId);
-            var speciesAndBreed = SpeciesAndBreed.Create(speciesId, command.PetDto.SpeciesAndBreed.BreedId).Value;
-            
+            var speciesResult = await _speciesRepository.GetById(
+                    SpeciesId.Create(command.PetDto.SpeciesAndBreed.SpeciesId), cancellationToken);
+
+            if (speciesResult.IsFailure)
+                return speciesResult.Error;
+
+            var breed = speciesResult.Value.breeds.FirstOrDefault(b => b.Id == command.PetDto.SpeciesAndBreed.BreedId);
+            if (breed is null)
+                return Errors.General.NotFound(command.PetDto.SpeciesAndBreed.BreedId);
+
+            var speciesAndBreed = SpeciesAndBreed.Create(speciesResult.Value.Id, command.PetDto.SpeciesAndBreed.BreedId).Value;
+
             var description = Description.Create(command.PetDto.Description).Value;
 
             var color = Color.Create(command.PetDto.Color).Value;
