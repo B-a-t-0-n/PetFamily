@@ -4,7 +4,8 @@ using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared.IDs;
 using PetFamily.Infrastucture.Repositories;
 using PetFamily.Domain.Shared;
-using PetFamily.Application.Volunteers.UpdateSocialNetwork.Requests;
+using PetFamily.Application.Volunteers.UpdateSocialNetwork.Commands;
+using PetFamily.Application.Database;
 
 namespace PetFamily.Application.Volunteers.UpdateSocialNetwork
 {
@@ -12,16 +13,22 @@ namespace PetFamily.Application.Volunteers.UpdateSocialNetwork
     {
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly ILogger<UpdateSocialNetworkHandler> _logger;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateSocialNetworkHandler(IVolunteerRepository volunteerRepository, ILogger<UpdateSocialNetworkHandler> logger)
+
+        public UpdateSocialNetworkHandler(
+            IVolunteerRepository volunteerRepository,
+            ILogger<UpdateSocialNetworkHandler> logger,
+            IUnitOfWork unitOfWork)
         {
             _volunteerRepository = volunteerRepository;
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result<Guid, Error>> Handle(UpdateSocialNetworkRequest request, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, Error>> Handle(UpdateSocialNetworkCommand command, CancellationToken cancellationToken = default)
         {
-            var id = VolunteerId.Create(request.Id);
+            var id = VolunteerId.Create(command.Id);
 
             var volunteerResult = await _volunteerRepository.GetById(id);
             if (volunteerResult.IsFailure)
@@ -29,9 +36,9 @@ namespace PetFamily.Application.Volunteers.UpdateSocialNetwork
 
             var socialNetworks = new List<SocialNetwork>();
 
-            if (request.SocialNetworkDto.SocialNetwork != null)
+            if (command.SocialNetworkDto.SocialNetwork != null)
             {
-                foreach (var socialnetwork in request.SocialNetworkDto.SocialNetwork)
+                foreach (var socialnetwork in command.SocialNetworkDto.SocialNetwork)
                 {
                     var socialNetwork = SocialNetwork.Create(socialnetwork.Name, socialnetwork.Link).Value;
 
@@ -39,11 +46,9 @@ namespace PetFamily.Application.Volunteers.UpdateSocialNetwork
                 }
             }
 
-            var volunteerSocialNetwork = new VolunteerSocialNetwork(socialNetworks);
+            volunteerResult.Value.UpdateSocialNetwork(socialNetworks);
 
-            volunteerResult.Value.UpdateSocialNetwork(volunteerSocialNetwork);
-
-            var rezult = await _volunteerRepository.Save(volunteerResult.Value, cancellationToken);
+            await _unitOfWork.SaveChanges(cancellationToken);
 
             _logger.LogInformation("updated social network volunteer {Surname} {Name} {Patronymic} with id {id}",
                 volunteerResult.Value.FullName.Surname,
@@ -51,7 +56,7 @@ namespace PetFamily.Application.Volunteers.UpdateSocialNetwork
                 volunteerResult.Value.FullName.Patronymic,
                 id.Value);
 
-            return rezult;
+            return id.Value;
         }
     }
 }

@@ -14,7 +14,8 @@ namespace PetFamily.Domain.PetMenegment.Entity
         //ef core
         private Pet(PetId id) : base(id) { }
 
-        private Pet(PetId id,
+        private Pet(
+            PetId id,
             Nickname nickname,
             SpeciesAndBreed speciesAndBreed,
             Description description,
@@ -28,7 +29,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
             bool isVaccinated,
             AssistanceStatus assistanceStatus,
             DateTime dateOfCreation,
-            PetDetailsForAssistance detailsForAssistance
+            ValueObjectList<DetailsForAssistance>? detailsForAssistance
             ) : base(id)
         {
             Nickname = nickname;
@@ -73,16 +74,22 @@ namespace PetFamily.Domain.PetMenegment.Entity
 
         public DateTime DateOfCreation { get; private set; }
 
-        public PetDetailsForAssistance DetailsForAssistance { get; private set; } = default!;
+        public ValueObjectList<DetailsForAssistance>? DetailsForAssistance { get; private set; } = default!;
 
         public IReadOnlyList<PetPhoto> PetPhotos => _petPhotos;
 
-        public void AddPet(PetPhoto petPhoto)
+        public void AddPetPhoto(PetPhoto petPhoto)
         {
             _petPhotos.Add(petPhoto);
         }
 
-        public static Result<Pet, Error> Create(PetId id,
+        public void DeletePetPhoto(PetPhoto petPhoto)
+        {
+            _petPhotos.Remove(petPhoto);
+        }
+
+        public static Result<Pet, Error> Create(
+            PetId id,
             Nickname nickname,
             SpeciesAndBreed speciesAndBreed,
             Description description,
@@ -96,7 +103,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
             bool isVaccinated,
             AssistanceStatus assistanceStatus,
             DateTime dateOfCreation,
-            PetDetailsForAssistance detailsForAssistance)
+            ValueObjectList<DetailsForAssistance>? detailsForAssistance)
         {
             var pet = new Pet(id,
                 nickname,

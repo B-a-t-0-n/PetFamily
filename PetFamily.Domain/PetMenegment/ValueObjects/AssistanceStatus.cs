@@ -6,8 +6,6 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
 {
     public class AssistanceStatus : ValueObject
     {
-        private static readonly AssistanceStatus[] _all = [NeedsHelp!, LookingForHome!, FoundAHouse!];
-
         private AssistanceStatus() { }
         private AssistanceStatus(string status)
         {
@@ -17,6 +15,8 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
         public static readonly AssistanceStatus NeedsHelp = new(nameof(NeedsHelp));
         public static readonly AssistanceStatus LookingForHome = new(nameof(LookingForHome));
         public static readonly AssistanceStatus FoundAHouse = new(nameof(FoundAHouse));
+
+        private static readonly AssistanceStatus[] _all = [NeedsHelp!, LookingForHome!, FoundAHouse!];
 
         public string Status { get; } = default!;
 

@@ -139,7 +139,7 @@ namespace PetFamily.Infrastucture.Configuration
             {
                 pb.ToJson();
 
-                pb.OwnsMany(d => d.DetailsForAssistance, db =>
+                pb.OwnsMany(d => d.Values, db =>
                 {
                     db.Property(i => i.Name)
                         .IsRequired()

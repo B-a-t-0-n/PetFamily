@@ -65,7 +65,7 @@ namespace PetFamily.Infrastucture.Configuration
             {
                 vb.ToJson();
 
-                vb.OwnsMany(s => s.DetailsForAssistance, sb =>
+                vb.OwnsMany(s => s.Values, sb =>
                 {
                     sb.Property(i => i.Name)
                         .IsRequired(false)
@@ -81,7 +81,7 @@ namespace PetFamily.Infrastucture.Configuration
             {
                 vb.ToJson();
 
-                vb.OwnsMany(s => s.SocialNetwork, sb =>
+                vb.OwnsMany(s => s.Values, sb =>
                 {
                     sb.Property(i => i.Name)
                         .IsRequired(false)

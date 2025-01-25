@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
+using PetFamily.Application.Database;
 using PetFamily.Application.Providers;
-using PetFamily.Infrastucture.Interceptors;
+using PetFamily.Application.Species;
 using PetFamily.Infrastucture.Options;
 using PetFamily.Infrastucture.Providers;
 using PetFamily.Infrastucture.Repositories;
@@ -17,6 +18,10 @@ namespace PetFamily.Infrastucture
         {
             services.AddScoped<ApplicationDbContext>();
             services.AddScoped<IVolunteerRepository, VolunteerRepository>();
+            services.AddScoped<ISpeciesRepository, SpeciesRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddTransient<IDateTimeProvider, DateTimeProvider>();
 
             services.AddMinio(configuration);
 

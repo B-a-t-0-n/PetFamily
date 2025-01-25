@@ -14,13 +14,14 @@ namespace PetFamily.Domain.PetMenegment.Entity
         //ef core
         private Volunteer(VolunteerId id) : base(id) { }
 
-        private Volunteer(VolunteerId id,
+        private Volunteer(
+            VolunteerId id,
             FullName fullName,
             Description description,
             YearsExperience yearsExperience,
             PhoneNumber phoneNumber,
-            VolunteerDetailsForAssistance? detailsForAssistance,
-            VolunteerSocialNetwork? socialNetwork
+            ValueObjectList<DetailsForAssistance>? detailsForAssistance,
+            ValueObjectList<SocialNetwork>? socialNetwork
             ) : base(id)
         {
             FullName = fullName;
@@ -39,9 +40,9 @@ namespace PetFamily.Domain.PetMenegment.Entity
 
         public PhoneNumber PhoneNumber { get; private set; } = default!;
 
-        public VolunteerSocialNetwork? SocialNetwork { get; private set; }
+        public ValueObjectList<SocialNetwork>? SocialNetwork { get; private set; }
 
-        public VolunteerDetailsForAssistance? DetailsForAssistance { get; private set; } = default!;
+        public ValueObjectList<DetailsForAssistance>? DetailsForAssistance { get; private set; } = default!;
 
         public IReadOnlyList<Pet> Pets => _pets;
 
@@ -57,25 +58,22 @@ namespace PetFamily.Domain.PetMenegment.Entity
             _pets
             .Count(p => p.AssistanceStatus == AssistanceStatus.NeedsHelp);
 
-        public void AddPet(Pet pet)
-        {
-            _pets.Add(pet);
-        }
-
-        public static Result<Volunteer, Error> Create(VolunteerId id,
+        public static Result<Volunteer, Error> Create(
+            VolunteerId id,
             FullName fullName,
             Description description,
             YearsExperience yearsExperience,
             PhoneNumber phoneNumber,
-            VolunteerDetailsForAssistance? detailsForAssistance,
-            VolunteerSocialNetwork? socialNetwork)
+            ValueObjectList<DetailsForAssistance>? detailsForAssistance,
+            ValueObjectList<SocialNetwork>? socialNetwork)
         {
             var volunteer = new Volunteer(id, fullName!, description, yearsExperience, phoneNumber!, detailsForAssistance, socialNetwork);
 
             return volunteer;
         }
 
-        public void UpdateMainInfo(FullName fullName,
+        public void UpdateMainInfo(
+            FullName fullName,
             Description description,
             YearsExperience yearsExperience,
             PhoneNumber phoneNumber)
@@ -86,14 +84,20 @@ namespace PetFamily.Domain.PetMenegment.Entity
             PhoneNumber = phoneNumber;
         }
 
-        public void UpdateSocialNetwork(VolunteerSocialNetwork socialNetwork)
+        public void UpdateSocialNetwork(ValueObjectList<SocialNetwork>? socialNetwork)
         {
             SocialNetwork = socialNetwork;
         }
 
-        public void UpdateDetailsForAssistance(VolunteerDetailsForAssistance detailsForAssistance)
+        public void UpdateDetailsForAssistance(ValueObjectList<DetailsForAssistance>? detailsForAssistance)
         {
             DetailsForAssistance = detailsForAssistance;
+        }
+
+        public UnitResult<Error> AddPet(Pet pet)
+        {
+            _pets.Add(pet);
+            return Result.Success<Error>();
         }
 
         public void Delete()
