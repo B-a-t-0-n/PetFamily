@@ -1,0 +1,16 @@
+﻿using PetFamily.Application.Dtos;
+using PetFamily.Application.Volunteers.UpdateMainInfo.Commands;
+using PetFamily.Domain.PetMenegment.ValueObjects;
+
+namespace PetFamily.API.Controllers.Modules.Requests
+{
+    public record UpdateMainInfoRequest(
+        FullNameDto FullName,
+        string? Description,
+        int YearsExperience,
+        string PhoneNumber)
+    {
+        public UpdateMainInfoCommand ToCommand(Guid volunteerId) =>
+            new(volunteerId, FullName, Description, YearsExperience, PhoneNumber);
+    }
+}

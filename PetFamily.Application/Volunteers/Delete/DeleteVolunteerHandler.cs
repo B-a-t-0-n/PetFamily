@@ -1,13 +1,12 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using PetFamily.Application.Volunteers.UpdateDetailsForAssistance.Commands;
-using PetFamily.Application.Volunteers.UpdateDetailsForAssistance;
-using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared.IDs;
 using PetFamily.Infrastucture.Repositories;
 using PetFamily.Domain.Shared;
 using PetFamily.Application.Volunteers.Delete.Commands;
 using PetFamily.Application.Database;
+using FluentValidation;
+using PetFamily.Application.Extentions;
 
 namespace PetFamily.Application.Volunteers.Delete
 {
@@ -15,25 +14,34 @@ namespace PetFamily.Application.Volunteers.Delete
     {
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly ILogger<DeleteVolunteerHandler> _logger;
+        private readonly IValidator<DeleteVolunteerCommand> _validator;
         private readonly IUnitOfWork _unitOfWork;
 
         public DeleteVolunteerHandler(
             IVolunteerRepository volunteerRepository,
             ILogger<DeleteVolunteerHandler> logger,
+            IValidator<DeleteVolunteerCommand> validator,
             IUnitOfWork unitOfWork)
         {
             _volunteerRepository = volunteerRepository;
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _validator = validator;
         }
 
-        public async Task<Result<Guid, Error>> Handle(DeleteVolunteerCommand command, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, ErrorList>> Handle(DeleteVolunteerCommand command, CancellationToken cancellationToken = default)
         {
+            var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+            if (validationResult.IsValid == false)
+            {
+                return validationResult.ToErrorList();
+            }
+
             var id = VolunteerId.Create(command.Id);
 
             var volunteerResult = await _volunteerRepository.GetById(id);
             if (volunteerResult.IsFailure)
-                return volunteerResult.Error;
+                return volunteerResult.Error.ToErrorList();
 
             volunteerResult.Value.Delete();
             await _unitOfWork.SaveChanges(cancellationToken);

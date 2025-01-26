@@ -1,6 +1,6 @@
-﻿using PetFamily.Application.Volunteers.UpdateSocialNetwork.Dtos;
+﻿using PetFamily.Application.Dtos;
 
 namespace PetFamily.Application.Volunteers.UpdateSocialNetwork.Commands
 {
-    public record UpdateSocialNetworkCommand(Guid Id, UpdateSocialNetworkDto SocialNetworkDto);
+    public record UpdateSocialNetworkCommand(Guid Id, IEnumerable<SocialNetworkDto> SocialNetwork);
 }

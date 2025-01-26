@@ -6,23 +6,23 @@ namespace PetFamily.API.Response
 
     public class Envelope
     {
-        private Envelope(object? rezult, IEnumerable<ResponseError> errors)
+        private Envelope(object? rezult, ErrorList? errors)
         {
             Rezult = rezult;
-            Errors = errors.ToList();
+            Errors = errors;
             TimeGenerated = DateTime.Now;
         }
 
         public object? Rezult { get; }
 
-        public List<ResponseError> Errors { get; }
+        public ErrorList? Errors { get; }
 
         public DateTime TimeGenerated { get; }
 
         public static Envelope Ok(object? rezult = null) =>
-            new(rezult, []);
+            new(rezult, null);
 
-        public static Envelope Error(IEnumerable<ResponseError> errors) => 
+        public static Envelope Error(ErrorList errors) => 
             new(null, errors);
 
     }

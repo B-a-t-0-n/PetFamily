@@ -9,7 +9,8 @@ using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Application.Providers;
 using PetFamily.Domain.PetMenegment.Entity;
 using PetFamily.Application.Database;
-using System.Reflection;
+using FluentValidation;
+using PetFamily.Application.Extentions;
 
 namespace PetFamily.Application.Volunteers.AddPetPtotos
 {
@@ -20,37 +21,46 @@ namespace PetFamily.Application.Volunteers.AddPetPtotos
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly IFileProvider _fileProvider;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IValidator<AddPetPhotosCommand> _validator;
         private readonly ILogger<AddPetPhotosHandler> _logger;
 
         public AddPetPhotosHandler(
             IVolunteerRepository volunteerRepository,
             IUnitOfWork unitOfWork,
             ILogger<AddPetPhotosHandler> logger,
-            IFileProvider fileProvider)
+            IFileProvider fileProvider,
+            IValidator<AddPetPhotosCommand> validator)
         {
             _volunteerRepository = volunteerRepository;
             _logger = logger;
             _unitOfWork = unitOfWork;
             _fileProvider = fileProvider;
+            _validator = validator;
         }
 
-        public async Task<Result<IReadOnlyList<PhotoPath>, Error>> Handle(AddPetPhotosCommand command, CancellationToken cancellationToken = default)
+        public async Task<Result<IReadOnlyList<PhotoPath>, ErrorList>> Handle(AddPetPhotosCommand command, CancellationToken cancellationToken = default)
         {
             var transaction = await _unitOfWork.BeginTransaction(cancellationToken);
 
             try
             {
+                var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+                if (validationResult.IsValid == false)
+                {
+                    return validationResult.ToErrorList();
+                }
+
                 var volunteerResult = await _volunteerRepository.GetById(
                     VolunteerId.Create(command.VolunteerId), cancellationToken);
 
                 if (volunteerResult.IsFailure)
-                    return volunteerResult.Error;
+                    return volunteerResult.Error.ToErrorList();
 
                 var petId = PetId.Create(command.PetId);
 
                 var pet = volunteerResult.Value.Pets.FirstOrDefault(p => p.Id == petId);
                 if (pet is null)
-                    return Errors.General.NotFound(petId);
+                    return Errors.General.NotFound(petId).ToErrorList();
 
                 List<FileData> filesData = [];
                 foreach (var file in command.Files)
@@ -59,7 +69,7 @@ namespace PetFamily.Application.Volunteers.AddPetPtotos
 
                     var photoPathResult = PhotoPath.Create(Guid.NewGuid().ToString(), extension);
                     if (photoPathResult.IsFailure)
-                        return photoPathResult.Error;
+                        return photoPathResult.Error.ToErrorList();
 
                     var fileContent = new FileData(file.Content, photoPathResult.Value, BUCKET_NAME);
 
@@ -67,7 +77,7 @@ namespace PetFamily.Application.Volunteers.AddPetPtotos
 
                     var photoResult = PetPhoto.Create(petPhotoId, photoPathResult.Value, false);
                     if (photoResult.IsFailure)
-                        return photoResult.Error;
+                        return photoResult.Error.ToErrorList();
 
                     pet.AddPetPhoto(photoResult.Value);
 
@@ -79,7 +89,7 @@ namespace PetFamily.Application.Volunteers.AddPetPtotos
                 var uploadResult = await _fileProvider.UploadFiles(filesData, cancellationToken);
 
                 if (uploadResult.IsFailure)
-                    return uploadResult.Error;
+                    return uploadResult.Error.ToErrorList();
 
                 transaction.Commit();
 
@@ -91,7 +101,7 @@ namespace PetFamily.Application.Volunteers.AddPetPtotos
                     "Can not add pet photos to pet - {id} in transaction", command.PetId);
 
                 transaction.Rollback();
-                return Error.Failure("Can not add pet photos to pet - {id}", "pet.petPhotos.failure");
+                return Error.Failure("Can not add pet photos to pet - {id}", "pet.petPhotos.failure").ToErrorList();
             }
         }
     }

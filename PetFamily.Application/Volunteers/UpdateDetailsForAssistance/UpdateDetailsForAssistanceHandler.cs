@@ -7,6 +7,9 @@ using PetFamily.Infrastucture.Repositories;
 using PetFamily.Domain.Shared;
 using PetFamily.Application.Volunteers.UpdateDetailsForAssistance.Commands;
 using PetFamily.Application.Database;
+using FluentValidation;
+using PetFamily.Application.Volunteers.UpdateMainInfo.Commands;
+using PetFamily.Application.Extentions;
 
 namespace PetFamily.Application.Volunteers.UpdateDetailsForAssistance
 {
@@ -14,31 +17,40 @@ namespace PetFamily.Application.Volunteers.UpdateDetailsForAssistance
     {
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly ILogger<UpdateDetailsForAssistanceHandler> _logger;
+        private readonly IValidator<UpdateDetailsForAssistanceCommand> _validator;
         private readonly IUnitOfWork _unitOfWork;
 
         public UpdateDetailsForAssistanceHandler(
             IVolunteerRepository volunteerRepository,
             ILogger<UpdateDetailsForAssistanceHandler> logger,
+            IValidator<UpdateDetailsForAssistanceCommand> validator,
             IUnitOfWork unitOfWork)
         {
             _volunteerRepository = volunteerRepository;
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _validator = validator;
         }
 
-        public async Task<Result<Guid, Error>> Handle(UpdateDetailsForAssistanceCommand command, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, ErrorList>> Handle(UpdateDetailsForAssistanceCommand command, CancellationToken cancellationToken = default)
         {
+            var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+            if (validationResult.IsValid == false)
+            {
+                return validationResult.ToErrorList();
+            }
+
             var id = VolunteerId.Create(command.Id);
 
             var volunteerResult = await _volunteerRepository.GetById(id);
             if (volunteerResult.IsFailure)
-                return volunteerResult.Error;
+                return volunteerResult.Error.ToErrorList();
 
             var detailsForAssistanceList = new List<DetailsForAssistance>();
 
-            if (command.DetailsForAssistanceDto.DetailsForAssistance != null)
+            if (command.DetailsForAssistance != null)
             {
-                foreach (var detailsForAssistanceItem in command.DetailsForAssistanceDto.DetailsForAssistance)
+                foreach (var detailsForAssistanceItem in command.DetailsForAssistance)
                 {
                     var detailsForAssistance = DetailsForAssistance.Create(detailsForAssistanceItem.Name, detailsForAssistanceItem.Description).Value;
 

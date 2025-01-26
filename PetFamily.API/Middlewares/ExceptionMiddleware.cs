@@ -1,5 +1,6 @@
 ﻿using PetFamily.API.Middlewares;
 using PetFamily.API.Response;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.API.Middlewares
 {
@@ -24,8 +25,8 @@ namespace PetFamily.API.Middlewares
             {
                 _logger.LogError(ex, ex.Message);
 
-                var responseError = new ResponseError("server.internal", ex.Message, null);
-                var envelope = Envelope.Error([responseError]);
+                var error = Error.Failure("server.internal", ex.Message);
+                var envelope = Envelope.Error(error);
 
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;

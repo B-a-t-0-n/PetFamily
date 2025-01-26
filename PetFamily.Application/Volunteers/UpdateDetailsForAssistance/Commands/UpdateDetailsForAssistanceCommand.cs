@@ -1,6 +1,6 @@
-﻿using PetFamily.Application.Volunteers.UpdateDetailsForAssistance.Dtos;
+﻿using PetFamily.Application.Dtos;
 
 namespace PetFamily.Application.Volunteers.UpdateDetailsForAssistance.Commands
 {
-    public record UpdateDetailsForAssistanceCommand(Guid Id, UpdateDetailsForAssistanceDto DetailsForAssistanceDto);
+    public record UpdateDetailsForAssistanceCommand(Guid Id, IEnumerable<DetailsForAssistanceDto> DetailsForAssistance);
 }
