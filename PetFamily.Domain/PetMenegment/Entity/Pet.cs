@@ -165,5 +165,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
 
             return Result.Success<Error>();
         }
+
+        public void Move(SerialNumber newSerialNumber) => SerialNumber = newSerialNumber;
     }
 }

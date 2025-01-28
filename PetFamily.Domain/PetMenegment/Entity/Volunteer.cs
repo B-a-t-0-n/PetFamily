@@ -125,6 +125,8 @@ namespace PetFamily.Domain.PetMenegment.Entity
             if (moveResult.IsFailure)
                 return moveResult.Error;
 
+            pet.Move(newSerialNumber);
+
             return Result.Success<Error>();
         }
 
@@ -133,7 +135,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
             if (newSerialNumber.Value <= _pets.Count)
                 return newSerialNumber;
 
-            var lasrSerialNumber = SerialNumber.Create(_pets.Count - 1);
+            var lasrSerialNumber = SerialNumber.Create(_pets.Count);
             if(lasrSerialNumber.IsFailure)
                 return lasrSerialNumber.Error;
 
