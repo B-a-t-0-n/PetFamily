@@ -1,6 +1,6 @@
 ﻿using PetFamily.Application.Dtos;
 using PetFamily.Application.Volunteers.UpdateSocialNetwork.Commands;
-using PetFamily.Domain.PetMenegment.ValueObjects;
+
 
 namespace PetFamily.API.Controllers.Modules.Requests
 {
@@ -8,5 +8,5 @@ namespace PetFamily.API.Controllers.Modules.Requests
     {
         public UpdateSocialNetworkCommand ToCommand(Guid volunteerId) =>
             new(volunteerId, SocialNetwork);
-    }
+    }    
 }
