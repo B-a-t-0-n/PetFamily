@@ -49,12 +49,14 @@ namespace PetFamily.Domain.PetMenegment.Entity
         }
 
         public Nickname Nickname { get; private set; } = default!;
-        
+
         public SpeciesAndBreed SpeciesAndBreed { get; private set; } = default!;
 
         public Description Description { get; private set; } = default!;
 
         public Color Color { get; private set; } = default!;
+
+        public SerialNumber SerialNumber { get; private set; } = default!;
 
         public HealthInformation HealthInformation { get; private set; } = default!;
 
@@ -113,7 +115,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
                 healthInformation,
                 address,
                 size,
-                phoneNumber, 
+                phoneNumber,
                 isCastrated,
                 dateOfBirth,
                 isVaccinated,
@@ -139,5 +141,31 @@ namespace PetFamily.Domain.PetMenegment.Entity
                 _isDeleted = false;
             }
         }
+
+        public void SetSerialNumber(SerialNumber serialNumber) => SerialNumber = serialNumber;
+
+        public UnitResult<Error> MoveForward()
+        {
+            var newSerialNumber = SerialNumber.Forward();
+            if (newSerialNumber.IsFailure)
+                return newSerialNumber.Error;
+
+            SerialNumber = newSerialNumber.Value;
+
+            return Result.Success<Error>();
+        }
+
+        public UnitResult<Error> MoveBack()
+        {
+            var newSerialNumber = SerialNumber.Back();
+            if (newSerialNumber.IsFailure)
+                return newSerialNumber.Error;
+
+            SerialNumber = newSerialNumber.Value;
+
+            return Result.Success<Error>();
+        }
+
+        public void Move(SerialNumber newSerialNumber) => SerialNumber = newSerialNumber;
     }
 }

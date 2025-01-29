@@ -9,7 +9,8 @@ using PetFamily.Application.Volunteers.AddPet.Commands;
 using PetFamily.Application.Providers;
 using PetFamily.Application.Database;
 using PetFamily.Application.Species;
-using PetFamily.Domain.SpeciesMenegment.Entity;
+using FluentValidation;
+using PetFamily.Application.Extentions;
 
 namespace PetFamily.Application.Volunteers.AddPet
 {
@@ -19,6 +20,7 @@ namespace PetFamily.Application.Volunteers.AddPet
         private readonly ISpeciesRepository _speciesRepository;
         private readonly ILogger<AddPetHandler> _logger;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly IValidator<AddPetCommand> _validator;
         private readonly IUnitOfWork _unitOfWork;
 
         public AddPetHandler(
@@ -26,63 +28,71 @@ namespace PetFamily.Application.Volunteers.AddPet
             ISpeciesRepository speciesRepository,
             ILogger<AddPetHandler> logger,
             IDateTimeProvider dateTimeProvider,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IValidator<AddPetCommand> validator)
         {
             _volunteerRepository = volunteerRepository;
             _speciesRepository = speciesRepository;
             _logger = logger;
             _dateTimeProvider = dateTimeProvider;
             _unitOfWork = unitOfWork;
+            _validator = validator;
         }
 
-        public async Task<Result<Guid, Error>> Handle(AddPetCommand command, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, ErrorList>> Handle(AddPetCommand command, CancellationToken cancellationToken = default)
         {
+            var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+            if (validationResult.IsValid == false)
+            {
+                return validationResult.ToErrorList();
+            }
+
             var volunteerResult = await _volunteerRepository.GetById(
                 VolunteerId.Create(command.VolunteerId), cancellationToken);
 
             if (volunteerResult.IsFailure)
-                return volunteerResult.Error;
+                return volunteerResult.Error.ToErrorList();
 
             var petId = PetId.NewPetId();
 
-            var nickname = Nickname.Create(command.PetDto.Nickname).Value;
+            var nickname = Nickname.Create(command.Nickname).Value;
 
             var speciesResult = await _speciesRepository.GetById(
-                    SpeciesId.Create(command.PetDto.SpeciesAndBreed.SpeciesId), cancellationToken);
+                    SpeciesId.Create(command.SpeciesAndBreed.SpeciesId), cancellationToken);
 
             if (speciesResult.IsFailure)
-                return speciesResult.Error;
+                return speciesResult.Error.ToErrorList();
 
-            var breed = speciesResult.Value.breeds.FirstOrDefault(b => b.Id == command.PetDto.SpeciesAndBreed.BreedId);
+            var breed = speciesResult.Value.breeds.FirstOrDefault(b => b.Id == command.SpeciesAndBreed.BreedId);
             if (breed is null)
-                return Errors.General.NotFound(command.PetDto.SpeciesAndBreed.BreedId);
+                return Errors.General.NotFound(command.SpeciesAndBreed.BreedId).ToErrorList();
 
-            var speciesAndBreed = SpeciesAndBreed.Create(speciesResult.Value.Id, command.PetDto.SpeciesAndBreed.BreedId).Value;
+            var speciesAndBreed = SpeciesAndBreed.Create(speciesResult.Value.Id, command.SpeciesAndBreed.BreedId).Value;
 
-            var description = Description.Create(command.PetDto.Description).Value;
+            var description = Description.Create(command.Description).Value;
 
-            var color = Color.Create(command.PetDto.Color).Value;
+            var color = Color.Create(command.Color).Value;
 
-            var healthInformation = HealthInformation.Create(command.PetDto.HealthInformation).Value;
+            var healthInformation = HealthInformation.Create(command.HealthInformation).Value;
 
             var address = Address.Create(
-                command.PetDto.Address.City,
-                command.PetDto.Address.Street,
-                command.PetDto.Address.House,
-                command.PetDto.Address.Flat,
-                command.PetDto.Address.ApartmentNumber).Value;
+                command.Address.City,
+                command.Address.Street,
+                command.Address.House,
+                command.Address.Flat,
+                command.Address.ApartmentNumber).Value;
 
-            var size = Size.Create(command.PetDto.Size.Height, command.PetDto.Size.Weight).Value;
+            var size = Size.Create(command.Size.Height, command.Size.Weight).Value;
 
-            var phoneNumber = PhoneNumber.Create(command.PetDto.PhoneNumber).Value;
+            var phoneNumber = PhoneNumber.Create(command.PhoneNumber).Value;
 
-            var assistanceStatus = AssistanceStatus.Create(command.PetDto.AssistanceStatus).Value;
+            var assistanceStatus = AssistanceStatus.Create(command.AssistanceStatus).Value;
 
             var detailsForAssistances = new List<DetailsForAssistance>();
 
-            if (command.PetDto.DetailsForAssistance != null)
+            if (command.DetailsForAssistance != null)
             {
-                foreach (var detailsForAssistance in command.PetDto.DetailsForAssistance)
+                foreach (var detailsForAssistance in command.DetailsForAssistance)
                 {
                     var value = DetailsForAssistance.Create(
                         detailsForAssistance.Name,
@@ -102,15 +112,15 @@ namespace PetFamily.Application.Volunteers.AddPet
                 address,
                 size,
                 phoneNumber, 
-                command.PetDto.IsCastrated,
-                command.PetDto.DateOfBirth,
-                command.PetDto.IsVaccinated,
+                command.IsCastrated,
+                command.DateOfBirth,
+                command.IsVaccinated,
                 assistanceStatus,
                 _dateTimeProvider.UtcNow,
                 detailsForAssistances);
 
             if (petResult.IsFailure)
-                return petResult.Error;
+                return petResult.Error.ToErrorList();
 
             volunteerResult.Value.AddPet(petResult.Value);
 

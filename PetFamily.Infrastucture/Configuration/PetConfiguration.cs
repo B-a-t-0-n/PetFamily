@@ -29,6 +29,15 @@ namespace PetFamily.Infrastucture.Configuration
                     .HasColumnName("nickname");
             });
 
+            builder.ComplexProperty(p => p.SerialNumber, pb =>
+            {
+                pb.IsRequired(true);
+
+                pb.Property(n => n.Value)
+                    .IsRequired(true)
+                    .HasColumnName("serial_number");
+            });
+
             builder.ComplexProperty(p => p.SpeciesAndBreed, pb =>
             {
                 pb.IsRequired();

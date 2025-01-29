@@ -3,26 +3,23 @@ using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.Application.Volunteers.Create;
 using PetFamily.Application.Volunteers.Create.Commands;
-using PetFamily.Application.Volunteers.UpdateDetailsForAssistance.Dtos;
 using PetFamily.Application.Volunteers.UpdateDetailsForAssistance.Commands;
 using PetFamily.Application.Volunteers.UpdateDetailsForAssistance;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
-using PetFamily.Application.Volunteers.UpdateMainInfo.Dtos;
 using PetFamily.Application.Volunteers.UpdateMainInfo.Commands;
 using PetFamily.Application.Volunteers.UpdateSocialNetwork;
-using PetFamily.Application.Volunteers.UpdateSocialNetwork.Dtos;
 using PetFamily.Application.Volunteers.UpdateSocialNetwork.Commands;
 using PetFamily.Application.Volunteers.Delete;
 using PetFamily.Application.Volunteers.Delete.Commands;
 using PetFamily.Application.Volunteers.AddPet;
 using PetFamily.Application.Volunteers.AddPet.Commands;
-using PetFamily.Application.Volunteers.AddPet.Dtos;
 using PetFamily.Application.Volunteers.AddPetPtotos;
 using PetFamily.Application.Volunteers.AddPetPtotos.Commands;
 using PetFamily.Application.Dtos;
 using PetFamily.API.Processors;
 using PetFamily.Application.Volunteers.DeletePetPhoto;
 using PetFamily.Application.Volunteers.DeletePetPhoto.Commands;
+using PetFamily.API.Controllers.Modules.Requests;
 
 namespace PetFamily.API.Controllers.Volunteer
 {
@@ -31,10 +28,12 @@ namespace PetFamily.API.Controllers.Volunteer
         [HttpPost]
         public async Task<ActionResult<Guid>> Create(
             [FromServices] CreateVolunteerHandler handler,
-            [FromBody] CreateVolunteerCommand request,
+            [FromBody] CreateVolunteerRequest request,
             CancellationToken cancellationToken = default)
         {
-            var result = await handler.Handle(request, cancellationToken);
+            var command = request.ToCommand();
+
+            var result = await handler.Handle(command, cancellationToken);
 
             if (result.IsFailure)
                 return result.Error.ToResponse();
@@ -46,15 +45,10 @@ namespace PetFamily.API.Controllers.Volunteer
         public async Task<ActionResult<Guid>> Update(
             [FromRoute] Guid id,
             [FromServices] UpdateMainInfoHandler handler,
-            [FromBody] UpdateMainInfoDto dto,
-            [FromServices] IValidator<UpdateMainInfoCommand> validator,
+            [FromBody] UpdateMainInfoRequest request,
             CancellationToken cancellationToken = default)
         {
-            var command = new UpdateMainInfoCommand(id, dto);
-
-            var validationResult = await validator.ValidateAsync(command, cancellationToken);
-            if (validationResult.IsValid == false)
-                return validationResult.ToValidationErrorResponse();
+            var command = request.ToCommand(id);
 
             var result = await handler.Handle(command, cancellationToken);
 
@@ -68,15 +62,10 @@ namespace PetFamily.API.Controllers.Volunteer
         public async Task<ActionResult<Guid>> Update(
             [FromRoute] Guid id,
             [FromServices] UpdateSocialNetworkHandler handler,
-            [FromBody] UpdateSocialNetworkDto dto,
-            [FromServices] IValidator<UpdateSocialNetworkCommand> validator,
+            [FromBody] UpdateSocialNetworkRequest request,
             CancellationToken cancellationToken = default)
         {
-            var command = new UpdateSocialNetworkCommand(id, dto);
-
-            var validationResult = await validator.ValidateAsync(command, cancellationToken);
-            if (validationResult.IsValid == false)
-                return validationResult.ToValidationErrorResponse();
+            var command = request.ToCommand(id);
 
             var result = await handler.Handle(command, cancellationToken);
 
@@ -90,15 +79,10 @@ namespace PetFamily.API.Controllers.Volunteer
         public async Task<ActionResult<Guid>> Update(
             [FromRoute] Guid id,
             [FromServices] UpdateDetailsForAssistanceHandler handler,
-            [FromBody] UpdateDetailsForAssistanceDto dto,
-            [FromServices] IValidator<UpdateDetailsForAssistanceCommand> validator,
+            [FromBody] UpdateDetailsForAssistanceRequest request,
             CancellationToken cancellationToken = default)
         {
-            var command = new UpdateDetailsForAssistanceCommand(id, dto);
-
-            var validationResult = await validator.ValidateAsync(command, cancellationToken);
-            if (validationResult.IsValid == false)
-                return validationResult.ToValidationErrorResponse();
+            var command = request.ToCommand(id);
 
             var result = await handler.Handle(command, cancellationToken);
 
@@ -112,14 +96,9 @@ namespace PetFamily.API.Controllers.Volunteer
         public async Task<ActionResult<Guid>> Delete(
             [FromRoute] Guid id,
             [FromServices] DeleteVolunteerHandler handler,
-            [FromServices] IValidator<DeleteVolunteerCommand> validator,
             CancellationToken cancellationToken = default)
         {
             var command = new DeleteVolunteerCommand(id);
-
-            var validationResult = await validator.ValidateAsync(command, cancellationToken);
-            if (validationResult.IsValid == false)
-                return validationResult.ToValidationErrorResponse();
 
             var result = await handler.Handle(command, cancellationToken);
 
@@ -133,15 +112,10 @@ namespace PetFamily.API.Controllers.Volunteer
         public async Task<ActionResult<Guid>> AddPet(
             [FromRoute] Guid id,
             [FromServices] AddPetHandler handler,
-            [FromBody] PetDto dto,
-            [FromServices] IValidator<AddPetCommand> validator,
+            [FromBody] AddPetRequest request,
             CancellationToken cancellationToken = default)
         {
-            var command = new AddPetCommand(id, dto);
-
-            var validationResult = await validator.ValidateAsync(command, cancellationToken);
-            if (validationResult.IsValid == false)
-                return validationResult.ToValidationErrorResponse();
+            var command = request.ToCommand(id);
 
             var result = await handler.Handle(command, cancellationToken);
 
@@ -157,17 +131,12 @@ namespace PetFamily.API.Controllers.Volunteer
             [FromRoute] Guid petId,
             [FromForm]IFormFileCollection files,
             [FromServices] AddPetPhotosHandler handler,
-            [FromServices] IValidator<AddPetPhotosCommand> validator,
             CancellationToken cancellationToken = default)
         {
             await using var fileProcessor = new FormFileProcessor();
             var fileDtos = fileProcessor.Process(files);
 
             var command = new AddPetPhotosCommand(volunteerId, petId, fileDtos);
-
-            var validationResult = await validator.ValidateAsync(command, cancellationToken);
-            if (validationResult.IsValid == false)
-                return validationResult.ToValidationErrorResponse();
 
             var result = await handler.Handle(command, cancellationToken);
             if (result.IsFailure)
@@ -182,14 +151,9 @@ namespace PetFamily.API.Controllers.Volunteer
             [FromRoute] Guid petId,
             [FromRoute] Guid photoId,
             [FromServices] DeletePetPhotoHandler handler,
-            [FromServices] IValidator<DeletePetPhotoCommand> validator,
             CancellationToken cancellationToken = default)
         {
             var command = new DeletePetPhotoCommand(volunteerId, petId, photoId);
-
-            var validationResult = await validator.ValidateAsync(command, cancellationToken);
-            if (validationResult.IsValid == false)
-                return validationResult.ToValidationErrorResponse();
 
             var result = await handler.Handle(command, cancellationToken);
 

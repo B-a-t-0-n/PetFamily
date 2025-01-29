@@ -1,7 +1,10 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Database;
+using PetFamily.Application.Extentions;
 using PetFamily.Application.Volunteers.Create.Commands;
+using PetFamily.Application.Volunteers.UpdateMainInfo.Commands;
 using PetFamily.Domain.PetMenegment.Entity;
 using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared;
@@ -14,20 +17,29 @@ namespace PetFamily.Application.Volunteers.Create
     {
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly ILogger<CreateVolunteerHandler> _logger;
+        private readonly IValidator<CreateVolunteerCommand> _validator;
         private readonly IUnitOfWork _unitOfWork;
 
         public CreateVolunteerHandler(
             IVolunteerRepository volunteerRepository,
             ILogger<CreateVolunteerHandler> logger,
+            IValidator<CreateVolunteerCommand> validator,
             IUnitOfWork unitOfWork) 
         {
             _volunteerRepository = volunteerRepository;
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _validator = validator;
         }
 
-        public async Task<Result<Guid, Error>> Handle(CreateVolunteerCommand command, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, ErrorList>> Handle(CreateVolunteerCommand command, CancellationToken cancellationToken = default)
         {
+            var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+            if (validationResult.IsValid == false)
+            {
+                return validationResult.ToErrorList();
+            }
+
             var volunteerId = VolunteerId.NewVolunteerId();
 
             var fullName = FullName.Create(command.FullName.Name, command.FullName.Surname, command.FullName.Patronymic).Value;
@@ -71,7 +83,7 @@ namespace PetFamily.Application.Volunteers.Create
                 socialNetworks);
 
             if (volunteerResult.IsFailure)
-                return volunteerResult.Error;
+                return volunteerResult.Error.ToErrorList();
 
             await _volunteerRepository.Add(volunteerResult.Value, cancellationToken);
             await _unitOfWork.SaveChanges(cancellationToken);

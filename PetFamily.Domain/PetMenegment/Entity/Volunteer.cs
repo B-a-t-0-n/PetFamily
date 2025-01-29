@@ -96,7 +96,80 @@ namespace PetFamily.Domain.PetMenegment.Entity
 
         public UnitResult<Error> AddPet(Pet pet)
         {
+            var serialNumberResult = SerialNumber.Create(_pets.Count + 1);
+            if (serialNumberResult.IsFailure)
+            {
+                return serialNumberResult.Error;
+            }
+
+            pet.SetSerialNumber(serialNumberResult.Value);
+
             _pets.Add(pet);
+            return Result.Success<Error>();
+        }
+
+        public UnitResult<Error> MovePet(Pet pet, SerialNumber newSerialNumber)
+        {
+            var currentSerialNumber = pet.SerialNumber;
+
+            if (currentSerialNumber == newSerialNumber || _pets.Count == 1)
+                return Result.Success<Error>();
+
+            var adjustedSerialNumber = AdjustNewSerialNumberIfOutOfRange(newSerialNumber);
+            if (adjustedSerialNumber.IsFailure)
+                return adjustedSerialNumber.Error;
+
+            newSerialNumber = adjustedSerialNumber.Value;
+
+            var moveResult = MovePetBetweenSerialNumbers(newSerialNumber, currentSerialNumber);
+            if (moveResult.IsFailure)
+                return moveResult.Error;
+
+            pet.Move(newSerialNumber);
+
+            return Result.Success<Error>();
+        }
+
+        private Result<SerialNumber, Error> AdjustNewSerialNumberIfOutOfRange(SerialNumber newSerialNumber)
+        {
+            if (newSerialNumber.Value <= _pets.Count)
+                return newSerialNumber;
+
+            var lasrSerialNumber = SerialNumber.Create(_pets.Count);
+            if(lasrSerialNumber.IsFailure)
+                return lasrSerialNumber.Error;
+
+            return lasrSerialNumber.Value;
+        }
+
+        private UnitResult<Error> MovePetBetweenSerialNumbers(SerialNumber newSerialNumber, SerialNumber currentSerialNumber)
+        {
+            if(newSerialNumber.Value < currentSerialNumber.Value)
+            {
+                var petsToMove = _pets
+                    .Where(p => p.SerialNumber.Value >= newSerialNumber.Value && p.SerialNumber.Value < currentSerialNumber.Value);
+
+                foreach(var petToMove in petsToMove)
+                {
+                    var result = petToMove.MoveForward();
+                    if (result.IsFailure)
+                        return result.Error;
+                }
+ 
+            }
+            else if(newSerialNumber.Value > currentSerialNumber.Value)
+            {
+                var petsToMove = _pets
+                    .Where(p => p.SerialNumber.Value > currentSerialNumber.Value && p.SerialNumber.Value <= newSerialNumber.Value);
+
+                foreach (var petToMove in petsToMove)
+                {
+                    var result = petToMove.MoveBack();
+                    if (result.IsFailure)
+                        return result.Error;
+                }
+            }
+
             return Result.Success<Error>();
         }
 

@@ -1,6 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Database;
+using PetFamily.Application.Extentions;
 using PetFamily.Application.Volunteers.UpdateMainInfo.Commands;
 using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared;
@@ -13,36 +15,45 @@ namespace PetFamily.Application.Volunteers.UpdateMainInfo
     {
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly ILogger<UpdateMainInfoHandler> _logger;
+        private readonly IValidator<UpdateMainInfoCommand> _validator; 
         private readonly IUnitOfWork _unitOfWork;
 
 
         public UpdateMainInfoHandler(
             IVolunteerRepository volunteerRepository,
             ILogger<UpdateMainInfoHandler> logger,
+            IValidator<UpdateMainInfoCommand> validator,
             IUnitOfWork unitOfWork)
         {
             _volunteerRepository = volunteerRepository;
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _validator = validator;
         }
 
-        public async Task<Result<Guid, Error>> Handle(UpdateMainInfoCommand command, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, ErrorList>> Handle(UpdateMainInfoCommand command, CancellationToken cancellationToken = default)
         {
+            var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+            if(validationResult.IsValid == false)
+            {
+                return validationResult.ToErrorList();
+            }
+
             var id = VolunteerId.Create(command.Id);
 
             var volunteerResult = await _volunteerRepository.GetById(id);
             if(volunteerResult.IsFailure)
-                return volunteerResult.Error;
+                return volunteerResult.Error.ToErrorList();
 
-            var fullName = FullName.Create(command.MainInfo.FullName.Name,
-                command.MainInfo.FullName.Surname,
-                command.MainInfo.FullName.Patronymic).Value;
+            var fullName = FullName.Create(command.FullName.Name,
+                command.FullName.Surname,
+                command.FullName.Patronymic).Value;
 
-            var description = Description.Create(command.MainInfo.Description).Value;
+            var description = Description.Create(command.Description).Value;
 
-            var yearsExperience = YearsExperience.Create(command.MainInfo.YearsExperience).Value;
+            var yearsExperience = YearsExperience.Create(command.YearsExperience).Value;
 
-            var phoneNumder = PhoneNumber.Create(command.MainInfo.PhoneNumber).Value;
+            var phoneNumder = PhoneNumber.Create(command.PhoneNumber).Value;
 
             volunteerResult.Value.UpdateMainInfo(fullName, description, yearsExperience, phoneNumder);
 

@@ -6,6 +6,9 @@ using PetFamily.Infrastucture.Repositories;
 using PetFamily.Domain.Shared;
 using PetFamily.Application.Volunteers.UpdateSocialNetwork.Commands;
 using PetFamily.Application.Database;
+using FluentValidation;
+using PetFamily.Application.Volunteers.UpdateDetailsForAssistance.Commands;
+using PetFamily.Application.Extentions;
 
 namespace PetFamily.Application.Volunteers.UpdateSocialNetwork
 {
@@ -13,32 +16,41 @@ namespace PetFamily.Application.Volunteers.UpdateSocialNetwork
     {
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly ILogger<UpdateSocialNetworkHandler> _logger;
+        private readonly IValidator<UpdateSocialNetworkCommand> _validator;
         private readonly IUnitOfWork _unitOfWork;
 
 
         public UpdateSocialNetworkHandler(
             IVolunteerRepository volunteerRepository,
             ILogger<UpdateSocialNetworkHandler> logger,
+            IValidator<UpdateSocialNetworkCommand> validator,
             IUnitOfWork unitOfWork)
         {
             _volunteerRepository = volunteerRepository;
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _validator = validator;
         }
 
-        public async Task<Result<Guid, Error>> Handle(UpdateSocialNetworkCommand command, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, ErrorList>> Handle(UpdateSocialNetworkCommand command, CancellationToken cancellationToken = default)
         {
+            var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+            if (validationResult.IsValid == false)
+            {
+                return validationResult.ToErrorList();
+            }
+
             var id = VolunteerId.Create(command.Id);
 
             var volunteerResult = await _volunteerRepository.GetById(id);
             if (volunteerResult.IsFailure)
-                return volunteerResult.Error;
+                return volunteerResult.Error.ToErrorList();
 
             var socialNetworks = new List<SocialNetwork>();
 
-            if (command.SocialNetworkDto.SocialNetwork != null)
+            if (command.SocialNetwork != null)
             {
-                foreach (var socialnetwork in command.SocialNetworkDto.SocialNetwork)
+                foreach (var socialnetwork in command.SocialNetwork)
                 {
                     var socialNetwork = SocialNetwork.Create(socialnetwork.Name, socialnetwork.Link).Value;
 
