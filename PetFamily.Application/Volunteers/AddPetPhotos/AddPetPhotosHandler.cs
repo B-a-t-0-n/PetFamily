@@ -11,6 +11,8 @@ using PetFamily.Domain.PetMenegment.Entity;
 using PetFamily.Application.Database;
 using FluentValidation;
 using PetFamily.Application.Extentions;
+using PetFamily.Application.Messaging;
+using System.Diagnostics;
 
 namespace PetFamily.Application.Volunteers.AddPetPtotos
 {
@@ -23,19 +25,22 @@ namespace PetFamily.Application.Volunteers.AddPetPtotos
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<AddPetPhotosCommand> _validator;
         private readonly ILogger<AddPetPhotosHandler> _logger;
+        private readonly IMessageQueue<IEnumerable<FileMetadata>> _messageQueue;
 
         public AddPetPhotosHandler(
             IVolunteerRepository volunteerRepository,
             IUnitOfWork unitOfWork,
             ILogger<AddPetPhotosHandler> logger,
             IFileProvider fileProvider,
-            IValidator<AddPetPhotosCommand> validator)
+            IValidator<AddPetPhotosCommand> validator,
+            IMessageQueue<IEnumerable<FileMetadata>> messageQueue)
         {
             _volunteerRepository = volunteerRepository;
             _logger = logger;
             _unitOfWork = unitOfWork;
             _fileProvider = fileProvider;
             _validator = validator;
+            _messageQueue = messageQueue;
         }
 
         public async Task<Result<IReadOnlyList<PhotoPath>, ErrorList>> Handle(AddPetPhotosCommand command, CancellationToken cancellationToken = default)
@@ -87,9 +92,14 @@ namespace PetFamily.Application.Volunteers.AddPetPtotos
                 await _unitOfWork.SaveChanges(cancellationToken);
 
                 var uploadResult = await _fileProvider.UploadFiles(filesData, cancellationToken);
-
                 if (uploadResult.IsFailure)
+                {
+                    await _messageQueue.WriteAsync(
+                        filesData.Select(f => new FileMetadata(f.BucketName, f.FilePath.PathToStorage)),
+                        cancellationToken);
+
                     return uploadResult.Error.ToErrorList();
+                }
 
                 transaction.Commit();
 
