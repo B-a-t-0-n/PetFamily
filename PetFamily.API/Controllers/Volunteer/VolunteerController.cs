@@ -20,6 +20,7 @@ using PetFamily.API.Processors;
 using PetFamily.Application.Volunteers.DeletePetPhoto;
 using PetFamily.Application.Volunteers.DeletePetPhoto.Commands;
 using PetFamily.API.Controllers.Modules.Requests;
+using PetFamily.Application.Volunteers.MovePet;
 
 namespace PetFamily.API.Controllers.Volunteer
 {
@@ -161,6 +162,24 @@ namespace PetFamily.API.Controllers.Volunteer
                 return result.Error.ToResponse();
 
             return Ok();
+        }
+
+        [HttpPost("{volunteerId:guid}/{petId:guid}/move-pet")]
+        public async Task<ActionResult<Guid>> MovePet(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromServices] MovePetHandler handler,
+            [FromBody] MovePetRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            var command = request.ToCommand(volunteerId, petId);
+
+            var result = await handler.Handle(command, cancellationToken);
+
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            return Ok(result.Value);
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace PetFamily.Domain.Shared
+﻿namespace PetFamily.Domain.Shared
 {
     public record Error
     {
@@ -54,36 +52,6 @@ namespace PetFamily.Domain.Shared
         public ErrorList ToErrorList()
         {
             return new([this]);
-        }
-    }
-
-    public class ErrorList : IEnumerable<Error>
-    {
-        private readonly List<Error> _errors;
-
-        public ErrorList(IEnumerable<Error> errors)
-        {
-            _errors = [..errors];
-        }
-
-        public IEnumerator<Error> GetEnumerator()
-        {
-            return _errors.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public static implicit operator ErrorList(Error error)
-        {
-            return new ([error]);
-        }
-
-        public static implicit operator ErrorList(List<Error> errors)
-        {
-            return new(errors);
         }
     }
 
