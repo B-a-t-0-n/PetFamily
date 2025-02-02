@@ -1,19 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
-using PetFamily.Application.Volunteers.Create;
-using PetFamily.Application.Volunteers.UpdateDetailsForAssistance;
-using PetFamily.Application.Volunteers.UpdateMainInfo;
-using PetFamily.Application.Volunteers.UpdateSocialNetwork;
-using PetFamily.Application.Volunteers.Delete;
-using PetFamily.Application.Volunteers.Delete.Commands;
-using PetFamily.Application.Volunteers.AddPet;
-using PetFamily.Application.Volunteers.AddPetPtotos;
-using PetFamily.Application.Volunteers.AddPetPtotos.Commands;
 using PetFamily.API.Processors;
-using PetFamily.Application.Volunteers.DeletePetPhoto;
-using PetFamily.Application.Volunteers.DeletePetPhoto.Commands;
-using PetFamily.Application.Volunteers.MovePet;
 using PetFamily.API.Controllers.Volunteer.Requests;
+using PetFamily.Application.PetManagement.UseCases.VolunteersHandlers.UpdateSocialNetwork;
+using PetFamily.Application.PetManagement.UseCases.VolunteersHandlers.Delete;
+using PetFamily.Application.PetManagement.UseCases.VolunteersHandlers.UpdateDetailsForAssistance;
+using PetFamily.Application.PetManagement.UseCases.VolunteersHandlers.Create;
+using PetFamily.Application.PetManagement.UseCases.VolunteersHandlers.UpdateMainInfo;
+using PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPet;
+using PetFamily.Application.PetManagement.UseCases.PetHandlers.DeletePetPhoto;
+using PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPetPhotos;
+using PetFamily.Application.PetManagement.UseCases.PetHandlers.MovePet;
+using PetFamily.Application.PetManagement.UseCases.VolunteersHandlers.Delete.Commands;
+using PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPetPhotos.Commands;
+using PetFamily.Application.PetManagement.UseCases.PetHandlers.DeletePetPhoto.Commands;
 
 namespace PetFamily.API.Controllers.Volunteer
 {

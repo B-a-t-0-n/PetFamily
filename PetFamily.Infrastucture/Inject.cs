@@ -4,9 +4,11 @@ using Minio;
 using PetFamily.Application.Database;
 using PetFamily.Application.FileProvider;
 using PetFamily.Application.Messaging;
+using PetFamily.Application.PetManagement;
 using PetFamily.Application.Providers;
 using PetFamily.Application.Species;
 using PetFamily.Infrastucture.BackgroundServices;
+using PetFamily.Infrastucture.DbContexts;
 using PetFamily.Infrastucture.Files;
 using PetFamily.Infrastucture.MessageQueues;
 using PetFamily.Infrastucture.Options;
@@ -21,7 +23,8 @@ namespace PetFamily.Infrastucture
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            services.AddScoped<ApplicationDbContext>();
+            services.AddScoped<WriteDbContext>();
+            services.AddScoped<ReadDbContext>();
             services.AddScoped<IVolunteerRepository, VolunteerRepository>();
             services.AddScoped<ISpeciesRepository, SpeciesRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
