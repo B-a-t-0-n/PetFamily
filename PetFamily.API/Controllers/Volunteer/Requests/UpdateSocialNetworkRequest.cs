@@ -7,5 +7,5 @@ namespace PetFamily.API.Controllers.Volunteer.Requests
     {
         public UpdateSocialNetworkCommand ToCommand(Guid volunteerId) =>
             new(volunteerId, SocialNetwork);
-    }    
+    }
 }

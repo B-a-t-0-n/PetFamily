@@ -1,11 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Database;
 using PetFamily.Application.Dtos;
 
 namespace PetFamily.Infrastucture.DbContexts
 {
-    public class ReadDbContext(IConfiguration configuration) : DbContext
+
+    public class ReadDbContext(IConfiguration configuration) : DbContext, IReadDbContext
     {
         public DbSet<VolunteerDto> Volunteers => Set<VolunteerDto>();
 

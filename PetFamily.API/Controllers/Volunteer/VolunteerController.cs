@@ -14,11 +14,25 @@ using PetFamily.Application.PetManagement.UseCases.PetHandlers.MovePet;
 using PetFamily.Application.PetManagement.UseCases.VolunteersHandlers.Delete.Commands;
 using PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPetPhotos.Commands;
 using PetFamily.Application.PetManagement.UseCases.PetHandlers.DeletePetPhoto.Commands;
+using PetFamily.Application.PetManagement.Queries.GetVolunteersWithPagination;
 
 namespace PetFamily.API.Controllers.Volunteer
 {
     public class VolunteerController : ApplicationController
     {
+        [HttpGet]
+        public async Task<ActionResult> Get(
+            [FromQuery] GetVolunteersWithPaginationRequest request,
+            [FromServices] GetVolunteersWithPaginationHandler handler,
+            CancellationToken cancellationToken = default)
+        {
+            var query = request.ToQuery();
+
+            var response = await handler.Handle(query, cancellationToken);
+
+            return Ok(response);
+        }
+
         [HttpPost]
         public async Task<ActionResult<Guid>> Create(
             [FromServices] CreateVolunteerHandler handler,

@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using PetFamily.Application.FileProvider;
+using PetFamily.Application.PetManagement.Queries.GetVolunteersWithPagination;
 using PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPet;
 using PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPetPhotos;
 using PetFamily.Application.PetManagement.UseCases.PetHandlers.DeletePetPhoto;
@@ -16,6 +18,14 @@ namespace PetFamily.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
+            services.AddHandlers();
+            services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
+
+            return services;
+        }
+
+        private static IServiceCollection AddHandlers(this IServiceCollection services)
+        {
             services.AddScoped<CreateVolunteerHandler>();
             services.AddScoped<UpdateMainInfoHandler>();
             services.AddScoped<UpdateSocialNetworkHandler>();
@@ -25,8 +35,7 @@ namespace PetFamily.Application
             services.AddScoped<AddPetPhotosHandler>();
             services.AddScoped<DeletePetPhotoHandler>();
             services.AddScoped<MovePetHandler>();
-
-            services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
+            services.AddScoped<GetVolunteersWithPaginationHandler>();
 
             return services;
         }
