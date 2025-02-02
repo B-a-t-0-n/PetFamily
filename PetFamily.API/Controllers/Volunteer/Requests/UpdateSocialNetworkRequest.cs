@@ -1,8 +1,7 @@
 ﻿using PetFamily.Application.Dtos;
 using PetFamily.Application.Volunteers.UpdateSocialNetwork.Commands;
 
-
-namespace PetFamily.API.Controllers.Modules.Requests
+namespace PetFamily.API.Controllers.Volunteer.Requests
 {
     public record UpdateSocialNetworkRequest(IEnumerable<SocialNetworkDto> SocialNetwork)
     {

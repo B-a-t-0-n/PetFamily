@@ -1,7 +1,7 @@
 ﻿using PetFamily.Application.Dtos;
 using PetFamily.Application.Volunteers.AddPet.Commands;
 
-namespace PetFamily.API.Controllers.Modules.Requests
+namespace PetFamily.API.Controllers.Volunteer.Requests
 {
     public record AddPetRequest(
         string Nickname,

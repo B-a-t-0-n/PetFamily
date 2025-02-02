@@ -1,26 +1,19 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.Application.Volunteers.Create;
-using PetFamily.Application.Volunteers.Create.Commands;
-using PetFamily.Application.Volunteers.UpdateDetailsForAssistance.Commands;
 using PetFamily.Application.Volunteers.UpdateDetailsForAssistance;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
-using PetFamily.Application.Volunteers.UpdateMainInfo.Commands;
 using PetFamily.Application.Volunteers.UpdateSocialNetwork;
-using PetFamily.Application.Volunteers.UpdateSocialNetwork.Commands;
 using PetFamily.Application.Volunteers.Delete;
 using PetFamily.Application.Volunteers.Delete.Commands;
 using PetFamily.Application.Volunteers.AddPet;
-using PetFamily.Application.Volunteers.AddPet.Commands;
 using PetFamily.Application.Volunteers.AddPetPtotos;
 using PetFamily.Application.Volunteers.AddPetPtotos.Commands;
-using PetFamily.Application.Dtos;
 using PetFamily.API.Processors;
 using PetFamily.Application.Volunteers.DeletePetPhoto;
 using PetFamily.Application.Volunteers.DeletePetPhoto.Commands;
-using PetFamily.API.Controllers.Modules.Requests;
 using PetFamily.Application.Volunteers.MovePet;
+using PetFamily.API.Controllers.Volunteer.Requests;
 
 namespace PetFamily.API.Controllers.Volunteer
 {

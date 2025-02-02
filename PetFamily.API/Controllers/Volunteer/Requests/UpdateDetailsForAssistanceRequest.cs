@@ -1,7 +1,7 @@
 ﻿using PetFamily.Application.Dtos;
 using PetFamily.Application.Volunteers.UpdateDetailsForAssistance.Commands;
 
-namespace PetFamily.API.Controllers.Modules.Requests
+namespace PetFamily.API.Controllers.Volunteer.Requests
 {
     public record UpdateDetailsForAssistanceRequest(IEnumerable<DetailsForAssistanceDto> DetailsForAssistance)
     {

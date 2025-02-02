@@ -2,7 +2,7 @@
 using PetFamily.Application.Volunteers.UpdateMainInfo.Commands;
 using PetFamily.Domain.PetMenegment.ValueObjects;
 
-namespace PetFamily.API.Controllers.Modules.Requests
+namespace PetFamily.API.Controllers.Volunteer.Requests
 {
     public record UpdateMainInfoRequest(
         FullNameDto FullName,

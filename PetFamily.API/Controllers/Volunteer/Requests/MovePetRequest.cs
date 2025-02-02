@@ -1,6 +1,6 @@
 ﻿using PetFamily.Application.Volunteers.MovePet.Commands;
 
-namespace PetFamily.API.Controllers.Modules.Requests
+namespace PetFamily.API.Controllers.Volunteer.Requests
 {
     public record MovePetRequest(int SerialNumber)
     {

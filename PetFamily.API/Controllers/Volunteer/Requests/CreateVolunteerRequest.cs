@@ -1,7 +1,7 @@
 ﻿using PetFamily.Application.Dtos;
 using PetFamily.Application.Volunteers.Create.Commands;
 
-namespace PetFamily.API.Controllers.Modules.Requests
+namespace PetFamily.API.Controllers.Volunteer.Requests
 {
     public record CreateVolunteerRequest(
         FullNameDto FullName,
