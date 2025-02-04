@@ -4,6 +4,8 @@ using Constants = PetFamily.Domain.Shared.Constants;
 using PetFamily.Domain.PetMenegment.Entity;
 using PetFamily.Domain.Shared.IDs;
 using PetFamily.Domain.PetMenegment.ValueObjects;
+using PetFamily.Infrastucture.Extensions;
+using PetFamily.Application.Dtos;
 
 namespace PetFamily.Infrastucture.Configuration.Write
 {
@@ -144,21 +146,12 @@ namespace PetFamily.Infrastucture.Configuration.Write
             builder.Property(p => p.DateOfCreation)
                     .HasColumnName("date_of_creation");
 
-            builder.OwnsOne(p => p.DetailsForAssistance, pb =>
-            {
-                pb.ToJson();
+            builder.Property(p => p.DetailsForAssistance)
+                .ValueObjectCollectionJsonConversion(
+                    detailForAssistance => new DetailsForAssistanceDto { Name = detailForAssistance.Name, Description = detailForAssistance.Description },
+                    dto => DetailsForAssistance.Create(dto.Name, dto.Description).Value)
+                .HasColumnName("details_for_assistance");
 
-                pb.OwnsMany(d => d.Values, db =>
-                {
-                    db.Property(i => i.Name)
-                        .IsRequired()
-                        .HasMaxLength(DetailsForAssistance.MAX_HIGHT_DESCRIPTION_LENGTH);
-
-                    db.Property(i => i.Description)
-                        .IsRequired()
-                        .HasMaxLength(DetailsForAssistance.MAX_HIGHT_DESCRIPTION_LENGTH);
-                });
-            });
 
             builder.HasMany(p => p.PetPhotos)
                 .WithOne()

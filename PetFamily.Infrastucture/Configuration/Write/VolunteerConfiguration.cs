@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PetFamily.Application.Dtos;
 using PetFamily.Domain.PetMenegment.Entity;
 using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared.IDs;
+using PetFamily.Infrastucture.Extensions;
 
 namespace PetFamily.Infrastucture.Configuration.Write
 {
@@ -60,37 +62,17 @@ namespace PetFamily.Infrastucture.Configuration.Write
                     .HasColumnName("phone_number");
             });
 
-            builder.OwnsOne(v => v.DetailsForAssistance, vb =>
-            {
-                vb.ToJson();
+            builder.Property(v => v.DetailsForAssistance)
+                .ValueObjectCollectionJsonConversion(
+                    detailForAssistance => new DetailsForAssistanceDto { Name = detailForAssistance.Name, Description = detailForAssistance.Description },
+                    dto => DetailsForAssistance.Create(dto.Name, dto.Description).Value)
+                .HasColumnName("details_for_assistance");
 
-                vb.OwnsMany(s => s.Values, sb =>
-                {
-                    sb.Property(i => i.Name)
-                        .IsRequired(false)
-                        .HasMaxLength(Domain.Shared.Constants.MAX_LOW_TEXT_LENGTH);
-
-                    sb.Property(i => i.Description)
-                        .IsRequired(false)
-                        .HasMaxLength(DetailsForAssistance.MAX_HIGHT_DESCRIPTION_LENGTH);
-                });
-            });
-
-            builder.OwnsOne(v => v.SocialNetwork, vb =>
-            {
-                vb.ToJson();
-
-                vb.OwnsMany(s => s.Values, sb =>
-                {
-                    sb.Property(i => i.Name)
-                        .IsRequired(false)
-                        .HasMaxLength(SocialNetwork.MAX_HIGHT_NAME_LENGTH);
-
-                    sb.Property(i => i.Link)
-                        .IsRequired(false)
-                        .HasMaxLength(Domain.Shared.Constants.MAX_LOW_TEXT_LENGTH);
-                });
-            });
+            builder.Property(v => v.SocialNetwork)
+                .ValueObjectCollectionJsonConversion(
+                    socialNetwork => new SocialNetworkDto { Name = socialNetwork.Name, Link = socialNetwork.Link },
+                    dto => SocialNetwork.Create(dto.Name, dto.Link).Value)
+                .HasColumnName("social_network");
 
             builder.HasMany(v => v.Pets)
                 .WithOne()

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Application.Dtos;
-using PetFamily.Domain.Shared.IDs;
+using System.Text.Json;
 
 namespace PetFamily.Infrastucture.Configuration.Read
 {
@@ -16,6 +16,11 @@ namespace PetFamily.Infrastucture.Configuration.Read
             builder.HasMany(p => p.PetPhotos)
                 .WithOne()
                 .HasForeignKey(p => p.PetId);
+
+            builder.Property(v => v.DetailsForAssistance)
+                .HasConversion(
+                    detailsForAssistance => JsonSerializer.Serialize(string.Empty, JsonSerializerOptions.Default),
+                    json => JsonSerializer.Deserialize<DetailsForAssistanceDto[]>(json, JsonSerializerOptions.Default)!);
         }
     }
 }

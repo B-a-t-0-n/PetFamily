@@ -1,4 +1,8 @@
 ﻿namespace PetFamily.Application.Dtos
 {
-    public record DetailsForAssistanceDto(string? Name, string? Description);
+    public class DetailsForAssistanceDto
+    {
+        public string? Name { get; init; }
+        public string? Description { get; init; }
+    }
 }

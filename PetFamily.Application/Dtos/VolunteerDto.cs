@@ -1,9 +1,4 @@
-﻿using PetFamily.Domain.PetMenegment.Entity;
-using PetFamily.Domain.PetMenegment.ValueObjects;
-using PetFamily.Domain.Shared;
-using PetFamily.Domain.Shared.IDs;
-
-namespace PetFamily.Application.Dtos
+﻿namespace PetFamily.Application.Dtos
 {
     public class VolunteerDto
     {
@@ -21,10 +16,8 @@ namespace PetFamily.Application.Dtos
 
         public string PhoneNumber { get; init; } = string.Empty;
 
-        //public ValueObjectList<SocialNetwork>? SocialNetwork { get; private set; }
+        public SocialNetworkDto[] SocialNetwork { get; set; } = [];
 
-        //public ValueObjectList<DetailsForAssistance>? DetailsForAssistance { get; private set; } = default!;
-
-        public PetDto[] Pets { get; init; } = [];
+        public DetailsForAssistanceDto[] DetailsForAssistance { get; set; } = [];
     }
 }

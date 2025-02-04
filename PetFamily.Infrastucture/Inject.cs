@@ -76,6 +76,10 @@ namespace PetFamily.Infrastucture
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            services.AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
+
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+
             return services;
         }
 

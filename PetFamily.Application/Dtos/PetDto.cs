@@ -46,8 +46,6 @@
 
         public DateTime DateOfCreation { get; init; }
 
-        //public ValueObjectList<DetailsForAssistance>? DetailsForAssistance { get; private set; } = default!;
-
-        public PetPhotoDto[] PetPhotos { get; init; } = [];
+        public DetailsForAssistanceDto[] DetailsForAssistance { get; set; } = [];
     }
 }

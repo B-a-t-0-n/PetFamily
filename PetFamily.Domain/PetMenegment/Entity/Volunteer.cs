@@ -10,6 +10,8 @@ namespace PetFamily.Domain.PetMenegment.Entity
         private bool _isDeleted = false;
          
         private readonly List<Pet> _pets = [];
+        public List<SocialNetwork> _socialNetwork = [];
+        public List<DetailsForAssistance> _detailsForAssistance = [];
 
         //ef core
         private Volunteer(VolunteerId id) : base(id) { }
@@ -20,16 +22,16 @@ namespace PetFamily.Domain.PetMenegment.Entity
             Description description,
             YearsExperience yearsExperience,
             PhoneNumber phoneNumber,
-            ValueObjectList<DetailsForAssistance>? detailsForAssistance,
-            ValueObjectList<SocialNetwork>? socialNetwork
+            List<DetailsForAssistance> detailsForAssistance,
+            List<SocialNetwork> socialNetwork
             ) : base(id)
         {
             FullName = fullName;
             Description = description;
             YearsExperience = yearsExperience;
             PhoneNumber = phoneNumber;
-            DetailsForAssistance = detailsForAssistance;
-            SocialNetwork = socialNetwork;
+            _detailsForAssistance = detailsForAssistance;
+            _socialNetwork = socialNetwork;
         }
 
         public FullName FullName { get; private set; } = default!;
@@ -40,9 +42,9 @@ namespace PetFamily.Domain.PetMenegment.Entity
 
         public PhoneNumber PhoneNumber { get; private set; } = default!;
 
-        public ValueObjectList<SocialNetwork>? SocialNetwork { get; private set; }
+        public IReadOnlyList<SocialNetwork> SocialNetwork => _socialNetwork;
 
-        public ValueObjectList<DetailsForAssistance>? DetailsForAssistance { get; private set; } = default!;
+        public IReadOnlyList<DetailsForAssistance> DetailsForAssistance => _detailsForAssistance;
 
         public IReadOnlyList<Pet> Pets => _pets;
 
@@ -64,8 +66,8 @@ namespace PetFamily.Domain.PetMenegment.Entity
             Description description,
             YearsExperience yearsExperience,
             PhoneNumber phoneNumber,
-            ValueObjectList<DetailsForAssistance>? detailsForAssistance,
-            ValueObjectList<SocialNetwork>? socialNetwork)
+            List<DetailsForAssistance> detailsForAssistance,
+            List<SocialNetwork> socialNetwork)
         {
             var volunteer = new Volunteer(id, fullName!, description, yearsExperience, phoneNumber!, detailsForAssistance, socialNetwork);
 
@@ -84,14 +86,14 @@ namespace PetFamily.Domain.PetMenegment.Entity
             PhoneNumber = phoneNumber;
         }
 
-        public void UpdateSocialNetwork(ValueObjectList<SocialNetwork>? socialNetwork)
+        public void UpdateSocialNetwork(List<SocialNetwork> socialNetwork)
         {
-            SocialNetwork = socialNetwork;
+            _socialNetwork = socialNetwork;
         }
 
-        public void UpdateDetailsForAssistance(ValueObjectList<DetailsForAssistance>? detailsForAssistance)
+        public void UpdateDetailsForAssistance(List<DetailsForAssistance> detailsForAssistance)
         {
-            DetailsForAssistance = detailsForAssistance;
+            _detailsForAssistance = detailsForAssistance;
         }
 
         public UnitResult<Error> AddPet(Pet pet)

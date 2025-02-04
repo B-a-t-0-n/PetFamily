@@ -26,7 +26,7 @@ namespace PetFamily.Application.PetManagement.Queries.GetVolunteersWithPaginatio
             GetVolunteersWithPaginationQuery query,
             CancellationToken cancellationToken = default)
         {
-            var volunteersQuery = _readDbContext.Volunteers.AsQueryable();
+            var volunteersQuery = _readDbContext.Volunteers;
 
             var pagedList = await volunteersQuery.ToPagedList(query.Page, query.PageSize, cancellationToken);
 
