@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetFamily.Application.Models;
+
 namespace PetFamily.Application.Extentions
 {
     public static class QueriesExtensions
