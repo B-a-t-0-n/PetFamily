@@ -10,7 +10,7 @@
 
         public string? Patronymic { get; init; } = string.Empty;
 
-        public string? Description { get; init; } = string.Empty;
+        public string? Description { get; init; }
 
         public int YearsExperience { get; init; }
 

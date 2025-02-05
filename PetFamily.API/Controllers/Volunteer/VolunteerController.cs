@@ -15,6 +15,7 @@ using PetFamily.Application.PetManagement.UseCases.VolunteersHandlers.Delete.Com
 using PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPetPhotos.Commands;
 using PetFamily.Application.PetManagement.UseCases.PetHandlers.DeletePetPhoto.Commands;
 using PetFamily.Application.PetManagement.Queries.GetVolunteersWithPagination;
+using PetFamily.Application.PetManagement.Queries.GetVolunteerById;
 
 namespace PetFamily.API.Controllers.Volunteer
 {
@@ -27,6 +28,19 @@ namespace PetFamily.API.Controllers.Volunteer
             CancellationToken cancellationToken = default)
         {
             var query = request.ToQuery();
+
+            var response = await handler.Handle(query, cancellationToken);
+
+            return Ok(response);
+        }
+
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult> Get(
+            [FromRoute] Guid id,
+            [FromServices] GetVolunteerByIdHandler handler,
+            CancellationToken cancellationToken = default)
+        {
+            var query = new GetVolunteerByIdQuery(id);
 
             var response = await handler.Handle(query, cancellationToken);
 

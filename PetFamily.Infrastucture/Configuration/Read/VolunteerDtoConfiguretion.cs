@@ -13,9 +13,9 @@ namespace PetFamily.Infrastucture.Configuration.Read
 
             builder.HasKey(i => i.Id);
 
-            builder.HasMany(v => v.Pets)
-                .WithOne()
-                .HasForeignKey(v => v.VolunteerId);
+            //builder.HasMany(v => v.Pets)
+            //    .WithOne()
+            //    .HasForeignKey(v => v.VolunteerId);
 
             builder.Property(v => v.DetailsForAssistance)
                 .HasConversion(

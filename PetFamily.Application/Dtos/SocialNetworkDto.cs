@@ -2,7 +2,7 @@
 {
     public class SocialNetworkDto
     {
-        public string? Name { get; init; }
-        public string? Link { get; init; }
+        public string? Name { get; set; }
+        public string? Link { get; set; }
     }
 }
