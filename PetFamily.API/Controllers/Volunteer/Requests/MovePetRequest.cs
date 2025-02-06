@@ -1,4 +1,4 @@
-﻿using PetFamily.Application.Volunteers.MovePet.Commands;
+﻿using PetFamily.Application.PetManagement.UseCases.PetHandlers.MovePet.Commands;
 
 namespace PetFamily.API.Controllers.Volunteer.Requests
 {

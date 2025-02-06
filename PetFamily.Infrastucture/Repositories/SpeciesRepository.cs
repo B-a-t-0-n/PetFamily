@@ -5,14 +5,15 @@ using PetFamily.Domain.PetMenegment.Entity;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.IDs;
 using PetFamily.Domain.SpeciesMenegment.Entity;
+using PetFamily.Infrastucture.DbContexts;
 
 namespace PetFamily.Infrastucture.Repositories
 {
     public class SpeciesRepository : ISpeciesRepository
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly WriteDbContext _dbContext;
 
-        public SpeciesRepository(ApplicationDbContext dbContext)
+        public SpeciesRepository(WriteDbContext dbContext)
         {
             _dbContext = dbContext;
         }

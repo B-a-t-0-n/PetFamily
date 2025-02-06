@@ -1,10 +1,9 @@
 ﻿using FluentValidation.Results;
 using PetFamily.Domain.Shared;
-using System.Threading;
 
 namespace PetFamily.Application.Extentions
 {
-    public static class Validationextentions
+    public static class ValidationExtentions
     {
         public static ErrorList ToErrorList(this ValidationResult validationResult)
         {

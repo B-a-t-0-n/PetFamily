@@ -10,6 +10,8 @@ namespace PetFamily.Domain.PetMenegment.Entity
         private bool _isDeleted = false;
 
         private readonly List<PetPhoto> _petPhotos = [];
+        private List<DetailsForAssistance> _detailsForAssistance = [];
+
 
         //ef core
         private Pet(PetId id) : base(id) { }
@@ -29,7 +31,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
             bool isVaccinated,
             AssistanceStatus assistanceStatus,
             DateTime dateOfCreation,
-            ValueObjectList<DetailsForAssistance>? detailsForAssistance
+            List<DetailsForAssistance> detailsForAssistance
             ) : base(id)
         {
             Nickname = nickname;
@@ -45,7 +47,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
             IsVaccinated = isVaccinated;
             AssistanceStatus = assistanceStatus;
             DateOfCreation = dateOfCreation;
-            DetailsForAssistance = detailsForAssistance;
+            _detailsForAssistance = detailsForAssistance;
         }
 
         public Nickname Nickname { get; private set; } = default!;
@@ -76,7 +78,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
 
         public DateTime DateOfCreation { get; private set; }
 
-        public ValueObjectList<DetailsForAssistance>? DetailsForAssistance { get; private set; } = default!;
+        public IReadOnlyList<DetailsForAssistance> DetailsForAssistance => _detailsForAssistance;
 
         public IReadOnlyList<PetPhoto> PetPhotos => _petPhotos;
 
@@ -105,7 +107,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
             bool isVaccinated,
             AssistanceStatus assistanceStatus,
             DateTime dateOfCreation,
-            ValueObjectList<DetailsForAssistance>? detailsForAssistance)
+            List<DetailsForAssistance> detailsForAssistance)
         {
             var pet = new Pet(id,
                 nickname,
