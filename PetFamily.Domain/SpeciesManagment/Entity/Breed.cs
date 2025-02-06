@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.IDs;
 using PetFamily.Domain.SpeciesMenegment.ValueObjects;
 
@@ -16,11 +17,11 @@ namespace PetFamily.Domain.SpeciesMenegment.Entity
 
         public Name Name { get; private set; } = default!;
 
-        public static Result<Breed> Create(BreedId id, Name name)
+        public static Result<Breed, Error> Create(BreedId id, Name name)
         {
-            var pet = new Breed(id, name);
+            var breed = new Breed(id, name);
 
-            return Result.Success(pet);
+            return breed;
         }
     }
 }

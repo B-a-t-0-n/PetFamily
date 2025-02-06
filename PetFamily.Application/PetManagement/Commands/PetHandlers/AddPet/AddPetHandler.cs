@@ -6,11 +6,11 @@ using PetFamily.Domain.Shared.IDs;
 using PetFamily.Domain.Shared;
 using PetFamily.Application.Providers;
 using PetFamily.Application.Database;
-using PetFamily.Application.Species;
 using FluentValidation;
 using PetFamily.Application.Extentions;
 using PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPet.Commands;
 using PetFamily.Application.Abstraction;
+using PetFamily.Application.SpeciesManagment;
 
 namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPet
 {

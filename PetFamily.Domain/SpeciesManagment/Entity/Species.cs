@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.IDs;
 using PetFamily.Domain.SpeciesMenegment.ValueObjects;
 
@@ -20,11 +21,20 @@ namespace PetFamily.Domain.SpeciesMenegment.Entity
 
         public IReadOnlyList<Breed> breeds => _breeds;
 
-        public static Result<Species> Create(SpeciesId id, Name name)
+        public static Result<Species, Error> Create(SpeciesId id, Name name)
         {
-            var pet = new Species(id, name);
+            var species = new Species(id, name);
 
-            return Result.Success(pet);
+            return species;
+        }
+
+        public UnitResult<Error> AddBreed(Breed breed)
+        {
+            if (_breeds.Any(b => b.Name.Value.Equals(breed.Name.Value, StringComparison.CurrentCultureIgnoreCase)))
+                return UnitResult.Failure<Error>(Errors.General.AlreadyExist());
+
+            _breeds.Add(breed);
+            return UnitResult.Success<Error>();
         }
     }
 

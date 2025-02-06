@@ -18,4 +18,9 @@
     <ProjectReference Include="..\PetFamily.Domain\PetFamily.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SpeciesManagment\Queries\BreedQuery\" />
+    <Folder Include="SpeciesManagment\Queries\SpeciesQuery\" />
+  </ItemGroup>
+
 </Project>
