@@ -36,6 +36,15 @@ namespace PetFamily.Domain.SpeciesMenegment.Entity
             _breeds.Add(breed);
             return UnitResult.Success<Error>();
         }
+
+        public UnitResult<Error> RemoveBreed(Breed breed)
+        {
+            if (_breeds.Any(b => b.Id == breed.Id) == false)
+                return UnitResult.Failure<Error>(Errors.General.NotFound());
+
+            _breeds.Remove(breed);
+            return UnitResult.Success<Error>();
+        }
     }
 
 }

@@ -9,6 +9,7 @@ using PetFamily.Domain.Shared.IDs;
 using PetFamily.Application.Extentions;
 using PetFamily.Domain.SpeciesMenegment.ValueObjects;
 using PetFamily.Domain.SpeciesMenegment.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace PetFamily.Application.SpeciesManagment.Commands.SpeciesHandlers.Create
 {
@@ -50,7 +51,7 @@ namespace PetFamily.Application.SpeciesManagment.Commands.SpeciesHandlers.Create
             if (speciesResult.IsFailure)
                 return speciesResult.Error.ToErrorList();
 
-            if (_readDbContext.Species.Any(s => s.Name.ToLower() == name.Value.ToLower()))
+            if (await _readDbContext.Species.AnyAsync(s => s.Name.ToLower() == name.Value.ToLower()))
                 return Errors.General.AlreadyExist().ToErrorList();
 
             await _speciesRepository.Add(speciesResult.Value, cancellationToken);

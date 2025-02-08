@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstraction;
 using PetFamily.Application.Database;
@@ -88,7 +89,7 @@ namespace PetFamily.Application.PetManagement.UseCases.VolunteersHandlers.Create
             if (volunteerResult.IsFailure)
                 return volunteerResult.Error.ToErrorList();
 
-            if (_readDbContext.Volunteers.Any(v => v.PhoneNumber == phoneNumder.Number))
+            if (await _readDbContext.Volunteers.AnyAsync(v => v.PhoneNumber == phoneNumder.Number))
                 return Errors.General.AlreadyExist().ToErrorList();
 
             await _volunteerRepository.Add(volunteerResult.Value, cancellationToken);

@@ -30,7 +30,7 @@ namespace PetFamily.Infrastucture.Configuration.Write
 
             builder.HasMany(s => s.breeds)
                 .WithOne()
-                .HasForeignKey("breed_id");
+                .HasForeignKey("species_id");
         }
     }
 }
