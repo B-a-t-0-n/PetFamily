@@ -44,7 +44,7 @@ namespace PetFamily.Infrastucture.Repositories
 
         public Guid Save(Species species, CancellationToken cancellationToken = default)
         {
-            _dbContext.Attach(species);
+            _dbContext.Species.Attach(species);
 
             return species.Id;
         }

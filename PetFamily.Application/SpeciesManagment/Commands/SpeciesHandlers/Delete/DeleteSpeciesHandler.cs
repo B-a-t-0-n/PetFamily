@@ -51,6 +51,7 @@ namespace PetFamily.Application.SpeciesManagment.Commands.SpeciesHandlers.Delete
                 return Error.Validation("record.is.used", " record is used").ToErrorList();
 
             _speciesRepository.Delete(speciesResult.Value, cancellationToken);
+
             await _unitOfWork.SaveChanges(cancellationToken);
 
             _logger.LogInformation("deleted species {Name} with id {speciesId}",
