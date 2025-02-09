@@ -168,6 +168,19 @@ namespace PetFamily.Domain.PetMenegment.Entity
             return Result.Success<Error>();
         }
 
+        public UnitResult<Error> SetMainPhotoPet(PetId petId, PhotoPath petPhoto)
+        {
+            var pet = _pets.FirstOrDefault(p => p.Id == petId);
+            if (pet is null)
+                return Errors.General.NotFound(petId);
+
+            var result = pet.SetMainPhoto(petPhoto);
+            if (result.IsFailure)
+                return result.Error;
+
+            return Result.Success<Error>();
+        }
+
         public Result<string, Error> DeletePetPhoto(PetId petId, PetPhotoId photoId)
         {
             var pet = _pets.FirstOrDefault(p => p.Id == petId);

@@ -86,6 +86,21 @@ namespace PetFamily.Domain.PetMenegment.Entity
             _petPhotos.Add(petPhoto);
         }
 
+        internal UnitResult<Error> SetMainPhoto(PhotoPath petPhoto)
+        {
+            var oldMainPhoto = _petPhotos.FirstOrDefault(x => x.IsMain);
+            if (oldMainPhoto is not null)
+                oldMainPhoto.SetIsMain(false);
+
+            var newMainPhoto = _petPhotos.FirstOrDefault(x => x.Path == petPhoto);
+            if (newMainPhoto is null)
+                return Errors.General.NotFound();
+
+            newMainPhoto.SetIsMain(true);
+
+            return Result.Success<Error>();
+        }
+
         internal void DeletePhoto(PetPhoto petPhoto)
         {
             _petPhotos.Remove(petPhoto);

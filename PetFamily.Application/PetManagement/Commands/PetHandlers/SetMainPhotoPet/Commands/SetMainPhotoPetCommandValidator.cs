@@ -3,15 +3,15 @@ using PetFamily.Application.Validation;
 using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared;
 
-namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.MovePet.Commands
+namespace PetFamily.Application.PetManagement.Commands.PetHandlers.SetMainPhotoPet.Commands
 {
-    public class MovePetCommandValidator : AbstractValidator<MovePetCommand>
+    public class SetMainPhotoPetCommandValidator : AbstractValidator<SetMainPhotoPetCommand>
     {
-        public MovePetCommandValidator()
+        public SetMainPhotoPetCommandValidator()
         {
             RuleFor(u => u.VolunteerId).NotEmpty().WithError(Errors.General.ValueIsRequired());
             RuleFor(u => u.PetId).NotEmpty().WithError(Errors.General.ValueIsRequired());
-            RuleFor(u => u.SerialNumber).MustBeValueObject(SerialNumber.Create);
+            RuleFor(u => u.Path).MustBeValueObject(PhotoPath.Create);
         }
     }
 }

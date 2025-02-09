@@ -24,6 +24,7 @@ using PetFamily.Application.PetManagement.Commands.PetHandlers.SoftDeletePet;
 using PetFamily.Application.PetManagement.Commands.PetHandlers.SoftDeletePet.Commands;
 using PetFamily.Application.PetManagement.Commands.PetHandlers.HardDeletePet;
 using PetFamily.Application.PetManagement.Commands.PetHandlers.HardDeletePet.Commands;
+using PetFamily.Application.PetManagement.Commands.PetHandlers.SetMainPhotoPet;
 
 namespace PetFamily.API.Controllers.Volunteer
 {
@@ -283,6 +284,24 @@ namespace PetFamily.API.Controllers.Volunteer
                 return result.Error.ToResponse();
 
             return Ok(result.Value);
+        }
+
+        [HttpPost("{volunteerId:guid}/{petId:guid}/main-photo")]
+        public async Task<ActionResult<Guid>> SetMainPhotoPet(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromServices] SetMainPhotoPetHandler handler,
+            [FromBody] SetMainPhotoPetRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            var command = request.ToCommand(volunteerId, petId);
+
+            var result = await handler.Handle(command, cancellationToken);
+
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            return Ok();
         }
     }
 }

@@ -33,6 +33,21 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
             return photoPath;
         }
 
+        public static Result<PhotoPath, Error> Create(string pathToStorage)
+        {
+            if (string.IsNullOrWhiteSpace(pathToStorage))
+                return Errors.General.ValueIsInvalid("pathToStorage");
+
+            if (extensions.Any(pathToStorage.EndsWith) == false)
+                return Errors.General.ValueIsInvalid("pathToStorage");
+
+            var path = pathToStorage;
+
+            var photoPath = new PhotoPath(path);
+
+            return photoPath;
+        }
+
         protected override IEnumerable<IComparable> GetEqualityComponents()
         {
             yield return PathToStorage;
