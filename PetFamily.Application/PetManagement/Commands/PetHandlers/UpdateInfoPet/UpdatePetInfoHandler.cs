@@ -97,11 +97,9 @@ namespace PetFamily.Application.PetManagement.Commands.PetHandlers.UpdateInfoPet
                 }
             }
 
-            var pet = volunteerResult.Value.Pets.FirstOrDefault(p => p.Id == petId);
-            if (pet is null)
-                return Errors.General.NotFound(command.PetId).ToErrorList();
-
-            pet.UpdateInfo(nickname,
+            var result = volunteerResult.Value.UpdatePetInfo(
+                PetId.Create(command.PetId),
+                nickname,
                 speciesAndBreed,
                 description,
                 color,
@@ -113,7 +111,9 @@ namespace PetFamily.Application.PetManagement.Commands.PetHandlers.UpdateInfoPet
                 command.DateOfBirth,
                 command.IsVaccinated,
                 assistanceStatus,
-                detailsForAssistances); 
+                detailsForAssistances);
+            if(result.IsFailure)
+                return result.Error.ToErrorList();
 
             await _unitOfWork.SaveChanges(cancellationToken);
 

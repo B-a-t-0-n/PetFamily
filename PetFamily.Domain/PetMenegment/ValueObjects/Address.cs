@@ -1,6 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Shared;
-using ValueObject = PetFamily.Domain.Shared.ValueObject;
 using Error = PetFamily.Domain.Shared.Error;
 
 namespace PetFamily.Domain.PetMenegment.ValueObjects
@@ -54,7 +53,7 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
             return address;
         }
 
-        protected override IEnumerable<object> GetEqualityComponents()
+        protected override IEnumerable<IComparable> GetEqualityComponents()
         {
             yield return Сity;
             yield return Street;

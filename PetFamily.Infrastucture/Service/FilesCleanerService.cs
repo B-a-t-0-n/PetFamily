@@ -4,7 +4,7 @@ using PetFamily.Application.Messaging;
 using PetFamily.Application.Providers;
 
 
-namespace PetFamily.Infrastucture.Files
+namespace PetFamily.Infrastucture.Service
 {
     public class FilesCleanerService : IFilesCleanerService
     {

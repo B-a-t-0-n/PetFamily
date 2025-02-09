@@ -49,23 +49,17 @@ namespace PetFamily.Application.PetManagement.Commands.PetHandlers.UpdatePetStat
             if (volunteerResult.IsFailure)
                 return volunteerResult.Error.ToErrorList();
 
-            var petId = PetId.Create(command.PetId);
-
             var assistanceStatus = AssistanceStatus.Create(command.AssistanceStatus).Value;
 
-            var pet = volunteerResult.Value.Pets.FirstOrDefault(p => p.Id == petId);
-            if (pet is null)
-                return Errors.General.NotFound(command.PetId).ToErrorList();
-
-            pet.UpdateAssistanceStatus(assistanceStatus);
+            var result = volunteerResult.Value.UpdatePetAssistanceStatus(PetId.Create(command.PetId), assistanceStatus);
+            if (result.IsFailure)
+                return result.Error.ToErrorList();
 
             await _unitOfWork.SaveChanges(cancellationToken);
 
-            _logger.LogInformation("updated assistance status pet info {Nikname} with id {PetId}",
-                pet.Nickname,
-                command.PetId);
+            _logger.LogInformation("updated assistance status pet with id {PetId}", command.PetId);
 
-            return petId.Value;
+            return command.PetId;
         }
     }
 }

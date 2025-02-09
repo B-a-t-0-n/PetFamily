@@ -155,11 +155,16 @@ namespace PetFamily.Infrastucture.Configuration.Write
 
             builder.HasMany(p => p.PetPhotos)
                 .WithOne()
+                .IsRequired()
                 .HasForeignKey("pet_id");
 
-            builder.Property<bool>("_isDeleted")
+            builder.Property<bool>("IsDeleted")
+                 .UsePropertyAccessMode(PropertyAccessMode.Field)
+                 .HasColumnName("is_deleted");
+
+            builder.Property<DateTime?>("DeletionDate")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("is_deleted");
+                .HasColumnName("deletion_date");
         }
     }
 }

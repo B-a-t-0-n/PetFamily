@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PetFamily.Domain.PetMenegment.Entity;
 using PetFamily.Domain.SpeciesMenegment.Entity;
-using PetFamily.Infrastucture.Interceptors;
 
 namespace PetFamily.Infrastucture.DbContexts
 {
@@ -18,7 +17,6 @@ namespace PetFamily.Infrastucture.DbContexts
             optionsBuilder.UseSnakeCaseNamingConvention();
             optionsBuilder.EnableSensitiveDataLogging();
             optionsBuilder.UseLoggerFactory(CreateLogerFactory());
-            optionsBuilder.AddInterceptors(new SoftDeleteInterceptor());
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

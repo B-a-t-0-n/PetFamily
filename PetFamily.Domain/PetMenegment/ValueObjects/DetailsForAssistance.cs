@@ -1,6 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Shared;
-using ValueObject = PetFamily.Domain.Shared.ValueObject;
 
 namespace PetFamily.Domain.PetMenegment.ValueObjects
 {
@@ -31,7 +30,7 @@ namespace PetFamily.Domain.PetMenegment.ValueObjects
             return detailsForAssistance;
         }
 
-        protected override IEnumerable<object> GetEqualityComponents()
+        protected override IEnumerable<IComparable> GetEqualityComponents()
         {
             yield return Name == null ? "" : Name; ;
             yield return Description == null ? "" : Description; ;

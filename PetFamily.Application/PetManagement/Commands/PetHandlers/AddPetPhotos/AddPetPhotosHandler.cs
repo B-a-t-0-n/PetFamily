@@ -57,15 +57,8 @@ namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPetPhotos
 
                 var volunteerResult = await _volunteerRepository.GetById(
                     VolunteerId.Create(command.VolunteerId), cancellationToken);
-
                 if (volunteerResult.IsFailure)
                     return volunteerResult.Error.ToErrorList();
-
-                var petId = PetId.Create(command.PetId);
-
-                var pet = volunteerResult.Value.Pets.FirstOrDefault(p => p.Id == petId);
-                if (pet is null)
-                    return Errors.General.NotFound(petId).ToErrorList();
 
                 List<FileData> filesData = [];
                 foreach (var file in command.Files)
@@ -84,7 +77,7 @@ namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPetPhotos
                     if (photoResult.IsFailure)
                         return photoResult.Error.ToErrorList();
 
-                    pet.AddPetPhoto(photoResult.Value);
+                    volunteerResult.Value.AddPetPhoto(PetId.Create(command.PetId), photoResult.Value);
 
                     filesData.Add(fileContent);
                 }
