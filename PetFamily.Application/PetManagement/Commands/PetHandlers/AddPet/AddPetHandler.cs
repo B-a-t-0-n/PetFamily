@@ -6,37 +6,37 @@ using PetFamily.Domain.Shared.IDs;
 using PetFamily.Domain.Shared;
 using PetFamily.Application.Providers;
 using PetFamily.Application.Database;
-using PetFamily.Application.Species;
 using FluentValidation;
 using PetFamily.Application.Extentions;
 using PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPet.Commands;
 using PetFamily.Application.Abstraction;
+using Microsoft.EntityFrameworkCore;
 
 namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPet
 {
     public class AddPetHandler : ICommandHandler<Guid, AddPetCommand>
     {
         private readonly IVolunteerRepository _volunteerRepository;
-        private readonly ISpeciesRepository _speciesRepository;
         private readonly ILogger<AddPetHandler> _logger;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IValidator<AddPetCommand> _validator;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IReadDbContext _readDbContext;
 
         public AddPetHandler(
             IVolunteerRepository volunteerRepository,
-            ISpeciesRepository speciesRepository,
             ILogger<AddPetHandler> logger,
             IDateTimeProvider dateTimeProvider,
             IUnitOfWork unitOfWork,
-            IValidator<AddPetCommand> validator)
+            IValidator<AddPetCommand> validator,
+            IReadDbContext readDbContext)
         {
             _volunteerRepository = volunteerRepository;
-            _speciesRepository = speciesRepository;
             _logger = logger;
             _dateTimeProvider = dateTimeProvider;
             _unitOfWork = unitOfWork;
             _validator = validator;
+            _readDbContext = readDbContext;
         }
 
         public async Task<Result<Guid, ErrorList>> Handle(AddPetCommand command, CancellationToken cancellationToken = default)
@@ -57,17 +57,17 @@ namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPet
 
             var nickname = Nickname.Create(command.Nickname).Value;
 
-            var speciesResult = await _speciesRepository.GetById(
-                    SpeciesId.Create(command.SpeciesAndBreed.SpeciesId), cancellationToken);
+            var species = await _readDbContext.Species
+                .FirstOrDefaultAsync(s => s.Id == command.SpeciesAndBreed.SpeciesId, cancellationToken);
+            if (species is null)
+                return Errors.General.NotFound(command.SpeciesAndBreed.SpeciesId).ToErrorList();
 
-            if (speciesResult.IsFailure)
-                return speciesResult.Error.ToErrorList();
-
-            var breed = speciesResult.Value.breeds.FirstOrDefault(b => b.Id == command.SpeciesAndBreed.BreedId);
+            var breed = await _readDbContext.Breeds
+                .FirstOrDefaultAsync(b => b.Id == command.SpeciesAndBreed.BreedId);
             if (breed is null)
                 return Errors.General.NotFound(command.SpeciesAndBreed.BreedId).ToErrorList();
 
-            var speciesAndBreed = SpeciesAndBreed.Create(speciesResult.Value.Id, command.SpeciesAndBreed.BreedId).Value;
+            var speciesAndBreed = SpeciesAndBreed.Create(SpeciesId.Create(species.Id), breed.Id).Value;
 
             var description = Description.Create(command.Description).Value;
 

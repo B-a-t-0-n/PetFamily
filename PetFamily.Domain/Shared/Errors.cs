@@ -1,6 +1,4 @@
-﻿using System.Reflection.Emit;
-
-namespace PetFamily.Domain.Shared
+﻿namespace PetFamily.Domain.Shared
 {
     public static class Errors
     {
@@ -23,6 +21,12 @@ namespace PetFamily.Domain.Shared
                 var label = name == null ? "" : " " + name + " ";
                 return Error.Validation("length.is.invalid", $"invalid{label}length");
             }
-        }  
+
+            public static Error AlreadyExist()
+            {
+                return Error.Validation("record.already.exist", "record already exist");
+            }
+        }
+
     }
 }

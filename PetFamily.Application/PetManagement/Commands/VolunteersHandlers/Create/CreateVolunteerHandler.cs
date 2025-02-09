@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstraction;
 using PetFamily.Application.Database;
@@ -18,17 +19,21 @@ namespace PetFamily.Application.PetManagement.UseCases.VolunteersHandlers.Create
         private readonly ILogger<CreateVolunteerHandler> _logger;
         private readonly IValidator<CreateVolunteerCommand> _validator;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IReadDbContext _readDbContext;
+
 
         public CreateVolunteerHandler(
             IVolunteerRepository volunteerRepository,
             ILogger<CreateVolunteerHandler> logger,
             IValidator<CreateVolunteerCommand> validator,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IReadDbContext readDbContext)
         {
             _volunteerRepository = volunteerRepository;
             _logger = logger;
             _unitOfWork = unitOfWork;
             _validator = validator;
+            _readDbContext = readDbContext;
         }
 
         public async Task<Result<Guid, ErrorList>> Handle(CreateVolunteerCommand command, CancellationToken cancellationToken = default)
@@ -83,6 +88,9 @@ namespace PetFamily.Application.PetManagement.UseCases.VolunteersHandlers.Create
 
             if (volunteerResult.IsFailure)
                 return volunteerResult.Error.ToErrorList();
+
+            if (await _readDbContext.Volunteers.AnyAsync(v => v.PhoneNumber == phoneNumder.Number))
+                return Errors.General.AlreadyExist().ToErrorList();
 
             await _volunteerRepository.Add(volunteerResult.Value, cancellationToken);
             await _unitOfWork.SaveChanges(cancellationToken);

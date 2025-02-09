@@ -21,9 +21,9 @@ namespace PetFamily.Domain.PetMenegment.Entity
 
         public static Result<PetPhoto, Error> Create(PetPhotoId id, PhotoPath path, bool isMain)
         {
-            var pet = new PetPhoto(id , path, isMain);
+            var petPhoto = new PetPhoto(id , path, isMain);
 
-            return pet;
+            return petPhoto;
         }
     }
 }

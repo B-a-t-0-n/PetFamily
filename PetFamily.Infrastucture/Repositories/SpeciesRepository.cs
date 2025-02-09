@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
-using PetFamily.Application.Species;
+using PetFamily.Application.SpeciesManagment;
 using PetFamily.Domain.PetMenegment.Entity;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.IDs;
@@ -44,7 +44,7 @@ namespace PetFamily.Infrastucture.Repositories
 
         public Guid Save(Species species, CancellationToken cancellationToken = default)
         {
-            _dbContext.Attach(species);
+            _dbContext.Species.Attach(species);
 
             return species.Id;
         }

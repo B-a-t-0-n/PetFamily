@@ -15,6 +15,10 @@ namespace PetFamily.Infrastucture.DbContexts
 
         public IQueryable<PetPhotoDto> PetPhotos => Set<PetPhotoDto>();
 
+        public IQueryable<SpeciesDto> Species => Set<SpeciesDto>();
+
+        public IQueryable<BreedDto> Breeds => Set<BreedDto>();
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(configuration.GetConnectionString(Constants.DATABASE));

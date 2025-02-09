@@ -2,7 +2,7 @@
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.IDs;
 
-namespace PetFamily.Application.Species
+namespace PetFamily.Application.SpeciesManagment
 {
     public interface ISpeciesRepository
     {

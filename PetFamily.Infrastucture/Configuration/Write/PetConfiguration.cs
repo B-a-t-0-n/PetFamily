@@ -48,7 +48,7 @@ namespace PetFamily.Infrastucture.Configuration.Write
                     .HasConversion(
                         id => id.Value,
                         value => SpeciesId.Create(value))
-                    .HasColumnName("SpeciesId");
+                    .HasColumnName("species_id");
 
                 pb.Property(n => n.BreedId)
                     .HasColumnName("breed_id");
