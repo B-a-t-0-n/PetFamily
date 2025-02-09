@@ -20,6 +20,10 @@ using PetFamily.Application.PetManagement.Commands.PetHandlers.UpdateInfoPet;
 using PetFamily.Application.PetManagement.Commands.PetHandlers.UpdatePetStatus;
 using PetFamily.Application.PetManagement.Commands.VolunteersHandlers.HardDelete;
 using PetFamily.Application.PetManagement.Commands.VolunteersHandlers.HardDelete.Commands;
+using PetFamily.Application.PetManagement.Commands.PetHandlers.SoftDeletePet;
+using PetFamily.Application.PetManagement.Commands.PetHandlers.SoftDeletePet.Commands;
+using PetFamily.Application.PetManagement.Commands.PetHandlers.HardDeletePet;
+using PetFamily.Application.PetManagement.Commands.PetHandlers.HardDeletePet.Commands;
 
 namespace PetFamily.API.Controllers.Volunteer
 {
@@ -195,6 +199,34 @@ namespace PetFamily.API.Controllers.Volunteer
             if (result.IsFailure)
                 return result.Error.ToResponse();
             return Ok(result.Value);
+        }
+
+        [HttpDelete("{volunteerId:guid}/{petId:guid}/soft")]
+        public async Task<ActionResult<Guid>> DeletePet(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromServices] SoftDeletePetHandler handler,
+            CancellationToken cancellationToken = default)
+        {
+            var command = new SoftDeletePetCommand(volunteerId, petId);
+            var result = await handler.Handle(command, cancellationToken);
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+            return Ok(result.Value);
+        }
+
+        [HttpDelete("{volunteerId:guid}/{petId:guid}/hard")]
+        public async Task<ActionResult<Guid>> DeletePet(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromServices] HardDeletePetHandler handler,
+            CancellationToken cancellationToken = default)
+        {
+            var command = new HardDeletePetCommand(volunteerId, petId);
+            var result = await handler.Handle(command, cancellationToken);
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+            return Ok();
         }
 
         [HttpPost("{volunteerId:guid}/{petId:guid}/add-pet-photos")]

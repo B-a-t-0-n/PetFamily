@@ -183,6 +183,28 @@ namespace PetFamily.Domain.PetMenegment.Entity
             return photo.Path.PathToStorage;
         }
 
+        public UnitResult<Error> SoftDeletePet(PetId id)
+        {
+            var pet = _pets.FirstOrDefault(p => p.Id == id);
+            if (pet is null)
+                return Errors.General.NotFound(id);
+
+            pet.Delete();
+
+            return Result.Success<Error>();
+        }
+
+        public UnitResult<Error> HardDeletePet(PetId id)
+        {
+            var pet = _pets.FirstOrDefault(p => p.Id == id);
+            if (pet is null)
+                return Errors.General.NotFound(id);
+
+            _pets.Remove(pet);
+
+            return Result.Success<Error>();
+        }
+
         public override void Delete()
         {
             base.Delete();
