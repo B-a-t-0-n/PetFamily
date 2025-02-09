@@ -162,6 +162,11 @@ namespace PetFamily.Domain.PetMenegment.Entity
             _detailsForAssistance = detailsForAssistance;
         }
 
+        public void UpdateAssistanceStatus(AssistanceStatus assistanceStatus)
+        {
+            AssistanceStatus = assistanceStatus;
+        }
+
         public void Delete()
         {
             if (_isDeleted == false)
