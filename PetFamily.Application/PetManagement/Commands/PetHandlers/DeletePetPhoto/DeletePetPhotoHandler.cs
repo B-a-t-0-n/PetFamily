@@ -14,8 +14,6 @@ namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.DeletePetPhot
 {
     public class DeletePetPhotoHandler : ICommandHandler<Guid, DeletePetPhotoCommand>
     {
-        private const string BUCKET_NAME = "photos";
-
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly IFileProvider _fileProvider;
         private readonly ILogger<DeletePetPhotoHandler> _logger;
@@ -62,7 +60,7 @@ namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.DeletePetPhot
 
                 await _unitOfWork.SaveChanges(cancellationToken);
 
-                var fileMetadata = new FileMetadata(BUCKET_NAME, pathToStorageResult.Value);
+                var fileMetadata = new FileMetadata(Constants.BUCKET_NAME, pathToStorageResult.Value);
 
                 var deleteResult = await _fileProvider.Deletefile(fileMetadata, cancellationToken);
 

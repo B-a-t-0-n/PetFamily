@@ -18,8 +18,6 @@ namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPetPhotos
 {
     public class AddPetPhotosHandler : ICommandHandler<IReadOnlyList<PhotoPath>, AddPetPhotosCommand>
     {
-        private const string BUCKET_NAME = "photos";
-
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly IFileProvider _fileProvider;
         private readonly IUnitOfWork _unitOfWork;
@@ -69,7 +67,7 @@ namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPetPhotos
                     if (photoPathResult.IsFailure)
                         return photoPathResult.Error.ToErrorList();
 
-                    var fileContent = new FileData(file.Content, photoPathResult.Value, BUCKET_NAME);
+                    var fileContent = new FileData(file.Content, photoPathResult.Value, Constants.BUCKET_NAME);
 
                     var petPhotoId = PetPhotoId.NewPetPhotoId();
 

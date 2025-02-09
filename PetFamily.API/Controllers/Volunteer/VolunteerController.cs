@@ -18,6 +18,8 @@ using PetFamily.Application.PetManagement.Queries.GetVolunteersWithPagination;
 using PetFamily.Application.PetManagement.Queries.GetVolunteerById;
 using PetFamily.Application.PetManagement.Commands.PetHandlers.UpdateInfoPet;
 using PetFamily.Application.PetManagement.Commands.PetHandlers.UpdatePetStatus;
+using PetFamily.Application.PetManagement.Commands.VolunteersHandlers.HardDelete;
+using PetFamily.Application.PetManagement.Commands.VolunteersHandlers.HardDelete.Commands;
 
 namespace PetFamily.API.Controllers.Volunteer
 {
@@ -116,13 +118,13 @@ namespace PetFamily.API.Controllers.Volunteer
             return Ok(result.Value);
         }
 
-        [HttpDelete("{id:guid}")]
+        [HttpDelete("{id:guid}/soft")]
         public async Task<ActionResult<Guid>> Delete(
             [FromRoute] Guid id,
-            [FromServices] DeleteVolunteerHandler handler,
+            [FromServices] SoftDeleteVolunteerHandler handler,
             CancellationToken cancellationToken = default)
         {
-            var command = new DeleteVolunteerCommand(id);
+            var command = new SoftDeleteVolunteerCommand(id);
 
             var result = await handler.Handle(command, cancellationToken);
 
@@ -130,6 +132,22 @@ namespace PetFamily.API.Controllers.Volunteer
                 return result.Error.ToResponse();
 
             return Ok(result.Value);
+        }
+
+        [HttpDelete("{id:guid}/hard")]
+        public async Task<ActionResult<Guid>> Delete(
+            [FromRoute] Guid id,
+            [FromServices] HardDeleteVolunteerHandler handler,
+            CancellationToken cancellationToken = default)
+        {
+            var command = new HardDeleteVolunteerCommand(id);
+
+            var result = await handler.Handle(command, cancellationToken);
+
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            return Ok();
         }
 
         [HttpPost("{id:guid}/add-pet")]
