@@ -202,6 +202,12 @@ namespace PetFamily.Domain.PetMenegment.Entity
             if (pet is null)
                 return Errors.General.NotFound(id);
 
+            var moveResult = MovePet(
+                pet,
+                SerialNumber.Create(_pets.Where(p => p.IsDeleted == false).Count()).Value);
+            if (moveResult.IsFailure)
+                return moveResult.Error;
+
             pet.Delete();
 
             return Result.Success<Error>();
@@ -212,6 +218,10 @@ namespace PetFamily.Domain.PetMenegment.Entity
             var pet = _pets.FirstOrDefault(p => p.Id == id);
             if (pet is null)
                 return Errors.General.NotFound(id);
+
+            var moveResult = MovePet(pet, SerialNumber.Create(_pets.Count).Value);
+            if (moveResult.IsFailure)
+                return moveResult.Error;
 
             _pets.Remove(pet);
 
