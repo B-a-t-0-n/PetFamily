@@ -16,6 +16,7 @@ using PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPetPhotos.Comm
 using PetFamily.Application.PetManagement.UseCases.PetHandlers.DeletePetPhoto.Commands;
 using PetFamily.Application.PetManagement.Queries.GetVolunteersWithPagination;
 using PetFamily.Application.PetManagement.Queries.GetVolunteerById;
+using PetFamily.Application.PetManagement.Commands.PetHandlers.UpdateInfoPet;
 
 namespace PetFamily.API.Controllers.Volunteer
 {
@@ -144,6 +145,21 @@ namespace PetFamily.API.Controllers.Volunteer
             if (result.IsFailure)
                 return result.Error.ToResponse();
 
+            return Ok(result.Value);
+        }
+
+        [HttpPut("{volunteerId:guid}/{petId:guid}/info")]
+        public async Task<ActionResult<Guid>> UpdatePetInfo(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromServices] UpdatePetInfoHandler handler,
+            [FromBody] UpdatePetInfoRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            var command = request.ToCommand(volunteerId, petId);
+            var result = await handler.Handle(command, cancellationToken);
+            if (result.IsFailure)
+                return result.Error.ToResponse();
             return Ok(result.Value);
         }
 

@@ -2,6 +2,10 @@
 using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.IDs;
+using System.Drawing;
+using System.Net;
+using Color = PetFamily.Domain.PetMenegment.ValueObjects.Color;
+using Size = PetFamily.Domain.PetMenegment.ValueObjects.Size;
 
 namespace PetFamily.Domain.PetMenegment.Entity
 {
@@ -126,6 +130,36 @@ namespace PetFamily.Domain.PetMenegment.Entity
                 detailsForAssistance);
 
             return pet;
+        }
+
+        public void UpdateInfo(
+            Nickname nickname,
+            SpeciesAndBreed speciesAndBreed,
+            Description description,
+            Color color,
+            HealthInformation healthInformation,
+            Address address,
+            Size size,
+            PhoneNumber phoneNumber,
+            bool isCastrated,
+            DateTime? dateOfBirth,
+            bool isVaccinated,
+            AssistanceStatus assistanceStatus,
+            List<DetailsForAssistance> detailsForAssistance)
+        {
+            Nickname = nickname;
+            Description = description;
+            Color = color;
+            HealthInformation = healthInformation;
+            SpeciesAndBreed = speciesAndBreed;
+            Address = address;
+            Size = size;
+            PhoneNumber = phoneNumber;
+            IsCastrated = isCastrated;
+            DateOfBirth = dateOfBirth;
+            IsVaccinated = isVaccinated;
+            AssistanceStatus = assistanceStatus;
+            _detailsForAssistance = detailsForAssistance;
         }
 
         public void Delete()

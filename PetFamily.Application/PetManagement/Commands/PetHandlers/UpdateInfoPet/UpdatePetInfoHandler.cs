@@ -1,45 +1,41 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
-using PetFamily.Domain.PetMenegment.Entity;
+using PetFamily.Application.Abstraction;
+using PetFamily.Application.Database;
 using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared.IDs;
 using PetFamily.Domain.Shared;
-using PetFamily.Application.Providers;
-using PetFamily.Application.Database;
-using FluentValidation;
+using PetFamily.Application.PetManagement.Commands.PetHandlers.UpdateInfoPet.Commands;
 using PetFamily.Application.Extentions;
-using PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPet.Commands;
-using PetFamily.Application.Abstraction;
 using Microsoft.EntityFrameworkCore;
 
-namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPet
+namespace PetFamily.Application.PetManagement.Commands.PetHandlers.UpdateInfoPet
 {
-    public class AddPetHandler : ICommandHandler<Guid, AddPetCommand>
+    public class UpdatePetInfoHandler : ICommandHandler<Guid, UpdatePetInfoCommand>
     {
         private readonly IVolunteerRepository _volunteerRepository;
-        private readonly ILogger<AddPetHandler> _logger;
-        private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly IValidator<AddPetCommand> _validator;
+        private readonly ILogger<UpdatePetInfoHandler> _logger;
+        private readonly IValidator<UpdatePetInfoCommand> _validator;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IReadDbContext _readDbContext;
 
-        public AddPetHandler(
+
+        public UpdatePetInfoHandler(
             IVolunteerRepository volunteerRepository,
-            ILogger<AddPetHandler> logger,
-            IDateTimeProvider dateTimeProvider,
+            ILogger<UpdatePetInfoHandler> logger,
+            IValidator<UpdatePetInfoCommand> validator,
             IUnitOfWork unitOfWork,
-            IValidator<AddPetCommand> validator,
             IReadDbContext readDbContext)
         {
             _volunteerRepository = volunteerRepository;
             _logger = logger;
-            _dateTimeProvider = dateTimeProvider;
             _unitOfWork = unitOfWork;
             _validator = validator;
             _readDbContext = readDbContext;
         }
 
-        public async Task<Result<Guid, ErrorList>> Handle(AddPetCommand command, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, ErrorList>> Handle(UpdatePetInfoCommand command, CancellationToken cancellationToken = default)
         {
             var validationResult = await _validator.ValidateAsync(command, cancellationToken);
             if (validationResult.IsValid == false)
@@ -52,7 +48,7 @@ namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPet
             if (volunteerResult.IsFailure)
                 return volunteerResult.Error.ToErrorList();
 
-            var petId = PetId.NewPetId();
+            var petId = PetId.Create(command.PetId);
 
             var nickname = Nickname.Create(command.Nickname).Value;
 
@@ -101,9 +97,11 @@ namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPet
                 }
             }
 
-            var petResult = Pet.Create(
-                petId,
-                nickname,
+            var pet = volunteerResult.Value.Pets.FirstOrDefault(p => p.Id == petId);
+            if (pet is null)
+                return Errors.General.NotFound(command.PetId).ToErrorList();
+
+            pet.UpdateInfo(nickname,
                 speciesAndBreed,
                 description,
                 color,
@@ -115,22 +113,15 @@ namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPet
                 command.DateOfBirth,
                 command.IsVaccinated,
                 assistanceStatus,
-                _dateTimeProvider.UtcNow,
-                detailsForAssistances);
-
-            if (petResult.IsFailure)
-                return petResult.Error.ToErrorList();
-
-            volunteerResult.Value.AddPet(petResult.Value);
+                detailsForAssistances); 
 
             await _unitOfWork.SaveChanges(cancellationToken);
 
-            _logger.LogInformation("added pet {Nickname} with id {petId} volunteer with id {volunteerId}",
-                nickname,
-                petId.Value,
-                volunteerResult.Value.Id);
+            _logger.LogInformation("updated pet info {Nikname} with id {PetId}",
+                command.Nickname,
+                command.PetId);
 
-            return (Guid)petResult.Value.Id;
+            return petId.Value;
         }
     }
 }
