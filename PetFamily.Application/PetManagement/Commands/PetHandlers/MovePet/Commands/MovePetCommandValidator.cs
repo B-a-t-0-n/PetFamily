@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using PetFamily.Application.Validation;
+using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.MovePet.Commands
@@ -10,7 +11,7 @@ namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.MovePet.Comma
         {
             RuleFor(u => u.VolunteerId).NotEmpty().WithError(Errors.General.ValueIsRequired());
             RuleFor(u => u.PetId).NotEmpty().WithError(Errors.General.ValueIsRequired());
-            RuleFor(u => u.SerialNumber).NotEmpty().WithError(Errors.General.ValueIsRequired());
+            RuleFor(u => u.SerialNumber).MustBeValueObject(SerialNumber.Create);
         }
     }
 }

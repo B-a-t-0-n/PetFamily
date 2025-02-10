@@ -14,8 +14,6 @@ namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.DeletePetPhot
 {
     public class DeletePetPhotoHandler : ICommandHandler<Guid, DeletePetPhotoCommand>
     {
-        private const string BUCKET_NAME = "photos";
-
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly IFileProvider _fileProvider;
         private readonly ILogger<DeletePetPhotoHandler> _logger;
@@ -54,19 +52,15 @@ namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.DeletePetPhot
                 if (volunteerResult.IsFailure)
                     return volunteerResult.Error.ToErrorList();
 
-                var pet = volunteerResult.Value.Pets.FirstOrDefault(p => p.Id == command.PetId);
-                if (pet is null)
-                    return Errors.General.NotFound(command.PetId).ToErrorList();
-
-                var photo = pet.PetPhotos.FirstOrDefault(p => p.Id == command.PetPhotoId);
-                if (photo is null)
-                    return Errors.General.NotFound(command.PetPhotoId).ToErrorList();
-
-                pet.DeletePetPhoto(photo);
+                var pathToStorageResult = volunteerResult.Value.DeletePetPhoto(
+                    PetId.Create(command.PetId),
+                    PetPhotoId.Create(command.PetPhotoId));
+                if (pathToStorageResult.IsFailure)
+                    return pathToStorageResult.Error.ToErrorList();
 
                 await _unitOfWork.SaveChanges(cancellationToken);
 
-                var fileMetadata = new FileMetadata(BUCKET_NAME, photo.Path.PathToStorage);
+                var fileMetadata = new FileMetadata(Constants.PHOTO_BUCKET_NAME, pathToStorageResult.Value);
 
                 var deleteResult = await _fileProvider.Deletefile(fileMetadata, cancellationToken);
 

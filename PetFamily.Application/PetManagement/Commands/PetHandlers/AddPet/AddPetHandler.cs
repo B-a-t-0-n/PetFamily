@@ -49,7 +49,6 @@ namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPet
 
             var volunteerResult = await _volunteerRepository.GetById(
                 VolunteerId.Create(command.VolunteerId), cancellationToken);
-
             if (volunteerResult.IsFailure)
                 return volunteerResult.Error.ToErrorList();
 

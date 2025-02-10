@@ -5,10 +5,8 @@ using PetFamily.Domain.Shared.IDs;
 
 namespace PetFamily.Domain.PetMenegment.Entity
 {
-    public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
-    {
-        private bool _isDeleted = false;
-         
+    public class Volunteer : Shared.SoftDeletableEntity<VolunteerId>
+    {         
         private readonly List<Pet> _pets = [];
         public List<SocialNetwork> _socialNetwork = [];
         public List<DetailsForAssistance> _detailsForAssistance = [];
@@ -110,6 +108,155 @@ namespace PetFamily.Domain.PetMenegment.Entity
             return Result.Success<Error>();
         }
 
+        public UnitResult<Error> UpdatePetInfo(
+            PetId petId,
+            Nickname nickname,
+            SpeciesAndBreed speciesAndBreed,
+            Description description,
+            Color color,
+            HealthInformation healthInformation,
+            Address address,
+            Size size,
+            PhoneNumber phoneNumber,
+            bool isCastrated,
+            DateTime? dateOfBirth,
+            bool isVaccinated,
+            AssistanceStatus assistanceStatus,
+            List<DetailsForAssistance> detailsForAssistance
+            )
+        {
+            var pet = _pets.FirstOrDefault(p => p.Id == petId);
+            if (pet is null)
+                return Errors.General.NotFound(petId);
+
+            pet.UpdateInfo(nickname,
+                speciesAndBreed,
+                description,
+                color,
+                healthInformation,
+                address,
+                size,
+                phoneNumber,
+                isCastrated,
+                dateOfBirth,
+                isVaccinated,
+                assistanceStatus,
+                detailsForAssistance);
+
+            return Result.Success<Error>();
+        }
+
+        public UnitResult<Error> UpdatePetAssistanceStatus(PetId petId, AssistanceStatus assistanceStatus)
+        {
+            var pet = _pets.FirstOrDefault(p => p.Id == petId);
+            if (pet is null)
+                return Errors.General.NotFound(petId);
+
+            pet.UpdateAssistanceStatus(assistanceStatus);
+
+            return Result.Success<Error>();
+        }
+
+        public UnitResult<Error> AddPetPhoto(PetId petId, PetPhoto photo)
+        {
+            var pet = _pets.FirstOrDefault(p => p.Id == petId);
+            if (pet is null)
+                return Errors.General.NotFound(petId);
+
+            pet.AddPhoto(photo);
+
+            return Result.Success<Error>();
+        }
+
+        public UnitResult<Error> SetMainPhotoPet(PetId petId, PhotoPath petPhoto)
+        {
+            var pet = _pets.FirstOrDefault(p => p.Id == petId);
+            if (pet is null)
+                return Errors.General.NotFound(petId);
+
+            var result = pet.SetMainPhoto(petPhoto);
+            if (result.IsFailure)
+                return result.Error;
+
+            return Result.Success<Error>();
+        }
+
+        public Result<string, Error> DeletePetPhoto(PetId petId, PetPhotoId photoId)
+        {
+            var pet = _pets.FirstOrDefault(p => p.Id == petId);
+            if (pet is null)
+                return Errors.General.NotFound(petId);
+
+            var photo = pet.PetPhotos.FirstOrDefault(p => p.Id == photoId);
+            if (photo is null)
+                return Errors.General.NotFound(photoId);
+
+            pet.DeletePhoto(photo);
+
+            return photo.Path.PathToStorage;
+        }
+
+        public UnitResult<Error> SoftDeletePet(PetId id)
+        {
+            var pet = _pets.FirstOrDefault(p => p.Id == id);
+            if (pet is null)
+                return Errors.General.NotFound(id);
+
+            var moveResult = MovePet(
+                pet,
+                SerialNumber.Create(_pets.Where(p => p.IsDeleted == false).Count()).Value);
+            if (moveResult.IsFailure)
+                return moveResult.Error;
+
+            pet.Delete();
+
+            return Result.Success<Error>();
+        }
+
+        public UnitResult<Error> HardDeletePet(PetId id)
+        {
+            var pet = _pets.FirstOrDefault(p => p.Id == id);
+            if (pet is null)
+                return Errors.General.NotFound(id);
+
+            var moveResult = MovePet(pet, SerialNumber.Create(_pets.Count).Value);
+            if (moveResult.IsFailure)
+                return moveResult.Error;
+
+            _pets.Remove(pet);
+
+            return Result.Success<Error>();
+        }
+
+        public override void Delete()
+        {
+            base.Delete();
+
+            foreach (var pet in _pets)
+            {
+                pet.Delete();
+            }
+        }
+
+        public override void Restore()
+        {
+            base.Restore();
+
+            foreach (var pet in _pets)
+            {
+                pet.Restore();
+            }
+        }
+
+        public void DeleteExpiredPets()
+        {
+            _pets.RemoveAll(p => p.IsExpired());
+        }
+
+        public bool IsExpired() => DeletionDate != null
+                                   && DateTime.UtcNow >= DeletionDate.Value
+                                      .AddDays(Constants.LIFETIME_AFTER_DELETION);
+
         public UnitResult<Error> MovePet(Pet pet, SerialNumber newSerialNumber)
         {
             var currentSerialNumber = pet.SerialNumber;
@@ -175,20 +322,6 @@ namespace PetFamily.Domain.PetMenegment.Entity
             return Result.Success<Error>();
         }
 
-        public void Delete()
-        {
-            if(_isDeleted == false)
-            {
-                _isDeleted = true;
-            }
-        }
-
-        public void Restore()
-        {
-            if (_isDeleted)
-            {
-                _isDeleted = true;
-            }
-        }
+        
     }
 }

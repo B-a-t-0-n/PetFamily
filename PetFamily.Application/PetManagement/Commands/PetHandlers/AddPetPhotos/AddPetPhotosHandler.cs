@@ -18,8 +18,6 @@ namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPetPhotos
 {
     public class AddPetPhotosHandler : ICommandHandler<IReadOnlyList<PhotoPath>, AddPetPhotosCommand>
     {
-        private const string BUCKET_NAME = "photos";
-
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly IFileProvider _fileProvider;
         private readonly IUnitOfWork _unitOfWork;
@@ -57,15 +55,8 @@ namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPetPhotos
 
                 var volunteerResult = await _volunteerRepository.GetById(
                     VolunteerId.Create(command.VolunteerId), cancellationToken);
-
                 if (volunteerResult.IsFailure)
                     return volunteerResult.Error.ToErrorList();
-
-                var petId = PetId.Create(command.PetId);
-
-                var pet = volunteerResult.Value.Pets.FirstOrDefault(p => p.Id == petId);
-                if (pet is null)
-                    return Errors.General.NotFound(petId).ToErrorList();
 
                 List<FileData> filesData = [];
                 foreach (var file in command.Files)
@@ -76,7 +67,7 @@ namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPetPhotos
                     if (photoPathResult.IsFailure)
                         return photoPathResult.Error.ToErrorList();
 
-                    var fileContent = new FileData(file.Content, photoPathResult.Value, BUCKET_NAME);
+                    var fileContent = new FileData(file.Content, photoPathResult.Value, Constants.PHOTO_BUCKET_NAME);
 
                     var petPhotoId = PetPhotoId.NewPetPhotoId();
 
@@ -84,7 +75,7 @@ namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPetPhotos
                     if (photoResult.IsFailure)
                         return photoResult.Error.ToErrorList();
 
-                    pet.AddPetPhoto(photoResult.Value);
+                    volunteerResult.Value.AddPetPhoto(PetId.Create(command.PetId), photoResult.Value);
 
                     filesData.Add(fileContent);
                 }

@@ -16,6 +16,15 @@ using PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPetPhotos.Comm
 using PetFamily.Application.PetManagement.UseCases.PetHandlers.DeletePetPhoto.Commands;
 using PetFamily.Application.PetManagement.Queries.GetVolunteersWithPagination;
 using PetFamily.Application.PetManagement.Queries.GetVolunteerById;
+using PetFamily.Application.PetManagement.Commands.PetHandlers.UpdateInfoPet;
+using PetFamily.Application.PetManagement.Commands.PetHandlers.UpdatePetStatus;
+using PetFamily.Application.PetManagement.Commands.VolunteersHandlers.HardDelete;
+using PetFamily.Application.PetManagement.Commands.VolunteersHandlers.HardDelete.Commands;
+using PetFamily.Application.PetManagement.Commands.PetHandlers.SoftDeletePet;
+using PetFamily.Application.PetManagement.Commands.PetHandlers.SoftDeletePet.Commands;
+using PetFamily.Application.PetManagement.Commands.PetHandlers.HardDeletePet;
+using PetFamily.Application.PetManagement.Commands.PetHandlers.HardDeletePet.Commands;
+using PetFamily.Application.PetManagement.Commands.PetHandlers.SetMainPhotoPet;
 
 namespace PetFamily.API.Controllers.Volunteer
 {
@@ -114,13 +123,13 @@ namespace PetFamily.API.Controllers.Volunteer
             return Ok(result.Value);
         }
 
-        [HttpDelete("{id:guid}")]
+        [HttpDelete("{id:guid}/soft")]
         public async Task<ActionResult<Guid>> Delete(
             [FromRoute] Guid id,
-            [FromServices] DeleteVolunteerHandler handler,
+            [FromServices] SoftDeleteVolunteerHandler handler,
             CancellationToken cancellationToken = default)
         {
-            var command = new DeleteVolunteerCommand(id);
+            var command = new SoftDeleteVolunteerCommand(id);
 
             var result = await handler.Handle(command, cancellationToken);
 
@@ -128,6 +137,22 @@ namespace PetFamily.API.Controllers.Volunteer
                 return result.Error.ToResponse();
 
             return Ok(result.Value);
+        }
+
+        [HttpDelete("{id:guid}/hard")]
+        public async Task<ActionResult<Guid>> Delete(
+            [FromRoute] Guid id,
+            [FromServices] HardDeleteVolunteerHandler handler,
+            CancellationToken cancellationToken = default)
+        {
+            var command = new HardDeleteVolunteerCommand(id);
+
+            var result = await handler.Handle(command, cancellationToken);
+
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            return Ok();
         }
 
         [HttpPost("{id:guid}/add-pet")]
@@ -145,6 +170,64 @@ namespace PetFamily.API.Controllers.Volunteer
                 return result.Error.ToResponse();
 
             return Ok(result.Value);
+        }
+
+        [HttpPut("{volunteerId:guid}/{petId:guid}/info")]
+        public async Task<ActionResult<Guid>> UpdatePetInfo(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromServices] UpdatePetInfoHandler handler,
+            [FromBody] UpdatePetInfoRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            var command = request.ToCommand(volunteerId, petId);
+            var result = await handler.Handle(command, cancellationToken);
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+            return Ok(result.Value);
+        }
+
+        [HttpPut("{volunteerId:guid}/{petId:guid}/assistance-status")]
+        public async Task<ActionResult<Guid>> UpdatePetStatus(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromServices] UpdatePetStatusHandler handler,
+            [FromBody] UpdatePetStatusRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            var command = request.ToCommand(volunteerId, petId);
+            var result = await handler.Handle(command, cancellationToken);
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+            return Ok(result.Value);
+        }
+
+        [HttpDelete("{volunteerId:guid}/{petId:guid}/soft")]
+        public async Task<ActionResult<Guid>> DeletePet(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromServices] SoftDeletePetHandler handler,
+            CancellationToken cancellationToken = default)
+        {
+            var command = new SoftDeletePetCommand(volunteerId, petId);
+            var result = await handler.Handle(command, cancellationToken);
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+            return Ok(result.Value);
+        }
+
+        [HttpDelete("{volunteerId:guid}/{petId:guid}/hard")]
+        public async Task<ActionResult<Guid>> DeletePet(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromServices] HardDeletePetHandler handler,
+            CancellationToken cancellationToken = default)
+        {
+            var command = new HardDeletePetCommand(volunteerId, petId);
+            var result = await handler.Handle(command, cancellationToken);
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+            return Ok();
         }
 
         [HttpPost("{volunteerId:guid}/{petId:guid}/add-pet-photos")]
@@ -201,6 +284,24 @@ namespace PetFamily.API.Controllers.Volunteer
                 return result.Error.ToResponse();
 
             return Ok(result.Value);
+        }
+
+        [HttpPost("{volunteerId:guid}/{petId:guid}/main-photo")]
+        public async Task<ActionResult<Guid>> SetMainPhotoPet(
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromServices] SetMainPhotoPetHandler handler,
+            [FromBody] SetMainPhotoPetRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            var command = request.ToCommand(volunteerId, petId);
+
+            var result = await handler.Handle(command, cancellationToken);
+
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            return Ok();
         }
     }
 }

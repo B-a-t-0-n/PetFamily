@@ -2,16 +2,15 @@
 using PetFamily.Domain.PetMenegment.ValueObjects;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.IDs;
+using Color = PetFamily.Domain.PetMenegment.ValueObjects.Color;
+using Size = PetFamily.Domain.PetMenegment.ValueObjects.Size;
 
 namespace PetFamily.Domain.PetMenegment.Entity
 {
-    public class Pet : Shared.Entity<PetId>, ISoftDeletable
+    public class Pet : Shared.SoftDeletableEntity<PetId>
     {
-        private bool _isDeleted = false;
-
         private readonly List<PetPhoto> _petPhotos = [];
         private List<DetailsForAssistance> _detailsForAssistance = [];
-
 
         //ef core
         private Pet(PetId id) : base(id) { }
@@ -82,12 +81,27 @@ namespace PetFamily.Domain.PetMenegment.Entity
 
         public IReadOnlyList<PetPhoto> PetPhotos => _petPhotos;
 
-        public void AddPetPhoto(PetPhoto petPhoto)
+        internal void AddPhoto(PetPhoto petPhoto)
         {
             _petPhotos.Add(petPhoto);
         }
 
-        public void DeletePetPhoto(PetPhoto petPhoto)
+        internal UnitResult<Error> SetMainPhoto(PhotoPath petPhoto)
+        {
+            var oldMainPhoto = _petPhotos.FirstOrDefault(x => x.IsMain);
+            if (oldMainPhoto is not null)
+                oldMainPhoto.SetIsMain(false);
+
+            var newMainPhoto = _petPhotos.FirstOrDefault(x => x.Path == petPhoto);
+            if (newMainPhoto is null)
+                return Errors.General.NotFound();
+
+            newMainPhoto.SetIsMain(true);
+
+            return Result.Success<Error>();
+        }
+
+        internal void DeletePhoto(PetPhoto petPhoto)
         {
             _petPhotos.Remove(petPhoto);
         }
@@ -128,25 +142,44 @@ namespace PetFamily.Domain.PetMenegment.Entity
             return pet;
         }
 
-        public void Delete()
+        internal void UpdateInfo(
+            Nickname nickname,
+            SpeciesAndBreed speciesAndBreed,
+            Description description,
+            Color color,
+            HealthInformation healthInformation,
+            Address address,
+            Size size,
+            PhoneNumber phoneNumber,
+            bool isCastrated,
+            DateTime? dateOfBirth,
+            bool isVaccinated,
+            AssistanceStatus assistanceStatus,
+            List<DetailsForAssistance> detailsForAssistance)
         {
-            if (_isDeleted == false)
-            {
-                _isDeleted = true;
-            }
+            Nickname = nickname;
+            Description = description;
+            Color = color;
+            HealthInformation = healthInformation;
+            SpeciesAndBreed = speciesAndBreed;
+            Address = address;
+            Size = size;
+            PhoneNumber = phoneNumber;
+            IsCastrated = isCastrated;
+            DateOfBirth = dateOfBirth;
+            IsVaccinated = isVaccinated;
+            AssistanceStatus = assistanceStatus;
+            _detailsForAssistance = detailsForAssistance;
         }
 
-        public void Restore()
+        internal void UpdateAssistanceStatus(AssistanceStatus assistanceStatus)
         {
-            if (_isDeleted)
-            {
-                _isDeleted = false;
-            }
+            AssistanceStatus = assistanceStatus;
         }
 
-        public void SetSerialNumber(SerialNumber serialNumber) => SerialNumber = serialNumber;
+        internal void SetSerialNumber(SerialNumber serialNumber) => SerialNumber = serialNumber;
 
-        public UnitResult<Error> MoveForward()
+        internal UnitResult<Error> MoveForward()
         {
             var newSerialNumber = SerialNumber.Forward();
             if (newSerialNumber.IsFailure)
@@ -157,7 +190,7 @@ namespace PetFamily.Domain.PetMenegment.Entity
             return Result.Success<Error>();
         }
 
-        public UnitResult<Error> MoveBack()
+        internal UnitResult<Error> MoveBack()
         {
             var newSerialNumber = SerialNumber.Back();
             if (newSerialNumber.IsFailure)
@@ -168,6 +201,10 @@ namespace PetFamily.Domain.PetMenegment.Entity
             return Result.Success<Error>();
         }
 
-        public void Move(SerialNumber newSerialNumber) => SerialNumber = newSerialNumber;
+        internal void Move(SerialNumber newSerialNumber) => SerialNumber = newSerialNumber;
+
+        internal bool IsExpired() => DeletionDate != null
+                                   && DateTime.UtcNow >= DeletionDate.Value
+                                      .AddDays(Constants.LIFETIME_AFTER_DELETION);
     }
 }

@@ -11,7 +11,7 @@ using PetFamily.Domain.Shared.IDs;
 
 namespace PetFamily.Application.PetManagement.UseCases.VolunteersHandlers.UpdateMainInfo
 {
-    public class UpdateMainInfoHandler : ICommandHandler<Guid, UpdateMainInfoCommand>   
+    public class UpdateMainInfoHandler : ICommandHandler<Guid, UpdateMainInfoCommand>
     {
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly ILogger<UpdateMainInfoHandler> _logger;

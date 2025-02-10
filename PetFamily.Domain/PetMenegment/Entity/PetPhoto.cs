@@ -25,5 +25,10 @@ namespace PetFamily.Domain.PetMenegment.Entity
 
             return petPhoto;
         }
+
+        internal void SetIsMain(bool status)
+        {
+            IsMain = status;
+        }
     }
 }

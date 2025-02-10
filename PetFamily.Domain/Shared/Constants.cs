@@ -4,5 +4,6 @@
     {
         public const int MAX_LOW_TEXT_LENGTH = 100;
         public const int MAX_HIGHT_TEXT_LENGTH = 3000;
+        public const int LIFETIME_AFTER_DELETION = 30;
     }
 }

@@ -10,17 +10,17 @@ using PetFamily.Application.Abstraction;
 
 namespace PetFamily.Application.PetManagement.UseCases.VolunteersHandlers.Delete
 {
-    public class DeleteVolunteerHandler : ICommandHandler<Guid, DeleteVolunteerCommand>
+    public class SoftDeleteVolunteerHandler : ICommandHandler<Guid, SoftDeleteVolunteerCommand>
     {
         private readonly IVolunteerRepository _volunteerRepository;
-        private readonly ILogger<DeleteVolunteerHandler> _logger;
-        private readonly IValidator<DeleteVolunteerCommand> _validator;
+        private readonly ILogger<SoftDeleteVolunteerHandler> _logger;
+        private readonly IValidator<SoftDeleteVolunteerCommand> _validator;
         private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteVolunteerHandler(
+        public SoftDeleteVolunteerHandler(
             IVolunteerRepository volunteerRepository,
-            ILogger<DeleteVolunteerHandler> logger,
-            IValidator<DeleteVolunteerCommand> validator,
+            ILogger<SoftDeleteVolunteerHandler> logger,
+            IValidator<SoftDeleteVolunteerCommand> validator,
             IUnitOfWork unitOfWork)
         {
             _volunteerRepository = volunteerRepository;
@@ -29,7 +29,7 @@ namespace PetFamily.Application.PetManagement.UseCases.VolunteersHandlers.Delete
             _validator = validator;
         }
 
-        public async Task<Result<Guid, ErrorList>> Handle(DeleteVolunteerCommand command, CancellationToken cancellationToken = default)
+        public async Task<Result<Guid, ErrorList>> Handle(SoftDeleteVolunteerCommand command, CancellationToken cancellationToken = default)
         {
             var validationResult = await _validator.ValidateAsync(command, cancellationToken);
             if (validationResult.IsValid == false)
@@ -46,7 +46,7 @@ namespace PetFamily.Application.PetManagement.UseCases.VolunteersHandlers.Delete
             volunteerResult.Value.Delete();
             await _unitOfWork.SaveChanges(cancellationToken);
 
-            _logger.LogInformation("deleted volunteer {Surname} {Name} {Patronymic} with id {id}",
+            _logger.LogInformation("soft deleted volunteer {Surname} {Name} {Patronymic} with id {id}",
                 volunteerResult.Value.FullName.Surname,
                 volunteerResult.Value.FullName.Name,
                 volunteerResult.Value.FullName.Patronymic,

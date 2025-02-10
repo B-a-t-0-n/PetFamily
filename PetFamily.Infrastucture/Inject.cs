@@ -9,11 +9,11 @@ using PetFamily.Application.Providers;
 using PetFamily.Application.SpeciesManagment;
 using PetFamily.Infrastucture.BackgroundServices;
 using PetFamily.Infrastucture.DbContexts;
-using PetFamily.Infrastucture.Files;
 using PetFamily.Infrastucture.MessageQueues;
 using PetFamily.Infrastucture.Options;
 using PetFamily.Infrastucture.Providers;
 using PetFamily.Infrastucture.Repositories;
+using PetFamily.Infrastucture.Service;
 
 namespace PetFamily.Infrastucture
 {
@@ -43,6 +43,7 @@ namespace PetFamily.Infrastucture
         private static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<IFilesCleanerService, FilesCleanerService>();
+            services.AddScoped<DeleteExpiredEntityService>();
 
             return services;
         }
@@ -57,6 +58,7 @@ namespace PetFamily.Infrastucture
         private static IServiceCollection AddHostedServices(this IServiceCollection services)
         {
             services.AddHostedService<FilesCleanerBackgroundService>();
+            services.AddHostedService<DeleteExpiredEntityBackgroundService>();
 
             return services;
         }

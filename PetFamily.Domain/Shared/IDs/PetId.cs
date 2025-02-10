@@ -1,4 +1,4 @@
-﻿using ValueObject = PetFamily.Domain.Shared.ValueObject;
+﻿using CSharpFunctionalExtensions;
 
 namespace PetFamily.Domain.Shared.IDs
 {
@@ -19,7 +19,7 @@ namespace PetFamily.Domain.Shared.IDs
 
         public static implicit operator Guid(PetId id) => id.Value;
 
-        protected override IEnumerable<object> GetEqualityComponents()
+        protected override IEnumerable<IComparable> GetEqualityComponents()
         {
             yield return Value;
         }

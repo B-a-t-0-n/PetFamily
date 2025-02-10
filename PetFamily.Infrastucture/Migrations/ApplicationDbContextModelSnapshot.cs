@@ -37,6 +37,10 @@ namespace PetFamily.Infrastucture.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_of_creation");
 
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deletion_date");
+
                     b.Property<string>("DetailsForAssistance")
                         .IsRequired()
                         .HasColumnType("jsonb")
@@ -46,13 +50,13 @@ namespace PetFamily.Infrastucture.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("is_castrated");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
                     b.Property<bool>("IsVaccinated")
                         .HasColumnType("boolean")
                         .HasColumnName("is_vaccinated");
-
-                    b.Property<bool>("_isDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_deleted");
 
                     b.Property<Guid?>("volunteer_id")
                         .HasColumnType("uuid")
@@ -241,19 +245,23 @@ namespace PetFamily.Infrastucture.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deletion_date");
+
                     b.Property<string>("DetailsForAssistance")
                         .IsRequired()
                         .HasColumnType("jsonb")
                         .HasColumnName("details_for_assistance");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
                     b.Property<string>("SocialNetwork")
                         .IsRequired()
                         .HasColumnType("jsonb")
                         .HasColumnName("social_network");
-
-                    b.Property<bool>("_isDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_deleted");
 
                     b.ComplexProperty<Dictionary<string, object>>("Description", "PetFamily.Domain.PetMenegment.Entity.Volunteer.Description#Description", b1 =>
                         {
@@ -372,6 +380,8 @@ namespace PetFamily.Infrastucture.Migrations
                     b.HasOne("PetFamily.Domain.PetMenegment.Entity.Volunteer", null)
                         .WithMany("Pets")
                         .HasForeignKey("volunteer_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_pet_volunteer_volunteer_id");
                 });
 
@@ -380,6 +390,8 @@ namespace PetFamily.Infrastucture.Migrations
                     b.HasOne("PetFamily.Domain.PetMenegment.Entity.Pet", null)
                         .WithMany("PetPhotos")
                         .HasForeignKey("pet_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_pet_photo_pet_pet_id");
                 });
 
