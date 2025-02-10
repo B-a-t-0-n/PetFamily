@@ -2,6 +2,6 @@
 {
     public static class Constants
     {
-        public const string BUCKET_NAME = "photos";
+        public const string PHOTO_BUCKET_NAME = "photos";
     }
 }

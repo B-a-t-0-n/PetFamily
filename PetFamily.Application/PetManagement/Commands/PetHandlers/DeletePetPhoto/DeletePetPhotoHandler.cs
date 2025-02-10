@@ -60,7 +60,7 @@ namespace PetFamily.Application.PetManagement.UseCases.PetHandlers.DeletePetPhot
 
                 await _unitOfWork.SaveChanges(cancellationToken);
 
-                var fileMetadata = new FileMetadata(Constants.BUCKET_NAME, pathToStorageResult.Value);
+                var fileMetadata = new FileMetadata(Constants.PHOTO_BUCKET_NAME, pathToStorageResult.Value);
 
                 var deleteResult = await _fileProvider.Deletefile(fileMetadata, cancellationToken);
 

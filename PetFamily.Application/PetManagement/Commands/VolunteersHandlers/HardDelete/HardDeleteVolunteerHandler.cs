@@ -56,7 +56,7 @@ namespace PetFamily.Application.PetManagement.Commands.VolunteersHandlers.HardDe
 
                 var filesMetadata = volunteerResult.Value.Pets
                     .SelectMany(p => p.PetPhotos
-                        .Select(photo => new FileMetadata(Constants.BUCKET_NAME, photo.Path.PathToStorage)))
+                        .Select(photo => new FileMetadata(Constants.PHOTO_BUCKET_NAME, photo.Path.PathToStorage)))
                     .ToList();
 
                 _volunteerRepository.Delete(volunteerResult.Value);

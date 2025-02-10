@@ -60,7 +60,7 @@ namespace PetFamily.Application.PetManagement.Commands.PetHandlers.HardDeletePet
                     return Errors.General.NotFound(petId).ToErrorList();
 
                 var filesMetadata = pet.PetPhotos
-                    .Select(p => new FileMetadata(Constants.BUCKET_NAME, p.Path.PathToStorage))
+                    .Select(p => new FileMetadata(Constants.PHOTO_BUCKET_NAME, p.Path.PathToStorage))
                     .ToList();
 
                 var result = volunteerResult.Value.HardDeletePet(petId);
