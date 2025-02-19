@@ -15,8 +15,8 @@ namespace UnitTests
                 Description.Create("Volunteer description").Value,
                 YearsExperience.Create(5).Value,
                 PhoneNumber.Create("1234567890").Value,
-                null,
-                null
+                null!,
+                null!
             ).Value;
         }
 
@@ -37,7 +37,7 @@ namespace UnitTests
                 true,
                 AssistanceStatus.Create("LookingForHome").Value,
                 DateTime.Now,
-                null
+                null!
             ).Value;
         }
 
