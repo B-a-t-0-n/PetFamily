@@ -6,7 +6,7 @@
 
         public string Nickname { get; init; } = string.Empty;
 
-        public Guid VolunteerId { get; init; } = default!;
+        public Guid? VolunteerId { get; init; } = default!;
 
         public Guid SpeciesId { get; init; } = default!;
 
@@ -14,19 +14,19 @@
 
         public string? Description { get; init; } = string.Empty;
 
-        public string? Color { get; init; } = string.Empty;
+        public string Color { get; init; } = string.Empty;
 
         public int SerialNumber { get; init; }
 
         public string? HealthInformation { get; init; } = string.Empty;
 
-        public string Сity { get; init; } = string.Empty;
+        public string City { get; init; } = string.Empty;
 
         public string Street { get; init; } = string.Empty;
 
         public string House { get; init; } = string.Empty;
 
-        public string? Flat { get; init; } = string.Empty;
+        public string Flat { get; init; } = string.Empty;
 
         public string? ApartmentNumber { get; init; } = string.Empty;
 
@@ -38,7 +38,7 @@
 
         public bool IsCastrated { get; init; }
 
-        public DateTime? DateOfBirth { get; init; }
+        public DateTime DateOfBirth { get; init; }
 
         public bool IsVaccinated { get; init; }
 

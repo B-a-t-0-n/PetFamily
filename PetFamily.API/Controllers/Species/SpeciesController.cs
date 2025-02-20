@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Controllers.Species.Requests;
-using PetFamily.API.Controllers.Volunteer.Requests;
 using PetFamily.API.Extensions;
-using PetFamily.Application.PetManagement.Queries.GetVolunteersWithPagination;
 using PetFamily.Application.SpeciesManagment.Commands.BreedHandlers.AddBreed;
 using PetFamily.Application.SpeciesManagment.Commands.BreedHandlers.RemoveBreed;
 using PetFamily.Application.SpeciesManagment.Commands.BreedHandlers.RemoveBreed.Commands;

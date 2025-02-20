@@ -5,8 +5,7 @@ using PetFamily.Application.Dtos;
 using PetFamily.Application.Extentions;
 using PetFamily.Application.Models;
 
-
-namespace PetFamily.Application.PetManagement.Queries.GetVolunteersWithPagination
+namespace PetFamily.Application.PetManagement.Queries.VolunteerHandlers.GetVolunteersWithPagination
 {
     public class GetVolunteersWithPaginationHandler : IQueryHandler<PagedList<VolunteerDto>, GetVolunteersWithPaginationQuery>
     {

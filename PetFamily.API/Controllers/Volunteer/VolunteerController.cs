@@ -14,8 +14,6 @@ using PetFamily.Application.PetManagement.UseCases.PetHandlers.MovePet;
 using PetFamily.Application.PetManagement.UseCases.VolunteersHandlers.Delete.Commands;
 using PetFamily.Application.PetManagement.UseCases.PetHandlers.AddPetPhotos.Commands;
 using PetFamily.Application.PetManagement.UseCases.PetHandlers.DeletePetPhoto.Commands;
-using PetFamily.Application.PetManagement.Queries.GetVolunteersWithPagination;
-using PetFamily.Application.PetManagement.Queries.GetVolunteerById;
 using PetFamily.Application.PetManagement.Commands.PetHandlers.UpdateInfoPet;
 using PetFamily.Application.PetManagement.Commands.PetHandlers.UpdatePetStatus;
 using PetFamily.Application.PetManagement.Commands.VolunteersHandlers.HardDelete;
@@ -25,6 +23,8 @@ using PetFamily.Application.PetManagement.Commands.PetHandlers.SoftDeletePet.Com
 using PetFamily.Application.PetManagement.Commands.PetHandlers.HardDeletePet;
 using PetFamily.Application.PetManagement.Commands.PetHandlers.HardDeletePet.Commands;
 using PetFamily.Application.PetManagement.Commands.PetHandlers.SetMainPhotoPet;
+using PetFamily.Application.PetManagement.Queries.VolunteerHandlers.GetVolunteersWithPagination;
+using PetFamily.Application.PetManagement.Queries.VolunteerHandlers.GetVolunteerById;
 
 namespace PetFamily.API.Controllers.Volunteer
 {

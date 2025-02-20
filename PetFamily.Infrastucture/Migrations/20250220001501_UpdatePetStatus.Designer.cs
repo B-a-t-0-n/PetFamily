@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetFamily.Infrastucture.DbContexts;
@@ -12,9 +13,11 @@ using PetFamily.Infrastucture.DbContexts;
 namespace PetFamily.Infrastucture.Migrations
 {
     [DbContext(typeof(WriteDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250220001501_UpdatePetStatus")]
+    partial class UpdatePetStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -172,12 +175,14 @@ namespace PetFamily.Infrastucture.Migrations
                             b1.IsRequired();
 
                             b1.Property<double>("Height")
+                                .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("double precision")
                                 .HasColumnName("height");
 
                             b1.Property<double>("Weight")
+                                .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("double precision")
-                                .HasColumnName("weight");
+                                .HasColumnName("height");
                         });
 
                     b.ComplexProperty<Dictionary<string, object>>("SpeciesAndBreed", "PetFamily.Domain.PetMenegment.Entity.Pet.SpeciesAndBreed#SpeciesAndBreed", b1 =>

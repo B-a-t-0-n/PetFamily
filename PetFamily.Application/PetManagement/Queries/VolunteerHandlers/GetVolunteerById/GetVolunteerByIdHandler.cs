@@ -5,7 +5,7 @@ using PetFamily.Application.Dtos;
 using PetFamily.Infrastucture;
 using System.Text.Json;
 
-namespace PetFamily.Application.PetManagement.Queries.GetVolunteerById
+namespace PetFamily.Application.PetManagement.Queries.VolunteerHandlers.GetVolunteerById
 {
     public class GetVolunteerByIdHandler : IQueryHandler<VolunteerDto?, GetVolunteerByIdQuery>
     {

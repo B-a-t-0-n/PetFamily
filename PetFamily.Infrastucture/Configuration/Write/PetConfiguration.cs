@@ -112,7 +112,7 @@ namespace PetFamily.Infrastucture.Configuration.Write
                     .HasColumnName("height");
 
                 pb.Property(s => s.Weight)
-                    .HasColumnName("height");
+                    .HasColumnName("weight");
             });
 
             builder.ComplexProperty(p => p.PhoneNumber, pb =>
@@ -140,7 +140,7 @@ namespace PetFamily.Infrastucture.Configuration.Write
 
                 ab.Property(a => a.Status)
                     .HasMaxLength(Domain.Shared.Constants.MAX_LOW_TEXT_LENGTH)
-                    .HasColumnName("status");
+                    .HasColumnName("assistance_status");
             });
 
             builder.Property(p => p.DateOfCreation)
