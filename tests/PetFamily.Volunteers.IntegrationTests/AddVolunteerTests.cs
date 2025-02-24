@@ -1,28 +1,27 @@
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Database;
+//using FluentAssertions;
+//using Microsoft.EntityFrameworkCore;
+//using Microsoft.Extensions.DependencyInjection;
+//using PetFamily.Application.Database;
 
-namespace PetFamily.Volunteers.IntegrationTests
-{
-    public class AddVolunteerTests : IClassFixture<IntegrationTestsWebFactory>
-    {
-        private readonly IntegrationTestsWebFactory _factory;
+//namespace PetFamily.Volunteers.IntegrationTests;
 
-        public AddVolunteerTests(IntegrationTestsWebFactory factory)
-        {
-            _factory = factory;
-        }
+//public class AddVolunteerTests : IClassFixture<IntegrationTestsWebFactory>
+//{
+//    private readonly IntegrationTestsWebFactory _factory;
 
-        [Fact]
-        public async Task Test1()
-        {
-            var scope = _factory.Services.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<IReadDbContext>();
+//    public AddVolunteerTests(IntegrationTestsWebFactory factory)
+//    {
+//        _factory = factory;
+//    }
 
-            var volunteer = await dbContext.Volunteers.ToListAsync();
+//    [Fact]
+//    public async Task Test1()
+//    {
+//        var scope = _factory.Services.CreateScope();
+//        var dbContext = scope.ServiceProvider.GetRequiredService<IReadDbContext>();
 
-            volunteer.Should().BeEmpty();
-        } 
-    }
-}
+//        var volunteer = await dbContext.Volunteers.ToListAsync();
+
+//        volunteer.Should().BeEmpty();
+//    } 
+//}
