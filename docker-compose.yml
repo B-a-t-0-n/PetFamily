@@ -34,7 +34,7 @@ services:
     image: ${DOCKER_REGISTRY-}petfamilyweb
     build:
       context: .
-      dockerfile: src/PetFamily.Web/Dockerfil
+      dockerfile: src/PetFamily.Web/Dockerfile
 
 volumes:
   postgres-data:

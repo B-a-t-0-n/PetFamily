@@ -11,25 +11,29 @@ namespace PetFamily.Species.Infrastructure;
 public static class DependencyInjection
 {
     public static IServiceCollection AddSpeciesInfrastructure(
-        this IServiceCollection services)
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         return services
-            .AddDatabase()
+            .AddDatabase(configuration)
             .AddRepositories();
     }
 
     
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<ISpeciesRepository, SpeciesRepository>();
-
-        return services;
+        return services.AddScoped<ISpeciesRepository, SpeciesRepository>();
     }
 
-    private static IServiceCollection AddDatabase(this IServiceCollection services)
+    private static IServiceCollection AddDatabase(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
-        services.AddScoped<WriteSpeciesDbContext>();
-        services.AddScoped<IReadSpeciesDbContext, ReadSpeciesDbContext>();
+        services.AddScoped(_ =>
+            new WriteSpeciesDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
+
+        services.AddScoped<IReadSpeciesDbContext, ReadSpeciesDbContext>(_ =>
+            new ReadSpeciesDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
 
         services.AddKeyedScoped<IUnitOfWork, UnitOfWork>(Modules.Species);
 

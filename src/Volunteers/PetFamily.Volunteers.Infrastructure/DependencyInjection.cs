@@ -14,6 +14,7 @@ using PetFamily.Volunteers.Infrastructure.Service;
 using Minio;
 using PetFamily.Volunteers.Infrastructure.Options;
 using PetFamily.SharedKernel;
+using static CSharpFunctionalExtensions.Result;
 
 namespace PetFamily.Volunteers.Infrastructure;
 
@@ -24,7 +25,7 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         return services
-            .AddDatabase()
+            .AddDatabase(configuration)
             .AddMinio(configuration)
             .AddRepositories()
             .AddHostedServices()
@@ -70,10 +71,15 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddDatabase(this IServiceCollection services)
+    private static IServiceCollection AddDatabase(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
-        services.AddScoped<WriteVolunteersDbContext>();
-        services.AddScoped<IReadVolunteersDbContext, ReadVolunteersDbContext>();
+        services.AddScoped(_ =>
+            new WriteVolunteersDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
+
+        services.AddScoped<IReadVolunteersDbContext, ReadVolunteersDbContext>(_ =>
+            new ReadVolunteersDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
 
         services.AddKeyedScoped<IUnitOfWork, UnitOfWork>(Modules.Volunteers);
 
@@ -85,7 +91,8 @@ public static class DependencyInjection
     }
 
     private static IServiceCollection AddMinio(
-        this IServiceCollection services, IConfiguration configuration)
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         services.AddMinio(options =>
         {

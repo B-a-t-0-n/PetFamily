@@ -8,15 +8,21 @@ using PetFamily.Species.Application;
 namespace PetFamily.Species.Infrastructure.DbContexts;
 
 
-public class ReadSpeciesDbContext(IConfiguration configuration) : DbContext, IReadSpeciesDbContext
+public class ReadSpeciesDbContext : DbContext, IReadSpeciesDbContext
 {
+    private readonly string _connectionString;
+
     public IQueryable<SpeciesDto> Species => Set<SpeciesDto>();
 
     public IQueryable<BreedDto> Breeds => Set<BreedDto>();
 
+    public ReadSpeciesDbContext(string connectionString)
+    {
+        _connectionString = connectionString;
+    }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(configuration.GetConnectionString(Constants.DATABASE));
+        optionsBuilder.UseNpgsql(_connectionString);
         optionsBuilder.UseSnakeCaseNamingConvention();
         optionsBuilder.EnableSensitiveDataLogging();
         optionsBuilder.UseLoggerFactory(CreateLogerFactory());

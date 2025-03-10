@@ -27,7 +27,7 @@ builder.Services.AddSerilog();
 
 builder.Services
     .AddVolunteersPresentation(builder.Configuration)
-    .AddSpeciesPresentation();
+    .AddSpeciesPresentation(builder.Configuration);
 
 var app = builder.Build();
 

@@ -8,17 +8,24 @@ using PetFamily.Volunteers.Application;
 namespace PetFamily.Volunteers.Infrastructure.DbContexts;
 
 
-public class ReadVolunteersDbContext(IConfiguration configuration) : DbContext, IReadVolunteersDbContext
+public class ReadVolunteersDbContext : DbContext, IReadVolunteersDbContext
 {
+    private readonly string _connectionString;
+
     public IQueryable<VolunteerDto> Volunteers => Set<VolunteerDto>();
 
     public IQueryable<PetDto> Pets => Set<PetDto>();
 
     public IQueryable<PetPhotoDto> PetPhotos => Set<PetPhotoDto>();
 
+    public ReadVolunteersDbContext(string connectionString)
+    {
+        _connectionString = connectionString;
+    }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(configuration.GetConnectionString(Constants.DATABASE));
+        optionsBuilder.UseNpgsql(_connectionString);
         optionsBuilder.UseSnakeCaseNamingConvention();
         optionsBuilder.EnableSensitiveDataLogging();
         optionsBuilder.UseLoggerFactory(CreateLogerFactory());

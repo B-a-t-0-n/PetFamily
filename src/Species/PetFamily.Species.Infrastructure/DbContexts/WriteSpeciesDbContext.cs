@@ -5,13 +5,20 @@ using PetFamily.SharedKernel;
 
 namespace PetFamily.Species.Infrastructure.DbContexts;
 
-public class WriteSpeciesDbContext(IConfiguration configuration) : DbContext
+public class WriteSpeciesDbContext : DbContext
 {
+    private readonly string _connectionString;
+
     public DbSet<Domain.Entity.Species> Species => Set<Domain.Entity.Species>();
+
+    public WriteSpeciesDbContext(string connectionString)
+    {
+        _connectionString = connectionString;
+    }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(configuration.GetConnectionString(Constants.DATABASE));
+        optionsBuilder.UseNpgsql(_connectionString);
         optionsBuilder.UseSnakeCaseNamingConvention();
         optionsBuilder.EnableSensitiveDataLogging();
         optionsBuilder.UseLoggerFactory(CreateLogerFactory());
