@@ -1,4 +1,4 @@
-﻿services:
+services:
   postgres:
     container_name: postgres
     image: postgres
@@ -30,13 +30,12 @@
       - minio-data:/data
     command: server --console-address ":9001" /data
     restart: always
-  petfamily.api:
-    image: ${DOCKER_REGISTRY-}petfamilyapi
+  petfamily.web:
+    image: ${DOCKER_REGISTRY-}petfamilyweb
     build:
       context: .
-      dockerfile: PetFamily.API/Dockerfile
+      dockerfile: src/PetFamily.Web/Dockerfile
 
 volumes:
   postgres-data:
   minio-data:
-  
