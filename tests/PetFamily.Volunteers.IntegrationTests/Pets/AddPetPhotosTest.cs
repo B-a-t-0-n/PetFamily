@@ -5,7 +5,6 @@ using PetFamily.Core.Abstractions;
 using PetFamily.Core.Dtos;
 using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.Volunteers.Application.Commands.PetHandlers.AddPetPhotos.Commands;
-using System.Text;
 
 namespace PetFamily.Volunteers.IntegrationTests.Pets;
 

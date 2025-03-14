@@ -28,4 +28,12 @@ public static class Errors
         }
     }
 
+    public static class User
+    {
+        public static Error InvalidCredentials()
+        {
+            return Error.Validation("credentials.is.invalid", "credentials is invalid");
+        }
+    }
+
 }

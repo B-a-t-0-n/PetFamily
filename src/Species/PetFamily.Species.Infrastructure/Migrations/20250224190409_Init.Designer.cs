@@ -10,89 +10,88 @@ using PetFamily.Species.Infrastructure.DbContexts;
 
 #nullable disable
 
-namespace PetFamily.Species.Infrastructure.Migrations
+namespace PetFamily.Species.Infrastructure.Migrations;
+
+[DbContext(typeof(WriteSpeciesDbContext))]
+[Migration("20250224190409_Init")]
+partial class Init
 {
-    [DbContext(typeof(WriteSpeciesDbContext))]
-    [Migration("20250224190409_Init")]
-    partial class Init
+    /// <inheritdoc />
+    protected override void BuildTargetModel(ModelBuilder modelBuilder)
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasDefaultSchema("species")
-                .HasAnnotation("ProductVersion", "9.0.2")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+        modelBuilder
+            .HasDefaultSchema("species")
+            .HasAnnotation("ProductVersion", "9.0.2")
+            .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+        NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("PetFamily.Species.Domain.Entity.Breed", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
+        modelBuilder.Entity("PetFamily.Species.Domain.Entity.Breed", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uuid")
+                    .HasColumnName("id");
 
-                    b.Property<Guid?>("species_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("species_id");
+                b.Property<Guid?>("species_id")
+                    .HasColumnType("uuid")
+                    .HasColumnName("species_id");
 
-                    b.ComplexProperty<Dictionary<string, object>>("Name", "PetFamily.Species.Domain.Entity.Breed.Name#Name", b1 =>
-                        {
-                            b1.IsRequired();
+                b.ComplexProperty<Dictionary<string, object>>("Name", "PetFamily.Species.Domain.Entity.Breed.Name#Name", b1 =>
+                    {
+                        b1.IsRequired();
 
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)")
-                                .HasColumnName("name");
-                        });
+                        b1.Property<string>("Value")
+                            .IsRequired()
+                            .HasMaxLength(100)
+                            .HasColumnType("character varying(100)")
+                            .HasColumnName("name");
+                    });
 
-                    b.HasKey("Id")
-                        .HasName("pk_breed");
+                b.HasKey("Id")
+                    .HasName("pk_breed");
 
-                    b.HasIndex("species_id")
-                        .HasDatabaseName("ix_breed_species_id");
+                b.HasIndex("species_id")
+                    .HasDatabaseName("ix_breed_species_id");
 
-                    b.ToTable("breed", "species");
-                });
+                b.ToTable("breed", "species");
+            });
 
-            modelBuilder.Entity("PetFamily.Species.Domain.Entity.Species", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
+        modelBuilder.Entity("PetFamily.Species.Domain.Entity.Species", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uuid")
+                    .HasColumnName("id");
 
-                    b.ComplexProperty<Dictionary<string, object>>("Name", "PetFamily.Species.Domain.Entity.Species.Name#Name", b1 =>
-                        {
-                            b1.IsRequired();
+                b.ComplexProperty<Dictionary<string, object>>("Name", "PetFamily.Species.Domain.Entity.Species.Name#Name", b1 =>
+                    {
+                        b1.IsRequired();
 
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)")
-                                .HasColumnName("name");
-                        });
+                        b1.Property<string>("Value")
+                            .IsRequired()
+                            .HasMaxLength(100)
+                            .HasColumnType("character varying(100)")
+                            .HasColumnName("name");
+                    });
 
-                    b.HasKey("Id")
-                        .HasName("pk_species");
+                b.HasKey("Id")
+                    .HasName("pk_species");
 
-                    b.ToTable("species", "species");
-                });
+                b.ToTable("species", "species");
+            });
 
-            modelBuilder.Entity("PetFamily.Species.Domain.Entity.Breed", b =>
-                {
-                    b.HasOne("PetFamily.Species.Domain.Entity.Species", null)
-                        .WithMany("breeds")
-                        .HasForeignKey("species_id")
-                        .HasConstraintName("fk_breed_species_species_id");
-                });
+        modelBuilder.Entity("PetFamily.Species.Domain.Entity.Breed", b =>
+            {
+                b.HasOne("PetFamily.Species.Domain.Entity.Species", null)
+                    .WithMany("breeds")
+                    .HasForeignKey("species_id")
+                    .HasConstraintName("fk_breed_species_species_id");
+            });
 
-            modelBuilder.Entity("PetFamily.Species.Domain.Entity.Species", b =>
-                {
-                    b.Navigation("breeds");
-                });
+        modelBuilder.Entity("PetFamily.Species.Domain.Entity.Species", b =>
+            {
+                b.Navigation("breeds");
+            });
 #pragma warning restore 612, 618
-        }
     }
 }
