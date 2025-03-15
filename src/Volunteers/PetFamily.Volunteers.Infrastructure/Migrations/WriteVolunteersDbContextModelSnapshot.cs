@@ -9,348 +9,347 @@ using PetFamily.Volunteers.Infrastructure.DbContexts;
 
 #nullable disable
 
-namespace PetFamily.Volunteers.Infrastructure.Migrations
+namespace PetFamily.Volunteers.Infrastructure.Migrations;
+
+[DbContext(typeof(WriteVolunteersDbContext))]
+partial class WriteVolunteersDbContextModelSnapshot : ModelSnapshot
 {
-    [DbContext(typeof(WriteVolunteersDbContext))]
-    partial class WriteVolunteersDbContextModelSnapshot : ModelSnapshot
+    protected override void BuildModel(ModelBuilder modelBuilder)
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasDefaultSchema("volunteers")
-                .HasAnnotation("ProductVersion", "9.0.2")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
-
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("PetFamily.Volunteers.Domain.Entity.Pet", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime?>("DateOfBirth")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("date_of_birth");
-
-                    b.Property<DateTime>("DateOfCreation")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("date_of_creation");
-
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("deletion_date");
-
-                    b.Property<string>("DetailsForAssistance")
-                        .IsRequired()
-                        .HasColumnType("jsonb")
-                        .HasColumnName("details_for_assistance");
-
-                    b.Property<bool>("IsCastrated")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_castrated");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_deleted");
-
-                    b.Property<bool>("IsVaccinated")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_vaccinated");
-
-                    b.Property<Guid?>("volunteer_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("volunteer_id");
-
-                    b.ComplexProperty<Dictionary<string, object>>("Address", "PetFamily.Volunteers.Domain.Entity.Pet.Address#Address", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("ApartmentNumber")
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)")
-                                .HasColumnName("apartment_number");
-
-                            b1.Property<string>("Flat")
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)")
-                                .HasColumnName("flat");
-
-                            b1.Property<string>("House")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)")
-                                .HasColumnName("house");
-
-                            b1.Property<string>("Street")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)")
-                                .HasColumnName("street");
-
-                            b1.Property<string>("Сity")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)")
-                                .HasColumnName("city");
-                        });
-
-                    b.ComplexProperty<Dictionary<string, object>>("AssistanceStatus", "PetFamily.Volunteers.Domain.Entity.Pet.AssistanceStatus#AssistanceStatus", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("Status")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)")
-                                .HasColumnName("assistance_status");
-                        });
-
-                    b.ComplexProperty<Dictionary<string, object>>("Color", "PetFamily.Volunteers.Domain.Entity.Pet.Color#Color", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("Value")
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)")
-                                .HasColumnName("color");
-                        });
-
-                    b.ComplexProperty<Dictionary<string, object>>("Description", "PetFamily.Volunteers.Domain.Entity.Pet.Description#Description", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("Value")
-                                .HasMaxLength(6000)
-                                .HasColumnType("character varying(6000)")
-                                .HasColumnName("description");
-                        });
-
-                    b.ComplexProperty<Dictionary<string, object>>("HealthInformation", "PetFamily.Volunteers.Domain.Entity.Pet.HealthInformation#HealthInformation", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("Value")
-                                .HasMaxLength(3000)
-                                .HasColumnType("character varying(3000)")
-                                .HasColumnName("health_information");
-                        });
-
-                    b.ComplexProperty<Dictionary<string, object>>("Nickname", "PetFamily.Volunteers.Domain.Entity.Pet.Nickname#Nickname", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)")
-                                .HasColumnName("nickname");
-                        });
-
-                    b.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "PetFamily.Volunteers.Domain.Entity.Pet.PhoneNumber#PhoneNumber", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("Number")
-                                .IsRequired()
-                                .HasMaxLength(20)
-                                .HasColumnType("character varying(20)")
-                                .HasColumnName("phone_number");
-                        });
-
-                    b.ComplexProperty<Dictionary<string, object>>("SerialNumber", "PetFamily.Volunteers.Domain.Entity.Pet.SerialNumber#SerialNumber", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<int>("Value")
-                                .HasColumnType("integer")
-                                .HasColumnName("serial_number");
-                        });
-
-                    b.ComplexProperty<Dictionary<string, object>>("Size", "PetFamily.Volunteers.Domain.Entity.Pet.Size#Size", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<double>("Height")
-                                .HasColumnType("double precision")
-                                .HasColumnName("height");
-
-                            b1.Property<double>("Weight")
-                                .HasColumnType("double precision")
-                                .HasColumnName("weight");
-                        });
-
-                    b.ComplexProperty<Dictionary<string, object>>("SpeciesAndBreed", "PetFamily.Volunteers.Domain.Entity.Pet.SpeciesAndBreed#SpeciesAndBreed", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<Guid>("BreedId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("breed_id");
-
-                            b1.Property<Guid>("SpeciesId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("species_id");
-                        });
-
-                    b.HasKey("Id")
-                        .HasName("pk_pet");
-
-                    b.HasIndex("volunteer_id")
-                        .HasDatabaseName("ix_pet_volunteer_id");
-
-                    b.ToTable("pet", "volunteers");
-                });
-
-            modelBuilder.Entity("PetFamily.Volunteers.Domain.Entity.PetPhoto", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<bool>("IsMain")
-                        .HasMaxLength(100)
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_main");
-
-                    b.Property<Guid?>("pet_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("pet_id");
-
-                    b.ComplexProperty<Dictionary<string, object>>("Path", "PetFamily.Volunteers.Domain.Entity.PetPhoto.Path#PhotoPath", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("PathToStorage")
-                                .IsRequired()
-                                .HasMaxLength(3000)
-                                .HasColumnType("character varying(3000)")
-                                .HasColumnName("path_to_storage");
-                        });
-
-                    b.HasKey("Id")
-                        .HasName("pk_pet_photo");
-
-                    b.HasIndex("pet_id")
-                        .HasDatabaseName("ix_pet_photo_pet_id");
-
-                    b.ToTable("pet_photo", "volunteers");
-                });
-
-            modelBuilder.Entity("PetFamily.Volunteers.Domain.Entity.Volunteer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("deletion_date");
-
-                    b.Property<string>("DetailsForAssistance")
-                        .IsRequired()
-                        .HasColumnType("jsonb")
-                        .HasColumnName("details_for_assistance");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_deleted");
-
-                    b.Property<string>("SocialNetwork")
-                        .IsRequired()
-                        .HasColumnType("jsonb")
-                        .HasColumnName("social_network");
-
-                    b.ComplexProperty<Dictionary<string, object>>("Description", "PetFamily.Volunteers.Domain.Entity.Volunteer.Description#Description", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("Value")
-                                .HasMaxLength(6000)
-                                .HasColumnType("character varying(6000)")
-                                .HasColumnName("description");
-                        });
-
-                    b.ComplexProperty<Dictionary<string, object>>("FullName", "PetFamily.Volunteers.Domain.Entity.Volunteer.FullName#FullName", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("Name")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)")
-                                .HasColumnName("name");
-
-                            b1.Property<string>("Patronymic")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)")
-                                .HasColumnName("patronymic");
-
-                            b1.Property<string>("Surname")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)")
-                                .HasColumnName("surname");
-                        });
-
-                    b.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "PetFamily.Volunteers.Domain.Entity.Volunteer.PhoneNumber#PhoneNumber", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("Number")
-                                .IsRequired()
-                                .HasMaxLength(20)
-                                .HasColumnType("character varying(20)")
-                                .HasColumnName("phone_number");
-                        });
-
-                    b.ComplexProperty<Dictionary<string, object>>("YearsExperience", "PetFamily.Volunteers.Domain.Entity.Volunteer.YearsExperience#YearsExperience", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<int>("Value")
-                                .HasColumnType("integer")
-                                .HasColumnName("years_experience");
-                        });
-
-                    b.HasKey("Id")
-                        .HasName("pk_volunteer");
-
-                    b.ToTable("volunteer", "volunteers");
-                });
-
-            modelBuilder.Entity("PetFamily.Volunteers.Domain.Entity.Pet", b =>
-                {
-                    b.HasOne("PetFamily.Volunteers.Domain.Entity.Volunteer", null)
-                        .WithMany("Pets")
-                        .HasForeignKey("volunteer_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_pet_volunteer_volunteer_id");
-                });
-
-            modelBuilder.Entity("PetFamily.Volunteers.Domain.Entity.PetPhoto", b =>
-                {
-                    b.HasOne("PetFamily.Volunteers.Domain.Entity.Pet", null)
-                        .WithMany("PetPhotos")
-                        .HasForeignKey("pet_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_pet_photo_pet_pet_id");
-                });
-
-            modelBuilder.Entity("PetFamily.Volunteers.Domain.Entity.Pet", b =>
-                {
-                    b.Navigation("PetPhotos");
-                });
-
-            modelBuilder.Entity("PetFamily.Volunteers.Domain.Entity.Volunteer", b =>
-                {
-                    b.Navigation("Pets");
-                });
+        modelBuilder
+            .HasDefaultSchema("volunteers")
+            .HasAnnotation("ProductVersion", "9.0.2")
+            .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+        NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+        modelBuilder.Entity("PetFamily.Volunteers.Domain.Entity.Pet", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uuid")
+                    .HasColumnName("id");
+
+                b.Property<DateTime?>("DateOfBirth")
+                    .HasColumnType("timestamp with time zone")
+                    .HasColumnName("date_of_birth");
+
+                b.Property<DateTime>("DateOfCreation")
+                    .HasColumnType("timestamp with time zone")
+                    .HasColumnName("date_of_creation");
+
+                b.Property<DateTime?>("DeletionDate")
+                    .HasColumnType("timestamp with time zone")
+                    .HasColumnName("deletion_date");
+
+                b.Property<string>("DetailsForAssistance")
+                    .IsRequired()
+                    .HasColumnType("jsonb")
+                    .HasColumnName("details_for_assistance");
+
+                b.Property<bool>("IsCastrated")
+                    .HasColumnType("boolean")
+                    .HasColumnName("is_castrated");
+
+                b.Property<bool>("IsDeleted")
+                    .HasColumnType("boolean")
+                    .HasColumnName("is_deleted");
+
+                b.Property<bool>("IsVaccinated")
+                    .HasColumnType("boolean")
+                    .HasColumnName("is_vaccinated");
+
+                b.Property<Guid?>("volunteer_id")
+                    .HasColumnType("uuid")
+                    .HasColumnName("volunteer_id");
+
+                b.ComplexProperty<Dictionary<string, object>>("Address", "PetFamily.Volunteers.Domain.Entity.Pet.Address#Address", b1 =>
+                    {
+                        b1.IsRequired();
+
+                        b1.Property<string>("ApartmentNumber")
+                            .HasMaxLength(100)
+                            .HasColumnType("character varying(100)")
+                            .HasColumnName("apartment_number");
+
+                        b1.Property<string>("Flat")
+                            .HasMaxLength(100)
+                            .HasColumnType("character varying(100)")
+                            .HasColumnName("flat");
+
+                        b1.Property<string>("House")
+                            .IsRequired()
+                            .HasMaxLength(100)
+                            .HasColumnType("character varying(100)")
+                            .HasColumnName("house");
+
+                        b1.Property<string>("Street")
+                            .IsRequired()
+                            .HasMaxLength(100)
+                            .HasColumnType("character varying(100)")
+                            .HasColumnName("street");
+
+                        b1.Property<string>("Сity")
+                            .IsRequired()
+                            .HasMaxLength(100)
+                            .HasColumnType("character varying(100)")
+                            .HasColumnName("city");
+                    });
+
+                b.ComplexProperty<Dictionary<string, object>>("AssistanceStatus", "PetFamily.Volunteers.Domain.Entity.Pet.AssistanceStatus#AssistanceStatus", b1 =>
+                    {
+                        b1.IsRequired();
+
+                        b1.Property<string>("Status")
+                            .IsRequired()
+                            .HasMaxLength(100)
+                            .HasColumnType("character varying(100)")
+                            .HasColumnName("assistance_status");
+                    });
+
+                b.ComplexProperty<Dictionary<string, object>>("Color", "PetFamily.Volunteers.Domain.Entity.Pet.Color#Color", b1 =>
+                    {
+                        b1.IsRequired();
+
+                        b1.Property<string>("Value")
+                            .HasMaxLength(100)
+                            .HasColumnType("character varying(100)")
+                            .HasColumnName("color");
+                    });
+
+                b.ComplexProperty<Dictionary<string, object>>("Description", "PetFamily.Volunteers.Domain.Entity.Pet.Description#Description", b1 =>
+                    {
+                        b1.IsRequired();
+
+                        b1.Property<string>("Value")
+                            .HasMaxLength(6000)
+                            .HasColumnType("character varying(6000)")
+                            .HasColumnName("description");
+                    });
+
+                b.ComplexProperty<Dictionary<string, object>>("HealthInformation", "PetFamily.Volunteers.Domain.Entity.Pet.HealthInformation#HealthInformation", b1 =>
+                    {
+                        b1.IsRequired();
+
+                        b1.Property<string>("Value")
+                            .HasMaxLength(3000)
+                            .HasColumnType("character varying(3000)")
+                            .HasColumnName("health_information");
+                    });
+
+                b.ComplexProperty<Dictionary<string, object>>("Nickname", "PetFamily.Volunteers.Domain.Entity.Pet.Nickname#Nickname", b1 =>
+                    {
+                        b1.IsRequired();
+
+                        b1.Property<string>("Value")
+                            .IsRequired()
+                            .HasMaxLength(100)
+                            .HasColumnType("character varying(100)")
+                            .HasColumnName("nickname");
+                    });
+
+                b.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "PetFamily.Volunteers.Domain.Entity.Pet.PhoneNumber#PhoneNumber", b1 =>
+                    {
+                        b1.IsRequired();
+
+                        b1.Property<string>("Number")
+                            .IsRequired()
+                            .HasMaxLength(20)
+                            .HasColumnType("character varying(20)")
+                            .HasColumnName("phone_number");
+                    });
+
+                b.ComplexProperty<Dictionary<string, object>>("SerialNumber", "PetFamily.Volunteers.Domain.Entity.Pet.SerialNumber#SerialNumber", b1 =>
+                    {
+                        b1.IsRequired();
+
+                        b1.Property<int>("Value")
+                            .HasColumnType("integer")
+                            .HasColumnName("serial_number");
+                    });
+
+                b.ComplexProperty<Dictionary<string, object>>("Size", "PetFamily.Volunteers.Domain.Entity.Pet.Size#Size", b1 =>
+                    {
+                        b1.IsRequired();
+
+                        b1.Property<double>("Height")
+                            .HasColumnType("double precision")
+                            .HasColumnName("height");
+
+                        b1.Property<double>("Weight")
+                            .HasColumnType("double precision")
+                            .HasColumnName("weight");
+                    });
+
+                b.ComplexProperty<Dictionary<string, object>>("SpeciesAndBreed", "PetFamily.Volunteers.Domain.Entity.Pet.SpeciesAndBreed#SpeciesAndBreed", b1 =>
+                    {
+                        b1.IsRequired();
+
+                        b1.Property<Guid>("BreedId")
+                            .HasColumnType("uuid")
+                            .HasColumnName("breed_id");
+
+                        b1.Property<Guid>("SpeciesId")
+                            .HasColumnType("uuid")
+                            .HasColumnName("species_id");
+                    });
+
+                b.HasKey("Id")
+                    .HasName("pk_pet");
+
+                b.HasIndex("volunteer_id")
+                    .HasDatabaseName("ix_pet_volunteer_id");
+
+                b.ToTable("pet", "volunteers");
+            });
+
+        modelBuilder.Entity("PetFamily.Volunteers.Domain.Entity.PetPhoto", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uuid")
+                    .HasColumnName("id");
+
+                b.Property<bool>("IsMain")
+                    .HasMaxLength(100)
+                    .HasColumnType("boolean")
+                    .HasColumnName("is_main");
+
+                b.Property<Guid?>("pet_id")
+                    .HasColumnType("uuid")
+                    .HasColumnName("pet_id");
+
+                b.ComplexProperty<Dictionary<string, object>>("Path", "PetFamily.Volunteers.Domain.Entity.PetPhoto.Path#PhotoPath", b1 =>
+                    {
+                        b1.IsRequired();
+
+                        b1.Property<string>("PathToStorage")
+                            .IsRequired()
+                            .HasMaxLength(3000)
+                            .HasColumnType("character varying(3000)")
+                            .HasColumnName("path_to_storage");
+                    });
+
+                b.HasKey("Id")
+                    .HasName("pk_pet_photo");
+
+                b.HasIndex("pet_id")
+                    .HasDatabaseName("ix_pet_photo_pet_id");
+
+                b.ToTable("pet_photo", "volunteers");
+            });
+
+        modelBuilder.Entity("PetFamily.Volunteers.Domain.Entity.Volunteer", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uuid")
+                    .HasColumnName("id");
+
+                b.Property<DateTime?>("DeletionDate")
+                    .HasColumnType("timestamp with time zone")
+                    .HasColumnName("deletion_date");
+
+                b.Property<string>("DetailsForAssistance")
+                    .IsRequired()
+                    .HasColumnType("jsonb")
+                    .HasColumnName("details_for_assistance");
+
+                b.Property<bool>("IsDeleted")
+                    .HasColumnType("boolean")
+                    .HasColumnName("is_deleted");
+
+                b.Property<string>("SocialNetwork")
+                    .IsRequired()
+                    .HasColumnType("jsonb")
+                    .HasColumnName("social_network");
+
+                b.ComplexProperty<Dictionary<string, object>>("Description", "PetFamily.Volunteers.Domain.Entity.Volunteer.Description#Description", b1 =>
+                    {
+                        b1.IsRequired();
+
+                        b1.Property<string>("Value")
+                            .HasMaxLength(6000)
+                            .HasColumnType("character varying(6000)")
+                            .HasColumnName("description");
+                    });
+
+                b.ComplexProperty<Dictionary<string, object>>("FullName", "PetFamily.Volunteers.Domain.Entity.Volunteer.FullName#FullName", b1 =>
+                    {
+                        b1.IsRequired();
+
+                        b1.Property<string>("Name")
+                            .IsRequired()
+                            .HasMaxLength(100)
+                            .HasColumnType("character varying(100)")
+                            .HasColumnName("name");
+
+                        b1.Property<string>("Patronymic")
+                            .IsRequired()
+                            .HasMaxLength(100)
+                            .HasColumnType("character varying(100)")
+                            .HasColumnName("patronymic");
+
+                        b1.Property<string>("Surname")
+                            .IsRequired()
+                            .HasMaxLength(100)
+                            .HasColumnType("character varying(100)")
+                            .HasColumnName("surname");
+                    });
+
+                b.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "PetFamily.Volunteers.Domain.Entity.Volunteer.PhoneNumber#PhoneNumber", b1 =>
+                    {
+                        b1.IsRequired();
+
+                        b1.Property<string>("Number")
+                            .IsRequired()
+                            .HasMaxLength(20)
+                            .HasColumnType("character varying(20)")
+                            .HasColumnName("phone_number");
+                    });
+
+                b.ComplexProperty<Dictionary<string, object>>("YearsExperience", "PetFamily.Volunteers.Domain.Entity.Volunteer.YearsExperience#YearsExperience", b1 =>
+                    {
+                        b1.IsRequired();
+
+                        b1.Property<int>("Value")
+                            .HasColumnType("integer")
+                            .HasColumnName("years_experience");
+                    });
+
+                b.HasKey("Id")
+                    .HasName("pk_volunteer");
+
+                b.ToTable("volunteer", "volunteers");
+            });
+
+        modelBuilder.Entity("PetFamily.Volunteers.Domain.Entity.Pet", b =>
+            {
+                b.HasOne("PetFamily.Volunteers.Domain.Entity.Volunteer", null)
+                    .WithMany("Pets")
+                    .HasForeignKey("volunteer_id")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired()
+                    .HasConstraintName("fk_pet_volunteer_volunteer_id");
+            });
+
+        modelBuilder.Entity("PetFamily.Volunteers.Domain.Entity.PetPhoto", b =>
+            {
+                b.HasOne("PetFamily.Volunteers.Domain.Entity.Pet", null)
+                    .WithMany("PetPhotos")
+                    .HasForeignKey("pet_id")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired()
+                    .HasConstraintName("fk_pet_photo_pet_pet_id");
+            });
+
+        modelBuilder.Entity("PetFamily.Volunteers.Domain.Entity.Pet", b =>
+            {
+                b.Navigation("PetPhotos");
+            });
+
+        modelBuilder.Entity("PetFamily.Volunteers.Domain.Entity.Volunteer", b =>
+            {
+                b.Navigation("Pets");
+            });
 #pragma warning restore 612, 618
-        }
     }
 }

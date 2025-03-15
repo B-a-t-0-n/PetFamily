@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using PetFamily.Core.Dtos;
 using PetFamily.Volunteers.Application.Commands.PetHandlers.AddPet.Commands;
-using PetFamily.Volunteers.Application.Commands.PetHandlers.AddPetPhotos.Commands;
 using PetFamily.Volunteers.Application.Commands.PetHandlers.DeletePetPhoto.Commands;
 using PetFamily.Volunteers.Application.Commands.PetHandlers.HardDeletePet.Commands;
 using PetFamily.Volunteers.Application.Commands.PetHandlers.MovePet.Commands;
@@ -15,7 +14,6 @@ using PetFamily.Volunteers.Application.Commands.VolunteersHandlers.SoftDelete.Co
 using PetFamily.Volunteers.Application.Commands.VolunteersHandlers.UpdateDetailsForAssistance.Commands;
 using PetFamily.Volunteers.Application.Commands.VolunteersHandlers.UpdateMainInfo.Commands;
 using PetFamily.Volunteers.Application.Commands.VolunteersHandlers.UpdateSocialNetwork.Commands;
-using System.Text;
 
 namespace PetFamily.Volunteers.IntegrationTests;
 

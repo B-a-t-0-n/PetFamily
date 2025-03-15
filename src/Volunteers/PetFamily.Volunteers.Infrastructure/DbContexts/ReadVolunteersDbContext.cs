@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PetFamily.Core.Dtos;
-using PetFamily.SharedKernel;
 using PetFamily.Volunteers.Application;
 
 namespace PetFamily.Volunteers.Infrastructure.DbContexts;

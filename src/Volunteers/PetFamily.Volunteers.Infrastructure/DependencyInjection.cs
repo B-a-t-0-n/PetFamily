@@ -14,7 +14,6 @@ using PetFamily.Volunteers.Infrastructure.Service;
 using Minio;
 using PetFamily.Volunteers.Infrastructure.Options;
 using PetFamily.SharedKernel;
-using static CSharpFunctionalExtensions.Result;
 
 namespace PetFamily.Volunteers.Infrastructure;
 

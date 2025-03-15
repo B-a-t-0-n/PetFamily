@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Core.Abstractions;
 using PetFamily.Volunteers.Application.Commands.PetHandlers.UpdatePetStatus.Commands;
-using PetFamily.Volunteers.Domain.ValueObjects;
 
 namespace PetFamily.Volunteers.IntegrationTests.Pets;
 

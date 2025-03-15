@@ -8,7 +8,6 @@ using PetFamily.Volunteers.Application;
 using PetFamily.Volunteers.Domain.Entity;
 using PetFamily.Volunteers.Domain.ValueObjects;
 using PetFamily.Volunteers.Infrastructure.DbContexts;
-using System.Runtime.InteropServices.Marshalling;
 
 namespace PetFamily.Volunteers.IntegrationTests;
 
