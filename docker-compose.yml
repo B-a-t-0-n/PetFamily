@@ -1,41 +1,61 @@
-services:
-  postgres:
-    container_name: postgres
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_DB: pet_family
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - 5434:5432
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-  seq:
-    image: datalust/seq:latest
-    container_name: seq
-    restart: always
-    environment:
-      - ACCEPT_EULA=Y
-    ports:
-      - 5341:5341
-      - 8081:80
-  minio:
-    container_name: minio
-    image: minio/minio
-    ports:
-      - 9000:9000
-      - 9001:9001
-    volumes:
-      - minio-data:/data
-    command: server --console-address ":9001" /data
-    restart: always
-  petfamily.web:
-    image: ${DOCKER_REGISTRY-}petfamilyweb
-    build:
-      context: .
-      dockerfile: src/PetFamily.Web/Dockerfile
+services:  
+ postgres:  
+   container_name: postgres  
+   image: postgres  
+   restart: always  
+   environment:  
+     POSTGRES_DB: pet_family  
+     POSTGRES_USER: postgres  
+     POSTGRES_PASSWORD: postgres  
+   ports:  
+     - 5434:5432  
+   volumes:  
+     - postgres-data:/var/lib/postgresql/data  
+ pgadmin:  
+   container_name: pgadmin  
+   image: dpage/pgadmin4:4.23
+   environment:  
+     PGADMIN_DEFAULT_EMAIL: admin@pgadmin.com  
+     PGADMIN_DEFAULT_PASSWORD: password  
+     PGADMIN_CONFIG_SERVER_MODE: 'False'  
+     PGADMIN_SERVER_1_HOST: postgres  
+     PGADMIN_SERVER_1_PORT: 5434  
+     PGADMIN_SERVER_1_USERNAME: postgres  
+     PGADMIN_SERVER_1_PASSWORD: postgres  
+     PGADMIN_SERVER_1_NAME: pet_family  
+     PGADMIN_SERVER_1_REGISTER: 'True'  
+   ports:  
+     - 5050:80  
+   volumes:  
+     - pgadmin:/var/lib/pgadmin  
+   depends_on:  
+     - postgres  
+ seq:  
+   image: datalust/seq:latest  
+   container_name: seq  
+   restart: always  
+   environment:  
+     - ACCEPT_EULA=Y  
+   ports:  
+     - 5341:5341  
+     - 8081:80  
+ minio:  
+   container_name: minio  
+   image: minio/minio  
+   ports:  
+     - 9000:9000  
+     - 9001:9001  
+   volumes:  
+     - minio-data:/data  
+   command: server --console-address ":9001" /data  
+   restart: always  
+ petfamily.web:  
+   image: ${DOCKER_REGISTRY-}petfamilyweb  
+   build:  
+     context: .  
+     dockerfile: src/PetFamily.Web/Dockerfile  
 
-volumes:
-  postgres-data:
-  minio-data:
+volumes:  
+ postgres-data:  
+ pgadmin:  
+ minio-data:
