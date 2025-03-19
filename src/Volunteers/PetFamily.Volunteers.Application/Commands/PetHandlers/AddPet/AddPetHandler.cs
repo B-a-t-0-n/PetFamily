@@ -88,13 +88,13 @@ public class AddPetHandler : ICommandHandler<Guid, AddPetCommand>
 
         var assistanceStatus = AssistanceStatus.Create(command.AssistanceStatus).Value;
 
-        var detailsForAssistances = new List<DetailsForAssistance>();
+        var detailsForAssistances = new List<Requisites>();
 
         if (command.DetailsForAssistance != null)
         {
             foreach (var detailsForAssistance in command.DetailsForAssistance)
             {
-                var value = DetailsForAssistance.Create(
+                var value = Requisites.Create(
                     detailsForAssistance.Name,
                     detailsForAssistance.Description).Value;
 

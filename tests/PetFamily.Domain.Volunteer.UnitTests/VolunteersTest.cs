@@ -12,12 +12,8 @@ public class VolunteersTest
     {
         return Volunteers.Domain.Entity.Volunteer.Create(
             VolunteerId.Create(Guid.NewGuid()),
-            FullName.Create("John", "Doe", null).Value,
             Description.Create("Volunteer description").Value,
-            YearsExperience.Create(5).Value,
-            PhoneNumber.Create("1234567890").Value,
-            null!,
-            null!
+            PhoneNumber.Create("1234567890").Value
         ).Value;
     }
 

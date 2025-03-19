@@ -27,10 +27,9 @@ public class AccountsDbContext : IdentityDbContext<User, Role, Guid>
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.HasDefaultSchema("accounts");
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AccountsDbContext).Assembly);
 
-        modelBuilder.Entity<User>()
-            .ToTable("users");
+        modelBuilder.HasDefaultSchema("accounts");
 
         modelBuilder.Entity<Role>()
             .ToTable("roles");
@@ -49,6 +48,31 @@ public class AccountsDbContext : IdentityDbContext<User, Role, Guid>
 
         modelBuilder.Entity<IdentityUserRole<Guid>>()
             .ToTable("user_roles");
+
+        modelBuilder.Entity<AdminProfile>()
+            .ToTable("admin_profiles");
+
+        modelBuilder.Entity<PartisipantAccount>()
+            .ToTable("partisipant_accounts");
+
+        modelBuilder.Entity<Permission>()
+            .ToTable("permissions");
+
+        modelBuilder.Entity<RolePermission>()
+            .ToTable("role_permissions");
+
+        modelBuilder.Entity<RolePermission>()
+            .HasKey(rp => new { rp.RoleId, rp.PermissionId });
+
+        modelBuilder.Entity<RolePermission>()
+            .HasOne(rp => rp.Role)
+            .WithMany(r => r.RolePermissions)
+            .HasForeignKey(rp => rp.RoleId);
+
+        modelBuilder.Entity<RolePermission>()
+            .HasOne(rp => rp.Permission)
+            .WithMany()
+            .HasForeignKey(rp => rp.PermissionId);
     }
 
     private ILoggerFactory CreateLogerFactory() => LoggerFactory.Create(builder => { builder.AddConsole(); });

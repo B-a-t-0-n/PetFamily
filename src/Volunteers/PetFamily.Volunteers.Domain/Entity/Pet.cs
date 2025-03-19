@@ -11,7 +11,7 @@ namespace PetFamily.Volunteers.Domain.Entity;
 public class Pet : SoftDeletableEntity<PetId>
 {
     private readonly List<PetPhoto> _petPhotos = [];
-    private List<DetailsForAssistance> _detailsForAssistance = [];
+    private List<Requisites> _requisites = [];
 
     //ef core
     private Pet(PetId id) : base(id) { }
@@ -31,7 +31,7 @@ public class Pet : SoftDeletableEntity<PetId>
         bool isVaccinated,
         AssistanceStatus assistanceStatus,
         DateTime dateOfCreation,
-        List<DetailsForAssistance> detailsForAssistance
+        List<Requisites> requisites
         ) : base(id)
     {
         Nickname = nickname;
@@ -47,7 +47,7 @@ public class Pet : SoftDeletableEntity<PetId>
         IsVaccinated = isVaccinated;
         AssistanceStatus = assistanceStatus;
         DateOfCreation = dateOfCreation;
-        _detailsForAssistance = detailsForAssistance;
+        _requisites = requisites;
     }
 
     public Nickname Nickname { get; private set; } = default!;
@@ -78,7 +78,7 @@ public class Pet : SoftDeletableEntity<PetId>
 
     public DateTime DateOfCreation { get; private set; }
 
-    public IReadOnlyList<DetailsForAssistance> DetailsForAssistance => _detailsForAssistance;
+    public IReadOnlyList<Requisites> Requisites => _requisites;
 
     public IReadOnlyList<PetPhoto> PetPhotos => _petPhotos;
 
@@ -122,7 +122,7 @@ public class Pet : SoftDeletableEntity<PetId>
         bool isVaccinated,
         AssistanceStatus assistanceStatus,
         DateTime dateOfCreation,
-        List<DetailsForAssistance> detailsForAssistance)
+        List<Requisites> requisites)
     {
         var pet = new Pet(id,
             nickname,
@@ -138,7 +138,7 @@ public class Pet : SoftDeletableEntity<PetId>
             isVaccinated,
             assistanceStatus,
             dateOfCreation,
-            detailsForAssistance);
+            requisites);
 
         return pet;
     }
@@ -156,7 +156,7 @@ public class Pet : SoftDeletableEntity<PetId>
         DateTime? dateOfBirth,
         bool isVaccinated,
         AssistanceStatus assistanceStatus,
-        List<DetailsForAssistance> detailsForAssistance)
+        List<Requisites> requisites)
     {
         Nickname = nickname;
         Description = description;
@@ -170,7 +170,7 @@ public class Pet : SoftDeletableEntity<PetId>
         DateOfBirth = dateOfBirth;
         IsVaccinated = isVaccinated;
         AssistanceStatus = assistanceStatus;
-        _detailsForAssistance = detailsForAssistance;
+        _requisites = requisites;
     }
 
     internal void UpdateAssistanceStatus(AssistanceStatus assistanceStatus)

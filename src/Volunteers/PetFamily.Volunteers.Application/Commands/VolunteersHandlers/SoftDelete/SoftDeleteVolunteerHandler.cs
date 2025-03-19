@@ -46,11 +46,7 @@ public class SoftDeleteVolunteerHandler : ICommandHandler<Guid, SoftDeleteVolunt
         volunteerResult.Value.Delete();
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        _logger.LogInformation("soft deleted volunteer {Surname} {Name} {Patronymic} with id {id}",
-            volunteerResult.Value.FullName.Surname,
-            volunteerResult.Value.FullName.Name,
-            volunteerResult.Value.FullName.Patronymic,
-            id.Value);
+        _logger.LogInformation("soft deleted volunteer with id {id}", id.Value);
 
         return id.Value;
     }

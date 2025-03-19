@@ -10,7 +10,6 @@ using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.SharedKernel.ValueObjects.IDs;
 using PetFamily.Volunteers.Application.Commands.VolunteersHandlers.Create.Commands;
 using PetFamily.Volunteers.Domain.Entity;
-using PetFamily.Volunteers.Domain.ValueObjects;
 
 namespace PetFamily.Volunteers.Application.Commands.VolunteersHandlers.Create;
 
@@ -47,60 +46,25 @@ public class CreateVolunteerHandler : ICommandHandler<Guid, CreateVolunteerComma
 
         var volunteerId = VolunteerId.NewVolunteerId();
 
-        var fullName = FullName.Create(command.FullName.Name, command.FullName.Surname, command.FullName.Patronymic).Value;
-
         var description = Description.Create(command.Description).Value;
-
-        var yearsExperience = YearsExperience.Create(command.YearsExperience).Value;
 
         var phoneNumder = PhoneNumber.Create(command.PhoneNumber).Value;
 
-        var detailsForAssistances = new List<DetailsForAssistance>();
-
-        if (command.DetailsForAssistance != null)
-        {
-            foreach (var detailsForAssistance in command.DetailsForAssistance)
-            {
-                var value = DetailsForAssistance.Create(detailsForAssistance.Name, detailsForAssistance.Description).Value;
-
-                detailsForAssistances.Add(value);
-            }
-        }
-
-        var socialNetworks = new List<SocialNetwork>();
-
-        if (command.SocialNetworks != null)
-        {
-            foreach (var socialnetwork in command.SocialNetworks)
-            {
-                var socialNetwork = SocialNetwork.Create(socialnetwork.Name, socialnetwork.Link).Value;
-
-                socialNetworks.Add(socialNetwork);
-            }
-        }
-
-        var volunteerResult = Volunteer.Create(volunteerId,
-            fullName,
+        var volunteerResult = Volunteer.Create(
+            volunteerId,
             description,
-            yearsExperience,
-            phoneNumder,
-            detailsForAssistances,
-            socialNetworks);
+            phoneNumder);
 
         if (volunteerResult.IsFailure)
             return volunteerResult.Error.ToErrorList();
 
-        if (await _readDbContext.Volunteers.AnyAsync(v => v.PhoneNumber == phoneNumder.Number))
+        if (await _readDbContext.Volunteers.AnyAsync(v => v.PhoneNumber == phoneNumder.Number, cancellationToken: cancellationToken))
             return Errors.General.AlreadyExist().ToErrorList();
 
         await _volunteerRepository.Add(volunteerResult.Value, cancellationToken);
         await _unitOfWork.SaveChanges(cancellationToken);
 
-        _logger.LogInformation("created volunteer {Surname} {Name} {Patronymic} with id {volunteerId}",
-            fullName.Surname,
-            fullName.Name,
-            fullName.Patronymic,
-            volunteerId.Value);
+        _logger.LogInformation("created volunteer with id {volunteerId}", volunteerId.Value);
 
         return (Guid)volunteerResult.Value.Id;
     }

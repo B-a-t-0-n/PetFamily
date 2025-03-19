@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PetFamily.Core.Dtos;
+using PetFamily.Core.Models;
 using PetFamily.Framework;
 using PetFamily.Species.Application.Commands.BreedHandlers.AddBreed;
 using PetFamily.Species.Application.Commands.BreedHandlers.RemoveBreed;
@@ -16,7 +18,7 @@ namespace PetFamily.Species.Presentation.Species;
 public class SpeciesController : ApplicationController
 {
     [HttpGet]
-    public async Task<ActionResult> Get(
+    public async Task<ActionResult<PagedList<SpeciesDto>>> Get(
         [FromQuery] GetSpeciesWithPaginationRequest request,
         [FromServices] GetSpeciesWithPaginationHandler handler,
         CancellationToken cancellationToken = default)
@@ -29,7 +31,7 @@ public class SpeciesController : ApplicationController
     }
 
     [HttpGet("{id:guid}/breeds")]
-    public async Task<ActionResult> Get(
+    public async Task<ActionResult<PagedList<BreedDto>>> Get(
         [FromRoute] Guid id,
         [FromQuery] GetBreedWithPaginationRequest request,
         [FromServices] GetBreedWithPaginationHandler handler,

@@ -1,6 +1,6 @@
 ﻿namespace PetFamily.Core.Dtos;
 
-public class DetailsForAssistanceDto
+public class RequisitesDto
 {
     public string? Name { get; init; }
     public string? Description { get; init; }

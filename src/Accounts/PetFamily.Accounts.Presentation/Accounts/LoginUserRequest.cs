@@ -1,5 +1,4 @@
 ﻿using PetFamily.Accounts.Application.Commands.Login;
-using System.ComponentModel.DataAnnotations;
 
 namespace PetFamily.Accounts.Presentation.Accounts
 {

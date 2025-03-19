@@ -1,5 +1,4 @@
 using Microsoft.OpenApi.Models;
-using PetFamily.Accounts.Infrastructure;
 using PetFamily.Accounts.Presentation;
 using PetFamily.Species.Presentation;
 using PetFamily.Volunteers.Presentation;

@@ -147,11 +147,11 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         builder.Property(p => p.DateOfCreation)
                 .HasColumnName("date_of_creation");
 
-        builder.Property(p => p.DetailsForAssistance)
+        builder.Property(p => p.Requisites)
             .ValueObjectCollectionJsonConversion(
-                detailForAssistance => new DetailsForAssistanceDto { Name = detailForAssistance.Name, Description = detailForAssistance.Description },
-                dto => DetailsForAssistance.Create(dto.Name, dto.Description).Value)
-            .HasColumnName("details_for_assistance");
+                requisit => new RequisitesDto { Name = requisit.Name, Description = requisit.Description },
+                dto => Requisites.Create(dto.Name, dto.Description).Value)
+            .HasColumnName("requisites");
 
 
         builder.HasMany(p => p.PetPhotos)

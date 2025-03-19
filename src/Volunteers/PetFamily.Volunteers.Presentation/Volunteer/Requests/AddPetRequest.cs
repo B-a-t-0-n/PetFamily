@@ -15,7 +15,7 @@ public record AddPetRequest(
     DateTime? DateOfBirth,
     bool IsVaccinated,
     string AssistanceStatus,
-    IEnumerable<DetailsForAssistanceDto>? DetailsForAssistance,
+    IEnumerable<RequisitesDto>? DetailsForAssistance,
     SpeciesAndBreedDto SpeciesAndBreed)
 {
     public AddPetCommand ToCommand(Guid volunteerId) =>

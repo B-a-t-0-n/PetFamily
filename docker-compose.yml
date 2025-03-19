@@ -13,13 +13,13 @@ services:
      - postgres-data:/var/lib/postgresql/data  
  pgadmin:  
    container_name: pgadmin  
-   image: dpage/pgadmin4:4.23
+   image: dpage/pgadmin4:9.1
    environment:  
      PGADMIN_DEFAULT_EMAIL: admin@pgadmin.com  
      PGADMIN_DEFAULT_PASSWORD: password  
      PGADMIN_CONFIG_SERVER_MODE: 'False'  
      PGADMIN_SERVER_1_HOST: postgres  
-     PGADMIN_SERVER_1_PORT: 5434  
+     PGADMIN_SERVER_1_PORT: 5432  
      PGADMIN_SERVER_1_USERNAME: postgres  
      PGADMIN_SERVER_1_PASSWORD: postgres  
      PGADMIN_SERVER_1_NAME: pet_family  

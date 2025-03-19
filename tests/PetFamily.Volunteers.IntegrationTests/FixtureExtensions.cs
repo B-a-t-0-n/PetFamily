@@ -11,9 +11,7 @@ using PetFamily.Volunteers.Application.Commands.PetHandlers.UpdatePetStatus.Comm
 using PetFamily.Volunteers.Application.Commands.VolunteersHandlers.Create.Commands;
 using PetFamily.Volunteers.Application.Commands.VolunteersHandlers.HardDelete.Commands;
 using PetFamily.Volunteers.Application.Commands.VolunteersHandlers.SoftDelete.Commands;
-using PetFamily.Volunteers.Application.Commands.VolunteersHandlers.UpdateDetailsForAssistance.Commands;
 using PetFamily.Volunteers.Application.Commands.VolunteersHandlers.UpdateMainInfo.Commands;
-using PetFamily.Volunteers.Application.Commands.VolunteersHandlers.UpdateSocialNetwork.Commands;
 
 namespace PetFamily.Volunteers.IntegrationTests;
 
@@ -22,11 +20,6 @@ public static class FixtureExtensions
     public static CreateVolunteerCommand CreateVolunteerCommand(this Fixture fixture)
     {
         return fixture.Build<CreateVolunteerCommand>()
-                      .With(v => v.FullName,
-                            new FullNameDto(
-                                "testname",
-                                "testlastname",
-                                "testpatronymic"))
                       .With(c => c.PhoneNumber, "89123456789")
                       .Create();
     }
@@ -49,54 +42,13 @@ public static class FixtureExtensions
                       .Create();
     }
 
-    public static UpdateDetailsForAssistanceCommand UpdateDetailsForAssistanceCommand(
-        this Fixture fixture,
-        Guid volunteerId)
-    {
-        return fixture.Build<UpdateDetailsForAssistanceCommand>()
-                      .With(v => v.Id, volunteerId)
-                      .With(v => v.DetailsForAssistance,
-                            new List<DetailsForAssistanceDto>
-                            {
-                                new DetailsForAssistanceDto()
-                                {
-                                    Name = "testname",
-                                    Description = "testdescription"
-                                }
-                            })
-                      .Create();
-    }
-
     public static UpdateMainInfoCommand UpdateMainInfoCommand(
         this Fixture fixture,
         Guid volunteerId)
     {
         return fixture.Build<UpdateMainInfoCommand>()
                       .With(v => v.Id, volunteerId)
-                      .With(v => v.FullName,
-                            new FullNameDto(
-                                "testname",
-                                "testlastname",
-                                "testpatronymic"))
                       .With(v => v.PhoneNumber, "89123456789")
-                      .Create();
-    }
-
-    public static UpdateSocialNetworkCommand UpdateSocialNetworkCommand(
-        this Fixture fixture,
-        Guid volunteerId)
-    {
-        return fixture.Build<UpdateSocialNetworkCommand>()
-                      .With(v => v.Id, volunteerId)
-                      .With(v => v.SocialNetwork,
-                            new List<SocialNetworkDto>
-                            {
-                                new SocialNetworkDto()
-                                {
-                                    Name = "testname",
-                                    Link = "testurl"
-                                }
-                            })
                       .Create();
     }
 
@@ -117,9 +69,9 @@ public static class FixtureExtensions
                       .With(v => v.AssistanceStatus, "needshelp")
                       .With(v => v.DateOfBirth, DateTime.UtcNow)
                       .With(v => v.DetailsForAssistance,
-                            new List<DetailsForAssistanceDto>
+                            new List<RequisitesDto>
                             {
-                                new DetailsForAssistanceDto()
+                                new RequisitesDto()
                                 {
                                     Name = "testname",
                                     Description = "testdescription"
@@ -189,9 +141,9 @@ public static class FixtureExtensions
                       .With(v => v.AssistanceStatus, "needshelp")
                       .With(v => v.DateOfBirth, DateTime.UtcNow)
                       .With(v => v.DetailsForAssistance,
-                            new List<DetailsForAssistanceDto>
+                            new List<RequisitesDto>
                             {
-                                new DetailsForAssistanceDto()
+                                new RequisitesDto()
                                 {
                                     Name = "testname",
                                     Description = "testdescription"

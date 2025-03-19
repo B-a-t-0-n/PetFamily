@@ -35,6 +35,6 @@ public class UpdatePetInfoCommandValidator : AbstractValidator<UpdatePetInfoComm
 
         RuleFor(a => a.IsVaccinated).NotNull().WithError(Errors.General.ValueIsRequired());
 
-        RuleForEach(c => c.DetailsForAssistance).MustBeValueObject(x => DetailsForAssistance.Create(x.Name, x.Description));
+        RuleForEach(c => c.DetailsForAssistance).MustBeValueObject(x => Requisites.Create(x.Name, x.Description));
     }
 }
