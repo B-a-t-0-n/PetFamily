@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using PetFamily.Accounts.Domain;
 using PetFamily.Core.Extentions;
-using PetFamily.Volunteers.Domain.ValueObjects;
 using PetFamily.Core.Dtos;
+using PetFamily.SharedKernel.ValueObjects;
 
 namespace PetFamily.Accounts.Infrastructure.Configuration;
 
@@ -33,5 +33,10 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<VolunteerAccount>
                 certificates => certificates,
                 dto => dto)
             .HasColumnName("certificates"); ;
+
+        builder
+            .HasOne(v => v.User)
+            .WithOne()
+            .HasForeignKey<VolunteerAccount>(v => v.UserId);
     }
 }

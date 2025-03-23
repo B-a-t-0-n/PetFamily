@@ -3,12 +3,24 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PetFamily.Accounts.Domain;
+using PetFamily.SharedKernel;
 
-namespace PetFamily.Accounts.Infrastructure;
+namespace PetFamily.Accounts.Infrastructure.DbContexts;
 
 public class AccountsDbContext : IdentityDbContext<User, Role, Guid>
 {
     private readonly string _connectionString;
+
+    public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
+
+    public DbSet<Permission> Permissions => Set<Permission>();
+
+    public DbSet<AdminAccount> AdminAccounts => Set<AdminAccount>();
+
+    public DbSet<PartisipantAccount> PartisipantAccounts => Set<PartisipantAccount>();
+
+    public DbSet<VolunteerAccount> VolunteerAccounts => Set<VolunteerAccount>();
+
 
     public AccountsDbContext(string connectionString)
     {
@@ -26,8 +38,6 @@ public class AccountsDbContext : IdentityDbContext<User, Role, Guid>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AccountsDbContext).Assembly);
 
         modelBuilder.HasDefaultSchema("accounts");
 
@@ -49,14 +59,30 @@ public class AccountsDbContext : IdentityDbContext<User, Role, Guid>
         modelBuilder.Entity<IdentityUserRole<Guid>>()
             .ToTable("user_roles");
 
-        modelBuilder.Entity<AdminProfile>()
-            .ToTable("admin_profiles");
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AccountsDbContext).Assembly);
+
+        modelBuilder.Entity<AdminAccount>()
+            .ToTable("admin_accounts");
+
+        modelBuilder.Entity<AdminAccount>()
+            .HasOne(v => v.User)
+            .WithOne()
+            .HasForeignKey<AdminAccount>(v => v.UserId);
 
         modelBuilder.Entity<PartisipantAccount>()
             .ToTable("partisipant_accounts");
 
+        modelBuilder.Entity<PartisipantAccount>()
+            .HasOne(v => v.User)
+            .WithOne()
+            .HasForeignKey<PartisipantAccount>(v => v.UserId);
+
         modelBuilder.Entity<Permission>()
             .ToTable("permissions");
+
+        modelBuilder.Entity<Permission>()
+            .HasIndex(p => p.Code)
+            .IsUnique();
 
         modelBuilder.Entity<RolePermission>()
             .ToTable("role_permissions");

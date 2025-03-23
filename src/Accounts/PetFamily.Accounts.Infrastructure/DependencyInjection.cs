@@ -8,6 +8,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using PetFamily.Accounts.Application;
+using PetFamily.Accounts.Infrastructure.DbContexts;
+using PetFamily.Accounts.Infrastructure.Options;
+using PetFamily.Accounts.Infrastructure.Providers;
+using PetFamily.Accounts.Infrastructure.Managers;
+using PetFamily.Accounts.Infrastructure.Seeders;
+using Microsoft.AspNetCore.Authorization;
+using PetFamily.Framework.Authorization;
+using PetFamily.Accounts.Application.Managers;
 
 
 namespace PetFamily.Accounts.Infrastructure;
@@ -20,9 +28,25 @@ public static class DependencyInjection
     {
         return services
             .AddIdentity()
-            .AddDbContext(configuration)
             .AddJwt(configuration)
-            .AddAuthorization();
+            .AddDbContext(configuration)
+            .AddSeeding(configuration)
+            .AddAuthorization()
+            .AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>()
+            .AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>(); ;
+    }
+
+    private static IServiceCollection AddSeeding(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.Configure<AdminOptions>(
+            configuration.GetSection(AdminOptions.ADMIN));
+
+        services.AddScoped<AccountsSeederService>();
+        services.AddSingleton<AccountsSeeder>();
+
+        return services;
     }
 
     private static IServiceCollection AddJwt(
@@ -61,7 +85,6 @@ public static class DependencyInjection
         return services;
     }
 
-
     private static IServiceCollection AddIdentity(this IServiceCollection services)
     {
         services
@@ -73,6 +96,12 @@ public static class DependencyInjection
             })
             .AddEntityFrameworkStores<AccountsDbContext>()
             .AddDefaultTokenProviders();
+
+        services.AddScoped<PermissionManager>();
+        services.AddScoped<RolePermissionManager>();
+        services.AddScoped<IAdminAccountManager, AdminAccountManager>();
+        services.AddScoped<IVolunteerAccountManager, VolunteerAccountManager>();
+        services.AddScoped<IPartisipantAccountManager, PartisipantAccountManager>();
 
         return services;
     }

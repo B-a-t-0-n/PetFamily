@@ -1,9 +1,12 @@
 using Microsoft.OpenApi.Models;
+using PetFamily.Accounts.Infrastructure.Seeders;
 using PetFamily.Accounts.Presentation;
 using PetFamily.Species.Presentation;
 using PetFamily.Volunteers.Presentation;
 using Serilog;
 using Serilog.Events;
+
+DotNetEnv.Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,11 +58,15 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddSerilog();
 
 builder.Services
+    .AddAccountPresentation(builder.Configuration)
     .AddVolunteersPresentation(builder.Configuration)
-    .AddSpeciesPresentation(builder.Configuration)
-    .AddAccountPresentation(builder.Configuration);
+    .AddSpeciesPresentation(builder.Configuration);
 
 var app = builder.Build();
+
+var accountsSeeeder = app.Services.GetRequiredService<AccountsSeeder>();
+
+await accountsSeeeder.SeedAsync();
 
 app.UseExceptionMiddleware();
 

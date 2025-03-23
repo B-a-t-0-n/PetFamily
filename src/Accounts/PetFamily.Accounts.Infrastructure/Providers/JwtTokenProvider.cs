@@ -2,11 +2,13 @@
 using Microsoft.IdentityModel.Tokens;
 using PetFamily.Accounts.Application;
 using PetFamily.Accounts.Domain;
+using PetFamily.Accounts.Infrastructure.Options;
+using PetFamily.Core.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace PetFamily.Accounts.Infrastructure;
+namespace PetFamily.Accounts.Infrastructure.Providers;
 
 public class JwtTokenProvider : ITokenProvider
 {
@@ -22,10 +24,14 @@ public class JwtTokenProvider : ITokenProvider
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
         var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+        var roleClaims = user.Roles.Select(r => new Claim(CustomClaims.Role, r.Name ?? string.Empty));
+
         Claim[] claims = [
-            new Claim(CustomClaims.Sub, user.Id.ToString()),
+            new Claim(CustomClaims.Id, user.Id.ToString()),
             new Claim(CustomClaims.Email, user.Email ?? ""),
         ];
+
+        claims = claims.Concat(roleClaims).ToArray();
 
         var jwtToken = new JwtSecurityToken(
             issuer: _jwtOptions.Issuer,

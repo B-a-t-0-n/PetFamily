@@ -5,7 +5,6 @@ using PetFamily.Volunteers.Domain.Entity;
 using PetFamily.SharedKernel.ValueObjects.IDs;
 using PetFamily.Core.Dtos;
 using PetFamily.SharedKernel;
-using PetFamily.Volunteers.Domain.ValueObjects;
 using PetFamily.SharedKernel.ValueObjects;
 
 namespace PetFamily.Volunteers.Infrastructure.Configuration.Write;
