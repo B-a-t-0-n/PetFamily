@@ -15,3 +15,5 @@ public class AccountsContract : IAccountsContract
     public async Task<HashSet<string>> GetUserPermissionCode(Guid userId) => 
         await _permissionManager.GetUserPermissionCodes(userId);
 }
+
+
