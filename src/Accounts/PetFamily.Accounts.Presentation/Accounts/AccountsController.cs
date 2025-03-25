@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Accounts.Application.Commands.Login;
+using PetFamily.Accounts.Application.Commands.RefreshTokens;
 using PetFamily.Accounts.Application.Commands.Register;
+using PetFamily.Accounts.Contracts.Responses;
 using PetFamily.Accounts.Presentation.Accounts.Requests;
 using PetFamily.Framework;
 
@@ -24,9 +26,24 @@ public class AccountsController : ApplicationController
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult> Login(
+    public async Task<ActionResult<LoginResponse>> Login(
         [FromBody] LoginUserRequest request,
         [FromServices] LoginHandler handler,
+        CancellationToken cancellationToken = default)
+    {
+        var command = request.ToCommand();
+        var result = await handler.Handle(command, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+
+    [HttpPost("refresh")]
+    public async Task<ActionResult> Refresh(
+        [FromBody] RefreshTokensRequest request,
+        [FromServices] RefreshTokensHandler handler,
         CancellationToken cancellationToken = default)
     {
         var command = request.ToCommand();

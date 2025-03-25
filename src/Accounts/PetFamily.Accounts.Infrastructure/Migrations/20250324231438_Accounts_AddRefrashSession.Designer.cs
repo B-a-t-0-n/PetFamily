@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetFamily.Accounts.Infrastructure.DbContexts;
@@ -12,9 +13,11 @@ using PetFamily.Accounts.Infrastructure.DbContexts;
 namespace PetFamily.Accounts.Infrastructure.Migrations
 {
     [DbContext(typeof(AccountsDbContext))]
-    partial class AccountsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250324231438_Accounts_AddRefrashSession")]
+    partial class Accounts_AddRefrashSession
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,7 +226,7 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                     b.ToTable("permissions", "accounts");
                 });
 
-            modelBuilder.Entity("PetFamily.Accounts.Domain.RefreshSession", b =>
+            modelBuilder.Entity("PetFamily.Accounts.Domain.RefrashSession", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -237,10 +240,6 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                     b.Property<DateTime>("ExpiresIn")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("expires_in");
-
-                    b.Property<Guid>("Jti")
-                        .HasColumnType("uuid")
-                        .HasColumnName("jti");
 
                     b.Property<Guid>("RefreshToken")
                         .HasColumnType("uuid")
@@ -543,7 +542,7 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PetFamily.Accounts.Domain.RefreshSession", b =>
+            modelBuilder.Entity("PetFamily.Accounts.Domain.RefrashSession", b =>
                 {
                     b.HasOne("PetFamily.Accounts.Domain.User", "User")
                         .WithMany()

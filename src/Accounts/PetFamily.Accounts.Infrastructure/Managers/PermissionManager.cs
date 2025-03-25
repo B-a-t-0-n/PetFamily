@@ -18,27 +18,27 @@ public class PermissionManager
         _accountsDbContext = accountsDbContext;
     }
 
-    public async Task<Permission?> FindByCode(string code) =>
-        await _accountsDbContext.Permissions.FirstOrDefaultAsync(p => p.Code == code);
+    public async Task<Permission?> FindByCode(string code, CancellationToken cancellationToken = default) =>
+        await _accountsDbContext.Permissions.FirstOrDefaultAsync(p => p.Code == code, cancellationToken);
 
-    public async Task AddRangeIfExist(IEnumerable<string> permissions)
+    public async Task AddRangeIfExist(IEnumerable<string> permissions, CancellationToken cancellationToken = default)
     {
         foreach (var permissionCode in permissions)
         {
-            var isPermissionsexist = await _accountsDbContext.Permissions.AnyAsync(p => p.Code == permissionCode);
+            var isPermissionsexist = await _accountsDbContext.Permissions.AnyAsync(p => p.Code == permissionCode, cancellationToken);
 
             if (isPermissionsexist)
                 continue;
 
-            await _accountsDbContext.Permissions.AddAsync(new Permission { Code = permissionCode });
+            await _accountsDbContext.Permissions.AddAsync(new Permission { Code = permissionCode }, cancellationToken);
 
             _logger.LogInformation("Added permission with code {code}", permissionCode);
         }
 
-        _accountsDbContext.SaveChanges();
+        await _accountsDbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<HashSet<string>> GetUserPermissionCodes(Guid userId)
+    public async Task<HashSet<string>> GetUserPermissionCodes(Guid userId, CancellationToken cancellationToken = default)
     {
         var permissions = await _accountsDbContext.Users
             .Where(u => u.Id == userId)
@@ -46,7 +46,7 @@ public class PermissionManager
             .SelectMany(r => r.RolePermissions)
             .Select(rp => rp.Permission.Code)
             .Distinct()
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         return permissions.ToHashSet();
     }

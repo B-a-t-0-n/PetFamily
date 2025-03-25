@@ -12,7 +12,7 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
 
         RuleForEach(c => c.SocialNetworks).MustBeValueObject(x => SocialNetwork.Create(x.Name, x.Link));
 
-        RuleFor(u => u.Email).NotEmpty().EmailAddress();
+        RuleFor(u => u.Email).NotEmpty();
 
         RuleFor(u => u.UserName).NotEmpty();
 

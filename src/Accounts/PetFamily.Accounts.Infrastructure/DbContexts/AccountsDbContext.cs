@@ -21,6 +21,8 @@ public class AccountsDbContext : IdentityDbContext<User, Role, Guid>
 
     public DbSet<VolunteerAccount> VolunteerAccounts => Set<VolunteerAccount>();
 
+    public DbSet<RefreshSession> RefreshSessions => Set<RefreshSession>();
+
 
     public AccountsDbContext(string connectionString)
     {
@@ -83,6 +85,14 @@ public class AccountsDbContext : IdentityDbContext<User, Role, Guid>
         modelBuilder.Entity<Permission>()
             .HasIndex(p => p.Code)
             .IsUnique();
+
+        modelBuilder.Entity<RefreshSession>()
+            .ToTable("refrash_sessions");
+
+        modelBuilder.Entity<RefreshSession>()
+            .HasOne(rs => rs.User)
+            .WithMany()
+            .HasForeignKey(rs => rs.UserId);
 
         modelBuilder.Entity<RolePermission>()
             .ToTable("role_permissions");

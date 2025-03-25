@@ -1,6 +1,6 @@
 ﻿using PetFamily.Accounts.Application.Commands.Login.Command;
 
-namespace PetFamily.Accounts.Presentation.Accounts;
+namespace PetFamily.Accounts.Presentation.Accounts.Requests;
 
 public record LoginUserRequest(string Email, string Password)
 {
