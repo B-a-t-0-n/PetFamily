@@ -105,6 +105,9 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.AddScoped<IReadAccountsDbContext, AccountsDbContext>(_ =>
+            new AccountsDbContext(configuration.GetConnectionString("Database")!));
+
         services.AddScoped<AccountsDbContext>(_ =>
             new AccountsDbContext(configuration.GetConnectionString("Database")!));
 

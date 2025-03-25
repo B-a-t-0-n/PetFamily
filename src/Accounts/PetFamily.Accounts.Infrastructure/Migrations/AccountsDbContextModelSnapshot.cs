@@ -522,10 +522,8 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
             modelBuilder.Entity("PetFamily.Accounts.Domain.AdminAccount", b =>
                 {
                     b.HasOne("PetFamily.Accounts.Domain.User", "User")
-                        .WithOne()
+                        .WithOne("AdminAccount")
                         .HasForeignKey("PetFamily.Accounts.Domain.AdminAccount", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("fk_admin_accounts_users_user_id");
 
                     b.Navigation("User");
@@ -534,10 +532,8 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
             modelBuilder.Entity("PetFamily.Accounts.Domain.PartisipantAccount", b =>
                 {
                     b.HasOne("PetFamily.Accounts.Domain.User", "User")
-                        .WithOne()
+                        .WithOne("PartisipantAccount")
                         .HasForeignKey("PetFamily.Accounts.Domain.PartisipantAccount", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("fk_partisipant_accounts_users_user_id");
 
                     b.Navigation("User");
@@ -579,10 +575,8 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
             modelBuilder.Entity("PetFamily.Accounts.Domain.VolunteerAccount", b =>
                 {
                     b.HasOne("PetFamily.Accounts.Domain.User", "User")
-                        .WithOne()
+                        .WithOne("VolunteerAccount")
                         .HasForeignKey("PetFamily.Accounts.Domain.VolunteerAccount", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("fk_volunteer_accounts_users_user_id");
 
                     b.Navigation("User");
@@ -591,6 +585,15 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
             modelBuilder.Entity("PetFamily.Accounts.Domain.Role", b =>
                 {
                     b.Navigation("RolePermissions");
+                });
+
+            modelBuilder.Entity("PetFamily.Accounts.Domain.User", b =>
+                {
+                    b.Navigation("AdminAccount");
+
+                    b.Navigation("PartisipantAccount");
+
+                    b.Navigation("VolunteerAccount");
                 });
 #pragma warning restore 612, 618
         }
