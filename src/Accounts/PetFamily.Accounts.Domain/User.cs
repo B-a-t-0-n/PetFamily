@@ -20,6 +20,10 @@ public class User : IdentityUser<Guid>
 
     public IReadOnlyList<SocialNetwork> SocialNetworks => _socialNetworks;
 
+    public AdminAccount? AdminAccount { get; set; }
+    public PartisipantAccount? PartisipantAccount { get; set; }
+    public VolunteerAccount? VolunteerAccount { get; set; }
+
     public static Result<User, Error> CreateAdmin(string userName, FullName fullName, string email, Role role)
     {
         if (role.Name!.ToUpper() != AdminAccount.ADMIN)

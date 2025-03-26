@@ -46,5 +46,23 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasMany(v => v.Roles)
             .WithMany()
             .UsingEntity<IdentityUserRole<Guid>>();
+
+        builder
+            .HasOne(v => v.AdminAccount)
+            .WithOne(u => u.User)
+            .HasForeignKey<AdminAccount>(a => a.UserId)
+            .IsRequired(false);
+
+        builder
+            .HasOne(v => v.PartisipantAccount)
+            .WithOne(u => u.User)
+            .HasForeignKey<PartisipantAccount>(a => a.UserId)
+            .IsRequired(false);
+
+        builder
+            .HasOne(v => v.VolunteerAccount)
+            .WithOne(u => u.User)
+            .HasForeignKey<VolunteerAccount>(a => a.UserId)
+            .IsRequired(false);
     }
 }

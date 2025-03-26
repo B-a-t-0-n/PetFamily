@@ -13,8 +13,8 @@ using PetFamily.Accounts.Infrastructure.DbContexts;
 namespace PetFamily.Accounts.Infrastructure.Migrations
 {
     [DbContext(typeof(AccountsDbContext))]
-    [Migration("20250324231438_Accounts_AddRefrashSession")]
-    partial class Accounts_AddRefrashSession
+    [Migration("20250325224818_Accounts_Init")]
+    partial class Accounts_Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -168,12 +168,20 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
+                    b.Property<Guid?>("UserId1")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id1");
+
                     b.HasKey("Id")
                         .HasName("pk_admin_accounts");
 
                     b.HasIndex("UserId")
                         .IsUnique()
                         .HasDatabaseName("ix_admin_accounts_user_id");
+
+                    b.HasIndex("UserId1")
+                        .IsUnique()
+                        .HasDatabaseName("ix_admin_accounts_user_id1");
 
                     b.ToTable("admin_accounts", "accounts");
                 });
@@ -194,12 +202,20 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
+                    b.Property<Guid?>("UserId1")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id1");
+
                     b.HasKey("Id")
                         .HasName("pk_partisipant_accounts");
 
                     b.HasIndex("UserId")
                         .IsUnique()
                         .HasDatabaseName("ix_partisipant_accounts_user_id");
+
+                    b.HasIndex("UserId1")
+                        .IsUnique()
+                        .HasDatabaseName("ix_partisipant_accounts_user_id1");
 
                     b.ToTable("partisipant_accounts", "accounts");
                 });
@@ -226,7 +242,7 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                     b.ToTable("permissions", "accounts");
                 });
 
-            modelBuilder.Entity("PetFamily.Accounts.Domain.RefrashSession", b =>
+            modelBuilder.Entity("PetFamily.Accounts.Domain.RefreshSession", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -240,6 +256,10 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                     b.Property<DateTime>("ExpiresIn")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("expires_in");
+
+                    b.Property<Guid>("Jti")
+                        .HasColumnType("uuid")
+                        .HasColumnName("jti");
 
                     b.Property<Guid>("RefreshToken")
                         .HasColumnType("uuid")
@@ -442,6 +462,10 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
+                    b.Property<Guid?>("UserId1")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id1");
+
                     b.ComplexProperty<Dictionary<string, object>>("YearsExperience", "PetFamily.Accounts.Domain.VolunteerAccount.YearsExperience#YearsExperience", b1 =>
                         {
                             b1.IsRequired();
@@ -457,6 +481,10 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique()
                         .HasDatabaseName("ix_volunteer_accounts_user_id");
+
+                    b.HasIndex("UserId1")
+                        .IsUnique()
+                        .HasDatabaseName("ix_volunteer_accounts_user_id1");
 
                     b.ToTable("volunteer_accounts", "accounts");
                 });
@@ -527,6 +555,11 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_admin_accounts_users_user_id");
 
+                    b.HasOne("PetFamily.Accounts.Domain.User", null)
+                        .WithOne("AdminAccount")
+                        .HasForeignKey("PetFamily.Accounts.Domain.AdminAccount", "UserId1")
+                        .HasConstraintName("fk_admin_accounts_users_user_id1");
+
                     b.Navigation("User");
                 });
 
@@ -539,10 +572,15 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_partisipant_accounts_users_user_id");
 
+                    b.HasOne("PetFamily.Accounts.Domain.User", null)
+                        .WithOne("PartisipantAccount")
+                        .HasForeignKey("PetFamily.Accounts.Domain.PartisipantAccount", "UserId1")
+                        .HasConstraintName("fk_partisipant_accounts_users_user_id1");
+
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PetFamily.Accounts.Domain.RefrashSession", b =>
+            modelBuilder.Entity("PetFamily.Accounts.Domain.RefreshSession", b =>
                 {
                     b.HasOne("PetFamily.Accounts.Domain.User", "User")
                         .WithMany()
@@ -584,12 +622,26 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_volunteer_accounts_users_user_id");
 
+                    b.HasOne("PetFamily.Accounts.Domain.User", null)
+                        .WithOne("VolunteerAccount")
+                        .HasForeignKey("PetFamily.Accounts.Domain.VolunteerAccount", "UserId1")
+                        .HasConstraintName("fk_volunteer_accounts_users_user_id1");
+
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("PetFamily.Accounts.Domain.Role", b =>
                 {
                     b.Navigation("RolePermissions");
+                });
+
+            modelBuilder.Entity("PetFamily.Accounts.Domain.User", b =>
+                {
+                    b.Navigation("AdminAccount");
+
+                    b.Navigation("PartisipantAccount");
+
+                    b.Navigation("VolunteerAccount");
                 });
 #pragma warning restore 612, 618
         }
