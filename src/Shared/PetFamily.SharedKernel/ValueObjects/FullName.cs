@@ -4,17 +4,17 @@ namespace PetFamily.SharedKernel.ValueObjects;
 
 public class FullName : ValueObject
 {
-    private FullName() { }
-    private FullName(string name, string surname, string? patronymic)
+    public FullName() { }
+    public FullName(string name, string surname, string? patronymic)
     {
-        Name = name;
+        FirstName = name;
         Surname = surname;
         Patronymic = patronymic;
     }
 
-    public string Name { get; } = default!;
+    public string FirstName { get; } = default!;
     public string Surname { get; } = default!;
-    public string? Patronymic { get; } = default!;
+    public string? Patronymic { get; }
 
     public static Result<FullName, Error> Create(string name, string surname, string? patronymic)
     {
@@ -40,7 +40,7 @@ public class FullName : ValueObject
 
     protected override IEnumerable<IComparable> GetEqualityComponents()
     {
-        yield return Name;
+        yield return FirstName;
         yield return Surname;
         yield return Patronymic == null ? "" : Patronymic;
     }

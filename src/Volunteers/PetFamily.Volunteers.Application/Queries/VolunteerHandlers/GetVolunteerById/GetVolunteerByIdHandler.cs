@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Dtos;
-using System.Text.Json;
 
 namespace PetFamily.Volunteers.Application.Queries.VolunteerHandlers.GetVolunteerById;
 
@@ -28,34 +27,14 @@ public class GetVolunteerByIdHandler : IQueryHandler<VolunteerDto?, GetVolunteer
         var sql = """
                 SELECT 
                     v.id,
-                    v.name,
-                    v.surname,
-                    v.patronymic,
                     v.description,
-                    v.years_experience,
                     v.phone_number,
-                    v.details_for_assistance,
-                    v.social_network
                 FROM volunteers.volunteer v
                 WHERE v.id = @Id and v.is_deleted = false
                 """;
         parameters.Add("@Id", query.Id);
 
-        var volunteer = await connection.QueryAsync<VolunteerDto, string, string, VolunteerDto>(
-            sql,
-            (volunteer, detailsForAssistanceJson, socialNetworkJson) =>
-            {
-                var detailsForAssistance = JsonSerializer.Deserialize<DetailsForAssistanceDto[]>(detailsForAssistanceJson, JsonSerializerOptions.Default) ?? [];
-                var socialNetwork = JsonSerializer.Deserialize<SocialNetworkDto[]>(socialNetworkJson, JsonSerializerOptions.Default) ?? [];
-
-                volunteer.SocialNetwork = socialNetwork;
-                volunteer.DetailsForAssistance = detailsForAssistance;
-
-                return volunteer;
-            },
-
-            splitOn: "details_for_assistance, social_network",
-            param: parameters);
+        var volunteer = await connection.QueryAsync<VolunteerDto>(sql);
 
         _logger.LogInformation("received volunteer with id {id}", query.Id);
     

@@ -46,5 +46,5 @@ public class PetDto
 
     public DateTime DateOfCreation { get; init; }
 
-    public DetailsForAssistanceDto[] DetailsForAssistance { get; set; } = [];
+    public RequisitesDto[] Requisites { get; set; } = [];
 }

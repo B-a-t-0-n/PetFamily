@@ -8,6 +8,16 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using PetFamily.Accounts.Application;
+using PetFamily.Accounts.Infrastructure.DbContexts;
+using PetFamily.Accounts.Infrastructure.Options;
+using PetFamily.Accounts.Infrastructure.Providers;
+using PetFamily.Accounts.Infrastructure.Managers;
+using PetFamily.Accounts.Infrastructure.Seeders;
+using Microsoft.AspNetCore.Authorization;
+using PetFamily.Framework.Authorization;
+using PetFamily.Accounts.Application.Managers;
+using PetFamily.Core.Providers;
+using PetFamily.Accounts.Infrastructure.Factory;
 
 
 namespace PetFamily.Accounts.Infrastructure;
@@ -19,10 +29,27 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         return services
+            .AddTransient<IDateTimeProvider, DateTimeProvider>()
             .AddIdentity()
-            .AddDbContext(configuration)
             .AddJwt(configuration)
-            .AddAuthorization();
+            .AddDbContext(configuration)
+            .AddSeeding(configuration)
+            .AddAuthorization()
+            .AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>()
+            .AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>(); 
+    }
+
+    private static IServiceCollection AddSeeding(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.Configure<AdminOptions>(
+            configuration.GetSection(AdminOptions.ADMIN));
+
+        services.AddScoped<AccountsSeederService>();
+        services.AddSingleton<AccountsSeeder>();
+
+        return services;
     }
 
     private static IServiceCollection AddJwt(
@@ -33,6 +60,9 @@ public static class DependencyInjection
 
         services.Configure<JwtOptions>(
             configuration.GetSection(JwtOptions.JWT));
+
+        services.Configure<RefreshSessionOptions>(
+            configuration.GetSection(RefreshSessionOptions.RefreshSession));
 
         services
             .AddAuthentication(options =>
@@ -46,21 +76,10 @@ public static class DependencyInjection
                 var jwtOptions = configuration.GetSection(JwtOptions.JWT).Get<JwtOptions>()
                                    ?? throw new ApplicationException("Missing jwt configuration");
 
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidIssuer = jwtOptions.Issuer,
-                    ValidAudience = jwtOptions.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key)),
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-
-                };
+                options.TokenValidationParameters = TokenValidationParametersFactory.CreateWithLifeTime(jwtOptions);
             });
         return services;
     }
-
 
     private static IServiceCollection AddIdentity(this IServiceCollection services)
     {
@@ -74,6 +93,11 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<AccountsDbContext>()
             .AddDefaultTokenProviders();
 
+        services.AddScoped<PermissionManager>();
+        services.AddScoped<RolePermissionManager>();
+        services.AddScoped<IAccountsManager, AccountsManager>();
+        services.AddScoped<IRefreshSessionManager, RefreshSessionManager>();
+
         return services;
     }
 
@@ -81,6 +105,9 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.AddScoped<IReadAccountsDbContext, AccountsDbContext>(_ =>
+            new AccountsDbContext(configuration.GetConnectionString("Database")!));
+
         services.AddScoped<AccountsDbContext>(_ =>
             new AccountsDbContext(configuration.GetConnectionString("Database")!));
 

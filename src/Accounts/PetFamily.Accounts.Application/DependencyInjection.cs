@@ -10,7 +10,7 @@ public static class DependencyInjection
     {
         return services
             .AddCommands()
-            //.AddQueries()
+            .AddQueries()
             .AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
     }
 
@@ -25,14 +25,14 @@ public static class DependencyInjection
         return services;
     }
 
-    //private static IServiceCollection AddQueries(this IServiceCollection services)
-    //{
-    //    services.Scan(scan => scan.FromAssemblies(typeof(DependencyInjection).Assembly)
-    //       .AddClasses(classes => classes
-    //       .AssignableTo(typeof(IQueryHandler<,>)))
-    //       .AsSelfWithInterfaces()
-    //       .WithScopedLifetime());
+    private static IServiceCollection AddQueries(this IServiceCollection services)
+    {
+        services.Scan(scan => scan.FromAssemblies(typeof(DependencyInjection).Assembly)
+           .AddClasses(classes => classes
+           .AssignableTo(typeof(IQueryHandler<,>)))
+           .AsSelfWithInterfaces()
+           .WithScopedLifetime());
 
-    //    return services;
-    //}
+        return services;
+    }
 }

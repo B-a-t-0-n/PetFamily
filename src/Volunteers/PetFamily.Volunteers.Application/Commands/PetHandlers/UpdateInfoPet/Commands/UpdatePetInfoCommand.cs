@@ -17,5 +17,5 @@ public record UpdatePetInfoCommand(
     DateTime? DateOfBirth,
     bool IsVaccinated,
     string AssistanceStatus,
-    IEnumerable<DetailsForAssistanceDto>? DetailsForAssistance,
+    IEnumerable<RequisitesDto>? DetailsForAssistance,
     SpeciesAndBreedDto SpeciesAndBreed) : ICommand;

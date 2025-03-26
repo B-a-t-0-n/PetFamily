@@ -34,13 +34,10 @@ public class VolunteersBaseTest : IClassFixture<IntegrationTestsWebFactory>, IAs
     {
         var result = Domain.Entity.Volunteer.Create(
             VolunteerId.NewVolunteerId(),
-            FullName.Create("name", "surname", "patronomic").Value,
             Description.Create("Description").Value,
-            YearsExperience.Create(1).Value,
-            PhoneNumber.Create("1234567890").Value,
-            new List<DetailsForAssistance>(),
-            new List<SocialNetwork>());
-        if(result.IsFailure)
+            PhoneNumber.Create("1234567890").Value);
+            
+        if (result.IsFailure)
             throw new Exception("Volunteer not created");
 
         await _volunteersWriteDbContext.Volunteers.AddAsync(result.Value);
@@ -62,9 +59,9 @@ public class VolunteersBaseTest : IClassFixture<IntegrationTestsWebFactory>, IAs
             Nickname.Create("test").Value,
             SpeciesAndBreed.Create(SpeciesId.NewSpeciesId(), Guid.NewGuid()).Value,
             Description.Create("test").Value,
-            Color.Create("test").Value,  
+            Color.Create("test").Value,
             HealthInformation.Create("test").Value,
-            Address.Create("test", "test" , "test", "test", "test").Value,
+            Address.Create("test", "test", "test", "test", "test").Value,
             Size.Create(1, 1).Value,
             PhoneNumber.Create("1234567890").Value,
             false,
@@ -72,7 +69,7 @@ public class VolunteersBaseTest : IClassFixture<IntegrationTestsWebFactory>, IAs
             false,
             AssistanceStatus.Create("needshelp").Value,
             DateTime.UtcNow,
-            new List<DetailsForAssistance>()
+            new List<Requisites>()
             );
         if (pet.IsFailure)
             throw new Exception("pet not created");
@@ -109,7 +106,7 @@ public class VolunteersBaseTest : IClassFixture<IntegrationTestsWebFactory>, IAs
 
         var result = volunteer.AddPetPhoto(pet.Id, photo.Value);
         if (result.IsFailure)
-            throw new Exception("Photo not added to pet");  
+            throw new Exception("Photo not added to pet");
 
         await _volunteersWriteDbContext.SaveChangesAsync();
 

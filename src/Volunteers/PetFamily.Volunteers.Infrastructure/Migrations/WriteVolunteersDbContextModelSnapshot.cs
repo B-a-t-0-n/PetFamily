@@ -42,11 +42,6 @@ partial class WriteVolunteersDbContextModelSnapshot : ModelSnapshot
                     .HasColumnType("timestamp with time zone")
                     .HasColumnName("deletion_date");
 
-                b.Property<string>("DetailsForAssistance")
-                    .IsRequired()
-                    .HasColumnType("jsonb")
-                    .HasColumnName("details_for_assistance");
-
                 b.Property<bool>("IsCastrated")
                     .HasColumnType("boolean")
                     .HasColumnName("is_castrated");
@@ -58,6 +53,11 @@ partial class WriteVolunteersDbContextModelSnapshot : ModelSnapshot
                 b.Property<bool>("IsVaccinated")
                     .HasColumnType("boolean")
                     .HasColumnName("is_vaccinated");
+
+                b.Property<string>("Requisites")
+                    .IsRequired()
+                    .HasColumnType("jsonb")
+                    .HasColumnName("requisites");
 
                 b.Property<Guid?>("volunteer_id")
                     .HasColumnType("uuid")
@@ -248,19 +248,9 @@ partial class WriteVolunteersDbContextModelSnapshot : ModelSnapshot
                     .HasColumnType("timestamp with time zone")
                     .HasColumnName("deletion_date");
 
-                b.Property<string>("DetailsForAssistance")
-                    .IsRequired()
-                    .HasColumnType("jsonb")
-                    .HasColumnName("details_for_assistance");
-
                 b.Property<bool>("IsDeleted")
                     .HasColumnType("boolean")
                     .HasColumnName("is_deleted");
-
-                b.Property<string>("SocialNetwork")
-                    .IsRequired()
-                    .HasColumnType("jsonb")
-                    .HasColumnName("social_network");
 
                 b.ComplexProperty<Dictionary<string, object>>("Description", "PetFamily.Volunteers.Domain.Entity.Volunteer.Description#Description", b1 =>
                     {
@@ -272,29 +262,6 @@ partial class WriteVolunteersDbContextModelSnapshot : ModelSnapshot
                             .HasColumnName("description");
                     });
 
-                b.ComplexProperty<Dictionary<string, object>>("FullName", "PetFamily.Volunteers.Domain.Entity.Volunteer.FullName#FullName", b1 =>
-                    {
-                        b1.IsRequired();
-
-                        b1.Property<string>("Name")
-                            .IsRequired()
-                            .HasMaxLength(100)
-                            .HasColumnType("character varying(100)")
-                            .HasColumnName("name");
-
-                        b1.Property<string>("Patronymic")
-                            .IsRequired()
-                            .HasMaxLength(100)
-                            .HasColumnType("character varying(100)")
-                            .HasColumnName("patronymic");
-
-                        b1.Property<string>("Surname")
-                            .IsRequired()
-                            .HasMaxLength(100)
-                            .HasColumnType("character varying(100)")
-                            .HasColumnName("surname");
-                    });
-
                 b.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "PetFamily.Volunteers.Domain.Entity.Volunteer.PhoneNumber#PhoneNumber", b1 =>
                     {
                         b1.IsRequired();
@@ -304,15 +271,6 @@ partial class WriteVolunteersDbContextModelSnapshot : ModelSnapshot
                             .HasMaxLength(20)
                             .HasColumnType("character varying(20)")
                             .HasColumnName("phone_number");
-                    });
-
-                b.ComplexProperty<Dictionary<string, object>>("YearsExperience", "PetFamily.Volunteers.Domain.Entity.Volunteer.YearsExperience#YearsExperience", b1 =>
-                    {
-                        b1.IsRequired();
-
-                        b1.Property<int>("Value")
-                            .HasColumnType("integer")
-                            .HasColumnName("years_experience");
                     });
 
                 b.HasKey("Id")

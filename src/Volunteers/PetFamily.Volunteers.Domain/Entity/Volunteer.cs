@@ -9,41 +9,23 @@ namespace PetFamily.Volunteers.Domain.Entity;
 public class Volunteer : SoftDeletableEntity<VolunteerId>
 {         
     private readonly List<Pet> _pets = [];
-    public List<SocialNetwork> _socialNetwork = [];
-    public List<DetailsForAssistance> _detailsForAssistance = [];
 
     //ef core
     private Volunteer(VolunteerId id) : base(id) { }
 
     private Volunteer(
         VolunteerId id,
-        FullName fullName,
         Description description,
-        YearsExperience yearsExperience,
-        PhoneNumber phoneNumber,
-        List<DetailsForAssistance> detailsForAssistance,
-        List<SocialNetwork> socialNetwork
+        PhoneNumber phoneNumber
         ) : base(id)
     {
-        FullName = fullName;
         Description = description;
-        YearsExperience = yearsExperience;
         PhoneNumber = phoneNumber;
-        _detailsForAssistance = detailsForAssistance;
-        _socialNetwork = socialNetwork;
     }
-
-    public FullName FullName { get; private set; } = default!;
 
     public Description Description { get; private set; } = default!;
 
-    public YearsExperience YearsExperience { get; private set; } = default!;
-
     public PhoneNumber PhoneNumber { get; private set; } = default!;
-
-    public IReadOnlyList<SocialNetwork> SocialNetwork => _socialNetwork;
-
-    public IReadOnlyList<DetailsForAssistance> DetailsForAssistance => _detailsForAssistance;
 
     public IReadOnlyList<Pet> Pets => _pets;
 
@@ -61,38 +43,20 @@ public class Volunteer : SoftDeletableEntity<VolunteerId>
 
     public static Result<Volunteer, Error> Create(
         VolunteerId id,
-        FullName fullName,
         Description description,
-        YearsExperience yearsExperience,
-        PhoneNumber phoneNumber,
-        List<DetailsForAssistance> detailsForAssistance,
-        List<SocialNetwork> socialNetwork)
+        PhoneNumber phoneNumber)
     {
-        var volunteer = new Volunteer(id, fullName!, description, yearsExperience, phoneNumber!, detailsForAssistance, socialNetwork);
+        var volunteer = new Volunteer(id, description, phoneNumber!);
 
         return volunteer;
     }
 
     public void UpdateMainInfo(
-        FullName fullName,
         Description description,
-        YearsExperience yearsExperience,
         PhoneNumber phoneNumber)
     {
-        FullName = fullName;
         Description = description;
-        YearsExperience = yearsExperience;
         PhoneNumber = phoneNumber;
-    }
-
-    public void UpdateSocialNetwork(List<SocialNetwork> socialNetwork)
-    {
-        _socialNetwork = socialNetwork;
-    }
-
-    public void UpdateDetailsForAssistance(List<DetailsForAssistance> detailsForAssistance)
-    {
-        _detailsForAssistance = detailsForAssistance;
     }
 
     public UnitResult<Error> AddPet(Pet pet)
@@ -123,7 +87,7 @@ public class Volunteer : SoftDeletableEntity<VolunteerId>
         DateTime? dateOfBirth,
         bool isVaccinated,
         AssistanceStatus assistanceStatus,
-        List<DetailsForAssistance> detailsForAssistance
+        List<Requisites> detailsForAssistance
         )
     {
         var pet = _pets.FirstOrDefault(p => p.Id == petId);

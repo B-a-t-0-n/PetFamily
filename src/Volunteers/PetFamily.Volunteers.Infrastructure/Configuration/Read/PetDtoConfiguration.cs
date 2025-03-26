@@ -13,13 +13,9 @@ public class PetDtoConfiguration : IEntityTypeConfiguration<PetDto>
 
         builder.HasKey(i => i.Id);
 
-        //builder.HasMany(p => p.PetPhotos)
-        //    .WithOne()
-        //    .HasForeignKey(p => p.PetId);
-
-        builder.Property(v => v.DetailsForAssistance)
+        builder.Property(v => v.Requisites)
             .HasConversion(
                 detailsForAssistance => JsonSerializer.Serialize(string.Empty, JsonSerializerOptions.Default),
-                json => JsonSerializer.Deserialize<DetailsForAssistanceDto[]>(json, JsonSerializerOptions.Default)!);
+                json => JsonSerializer.Deserialize<RequisitesDto[]>(json, JsonSerializerOptions.Default)!);
     }
 }
