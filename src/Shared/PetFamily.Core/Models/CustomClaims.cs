@@ -9,4 +9,6 @@ public class CustomClaims
     public static string Id = nameof(Id);
 
     public static string Email = nameof(Email);
+
+    public static string Jti = nameof(Jti);
 }

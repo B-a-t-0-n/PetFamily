@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetFamily.Accounts.Infrastructure.DbContexts;
@@ -12,9 +13,11 @@ using PetFamily.Accounts.Infrastructure.DbContexts;
 namespace PetFamily.Accounts.Infrastructure.Migrations
 {
     [DbContext(typeof(AccountsDbContext))]
-    partial class AccountsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250325224818_Accounts_Init")]
+    partial class Accounts_Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,12 +168,20 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
+                    b.Property<Guid?>("UserId1")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id1");
+
                     b.HasKey("Id")
                         .HasName("pk_admin_accounts");
 
                     b.HasIndex("UserId")
                         .IsUnique()
                         .HasDatabaseName("ix_admin_accounts_user_id");
+
+                    b.HasIndex("UserId1")
+                        .IsUnique()
+                        .HasDatabaseName("ix_admin_accounts_user_id1");
 
                     b.ToTable("admin_accounts", "accounts");
                 });
@@ -191,12 +202,20 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
+                    b.Property<Guid?>("UserId1")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id1");
+
                     b.HasKey("Id")
                         .HasName("pk_partisipant_accounts");
 
                     b.HasIndex("UserId")
                         .IsUnique()
                         .HasDatabaseName("ix_partisipant_accounts_user_id");
+
+                    b.HasIndex("UserId1")
+                        .IsUnique()
+                        .HasDatabaseName("ix_partisipant_accounts_user_id1");
 
                     b.ToTable("partisipant_accounts", "accounts");
                 });
@@ -443,6 +462,10 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
+                    b.Property<Guid?>("UserId1")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id1");
+
                     b.ComplexProperty<Dictionary<string, object>>("YearsExperience", "PetFamily.Accounts.Domain.VolunteerAccount.YearsExperience#YearsExperience", b1 =>
                         {
                             b1.IsRequired();
@@ -458,6 +481,10 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique()
                         .HasDatabaseName("ix_volunteer_accounts_user_id");
+
+                    b.HasIndex("UserId1")
+                        .IsUnique()
+                        .HasDatabaseName("ix_volunteer_accounts_user_id1");
 
                     b.ToTable("volunteer_accounts", "accounts");
                 });
@@ -522,9 +549,16 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
             modelBuilder.Entity("PetFamily.Accounts.Domain.AdminAccount", b =>
                 {
                     b.HasOne("PetFamily.Accounts.Domain.User", "User")
-                        .WithOne("AdminAccount")
+                        .WithOne()
                         .HasForeignKey("PetFamily.Accounts.Domain.AdminAccount", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_admin_accounts_users_user_id");
+
+                    b.HasOne("PetFamily.Accounts.Domain.User", null)
+                        .WithOne("AdminAccount")
+                        .HasForeignKey("PetFamily.Accounts.Domain.AdminAccount", "UserId1")
+                        .HasConstraintName("fk_admin_accounts_users_user_id1");
 
                     b.Navigation("User");
                 });
@@ -532,9 +566,16 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
             modelBuilder.Entity("PetFamily.Accounts.Domain.PartisipantAccount", b =>
                 {
                     b.HasOne("PetFamily.Accounts.Domain.User", "User")
-                        .WithOne("PartisipantAccount")
+                        .WithOne()
                         .HasForeignKey("PetFamily.Accounts.Domain.PartisipantAccount", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_partisipant_accounts_users_user_id");
+
+                    b.HasOne("PetFamily.Accounts.Domain.User", null)
+                        .WithOne("PartisipantAccount")
+                        .HasForeignKey("PetFamily.Accounts.Domain.PartisipantAccount", "UserId1")
+                        .HasConstraintName("fk_partisipant_accounts_users_user_id1");
 
                     b.Navigation("User");
                 });
@@ -575,9 +616,16 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
             modelBuilder.Entity("PetFamily.Accounts.Domain.VolunteerAccount", b =>
                 {
                     b.HasOne("PetFamily.Accounts.Domain.User", "User")
-                        .WithOne("VolunteerAccount")
+                        .WithOne()
                         .HasForeignKey("PetFamily.Accounts.Domain.VolunteerAccount", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_volunteer_accounts_users_user_id");
+
+                    b.HasOne("PetFamily.Accounts.Domain.User", null)
+                        .WithOne("VolunteerAccount")
+                        .HasForeignKey("PetFamily.Accounts.Domain.VolunteerAccount", "UserId1")
+                        .HasConstraintName("fk_volunteer_accounts_users_user_id1");
 
                     b.Navigation("User");
                 });

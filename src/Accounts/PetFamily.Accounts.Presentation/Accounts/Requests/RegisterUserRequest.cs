@@ -1,4 +1,5 @@
 ﻿using PetFamily.Accounts.Application.Commands.Register.Command;
+using PetFamily.Core.Abstractions;
 using PetFamily.Core.Dtos;
 
 namespace PetFamily.Accounts.Presentation.Accounts.Requests;
@@ -12,3 +13,6 @@ public record RegisterUserRequest(
 {
     public RegisterUserCommand ToCommand() => new(Email, UserName, Password, FullName, SocialNetworks);
 }
+
+
+

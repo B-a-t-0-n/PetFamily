@@ -17,7 +17,7 @@ public class RegisterUserHandler : ICommandHandler<RegisterUserCommand>
 {
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<Role> _roleManager;
-    private readonly IPartisipantAccountManager _partisipantAccountManager;
+    private readonly IAccountsManager _accountsManager;
     private readonly ILogger<RegisterUserHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IValidator<RegisterUserCommand> _validator;
@@ -25,14 +25,14 @@ public class RegisterUserHandler : ICommandHandler<RegisterUserCommand>
     public RegisterUserHandler(
         UserManager<User> userManager,
         RoleManager<Role> roleManager,
-        IPartisipantAccountManager partisipantAccountManager,
+        IAccountsManager accountsManager,
         ILogger<RegisterUserHandler> logger,
         [FromKeyedServices(Modules.Accounts)] IUnitOfWork unitOfWork,
         IValidator<RegisterUserCommand> validator)
     {
         _userManager = userManager;
         _roleManager = roleManager;
-        _partisipantAccountManager = partisipantAccountManager;
+        _accountsManager = accountsManager;
         _logger = logger;
         _unitOfWork = unitOfWork;
         _validator = validator;
@@ -96,7 +96,7 @@ public class RegisterUserHandler : ICommandHandler<RegisterUserCommand>
                 UserId = userResult.Value.Id
             };
 
-            await _partisipantAccountManager.CreatePartisipantAccount(partisipantAccount);
+            await _accountsManager.CreatePartisipantAccount(partisipantAccount, cancellationToken);
 
             transaction.Commit();
 

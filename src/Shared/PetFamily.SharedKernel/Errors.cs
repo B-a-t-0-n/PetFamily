@@ -36,4 +36,16 @@ public static class Errors
         }
     }
 
+    public static class Tokens
+    {
+        public static Error ExpiredToken()
+        {
+            return Error.Validation("token.is.expired", "token is expired");
+        }
+
+        public static Error InvalidToken()
+        {
+            return Error.Validation("token.is.invalid", "token is invalid");
+        }
+    }
 }

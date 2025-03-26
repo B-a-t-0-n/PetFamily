@@ -16,6 +16,8 @@ using PetFamily.Accounts.Infrastructure.Seeders;
 using Microsoft.AspNetCore.Authorization;
 using PetFamily.Framework.Authorization;
 using PetFamily.Accounts.Application.Managers;
+using PetFamily.Core.Providers;
+using PetFamily.Accounts.Infrastructure.Factory;
 
 
 namespace PetFamily.Accounts.Infrastructure;
@@ -27,13 +29,14 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         return services
+            .AddTransient<IDateTimeProvider, DateTimeProvider>()
             .AddIdentity()
             .AddJwt(configuration)
             .AddDbContext(configuration)
             .AddSeeding(configuration)
             .AddAuthorization()
             .AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>()
-            .AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>(); ;
+            .AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>(); 
     }
 
     private static IServiceCollection AddSeeding(
@@ -58,6 +61,9 @@ public static class DependencyInjection
         services.Configure<JwtOptions>(
             configuration.GetSection(JwtOptions.JWT));
 
+        services.Configure<RefreshSessionOptions>(
+            configuration.GetSection(RefreshSessionOptions.RefreshSession));
+
         services
             .AddAuthentication(options =>
             {
@@ -70,17 +76,7 @@ public static class DependencyInjection
                 var jwtOptions = configuration.GetSection(JwtOptions.JWT).Get<JwtOptions>()
                                    ?? throw new ApplicationException("Missing jwt configuration");
 
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidIssuer = jwtOptions.Issuer,
-                    ValidAudience = jwtOptions.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key)),
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-
-                };
+                options.TokenValidationParameters = TokenValidationParametersFactory.CreateWithLifeTime(jwtOptions);
             });
         return services;
     }
@@ -99,9 +95,8 @@ public static class DependencyInjection
 
         services.AddScoped<PermissionManager>();
         services.AddScoped<RolePermissionManager>();
-        services.AddScoped<IAdminAccountManager, AdminAccountManager>();
-        services.AddScoped<IVolunteerAccountManager, VolunteerAccountManager>();
-        services.AddScoped<IPartisipantAccountManager, PartisipantAccountManager>();
+        services.AddScoped<IAccountsManager, AccountsManager>();
+        services.AddScoped<IRefreshSessionManager, RefreshSessionManager>();
 
         return services;
     }
@@ -110,6 +105,9 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.AddScoped<IReadAccountsDbContext, AccountsDbContext>(_ =>
+            new AccountsDbContext(configuration.GetConnectionString("Database")!));
+
         services.AddScoped<AccountsDbContext>(_ =>
             new AccountsDbContext(configuration.GetConnectionString("Database")!));
 

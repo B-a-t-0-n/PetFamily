@@ -22,7 +22,7 @@ public class AccountsSeederService
     private readonly RoleManager<Role> _roleManager;
     private readonly PermissionManager _permissionManager;
     private readonly RolePermissionManager _rolePermissionManager;
-    private readonly IAdminAccountManager _adminAccountManager;
+    private readonly IAccountsManager _adminAccountManager;
     private readonly AdminOptions _adminOptions;
     private readonly ILogger<AccountsSeederService> _logger;
     private readonly IUnitOfWork _unitOfWork;
@@ -33,7 +33,7 @@ public class AccountsSeederService
         RoleManager<Role> roleManager,
         PermissionManager permissionManager,
         RolePermissionManager rolePermissionManager,
-        IAdminAccountManager adminAccountManager,
+        IAccountsManager adminAccountManager,
         IOptions<AdminOptions> adminOptions,
         ILogger<AccountsSeederService> logger,
         [FromKeyedServices(Modules.Accounts)] IUnitOfWork unitOfWork)

@@ -36,7 +36,7 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<VolunteerAccount>
 
         builder
             .HasOne(v => v.User)
-            .WithOne()
+            .WithOne(u => u.VolunteerAccount)
             .HasForeignKey<VolunteerAccount>(v => v.UserId);
     }
 }

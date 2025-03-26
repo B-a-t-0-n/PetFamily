@@ -19,18 +19,21 @@ public class RolePermissionManager
         _accountsDbContext = accountsDbContext;
     }
 
-    public async Task AddRangeIfExist(Guid roleId, IEnumerable<string> permissions)
+    public async Task AddRangeIfExist(
+        Guid roleId,
+        IEnumerable<string> permissions,
+        CancellationToken cancellationToken = default)
     {
         foreach (var permissionCode in permissions)
         {
             var permission = await _accountsDbContext.Permissions
-                .FirstOrDefaultAsync(p => p.Code == permissionCode);
+                .FirstOrDefaultAsync(p => p.Code == permissionCode, cancellationToken);
 
             if (permission == null)
                 throw new ApplicationException($"Permission with code {permissionCode} not found");
 
             var rolePermissionExist = await _accountsDbContext.RolePermissions
-                .AnyAsync(rp => rp.RoleId == roleId && rp.PermissionId == permission!.Id);
+                .AnyAsync(rp => rp.RoleId == roleId && rp.PermissionId == permission!.Id, cancellationToken);
 
             if (rolePermissionExist)
                 continue;
@@ -45,7 +48,7 @@ public class RolePermissionManager
             _logger.LogInformation("Added permission {permissionCode} to role by Id {roleId}", permissionCode, roleId);
         }
 
-        await _accountsDbContext.SaveChangesAsync();
+        await _accountsDbContext.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("Added permissions to role by Id {roleId}", roleId);
     }

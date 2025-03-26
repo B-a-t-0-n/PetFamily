@@ -2,12 +2,13 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using PetFamily.Accounts.Application;
 using PetFamily.Accounts.Domain;
 using PetFamily.SharedKernel;
 
 namespace PetFamily.Accounts.Infrastructure.DbContexts;
 
-public class AccountsDbContext : IdentityDbContext<User, Role, Guid>
+public class AccountsDbContext : IdentityDbContext<User, Role, Guid>, IReadAccountsDbContext
 {
     private readonly string _connectionString;
 
@@ -21,6 +22,9 @@ public class AccountsDbContext : IdentityDbContext<User, Role, Guid>
 
     public DbSet<VolunteerAccount> VolunteerAccounts => Set<VolunteerAccount>();
 
+    public DbSet<RefreshSession> RefreshSessions => Set<RefreshSession>();
+
+    IQueryable<User> IReadAccountsDbContext.Users => Users;
 
     public AccountsDbContext(string connectionString)
     {
@@ -66,7 +70,7 @@ public class AccountsDbContext : IdentityDbContext<User, Role, Guid>
 
         modelBuilder.Entity<AdminAccount>()
             .HasOne(v => v.User)
-            .WithOne()
+            .WithOne(u => u.AdminAccount)
             .HasForeignKey<AdminAccount>(v => v.UserId);
 
         modelBuilder.Entity<PartisipantAccount>()
@@ -74,7 +78,7 @@ public class AccountsDbContext : IdentityDbContext<User, Role, Guid>
 
         modelBuilder.Entity<PartisipantAccount>()
             .HasOne(v => v.User)
-            .WithOne()
+            .WithOne(u => u.PartisipantAccount)
             .HasForeignKey<PartisipantAccount>(v => v.UserId);
 
         modelBuilder.Entity<Permission>()
@@ -83,6 +87,14 @@ public class AccountsDbContext : IdentityDbContext<User, Role, Guid>
         modelBuilder.Entity<Permission>()
             .HasIndex(p => p.Code)
             .IsUnique();
+
+        modelBuilder.Entity<RefreshSession>()
+            .ToTable("refrash_sessions");
+
+        modelBuilder.Entity<RefreshSession>()
+            .HasOne(rs => rs.User)
+            .WithMany()
+            .HasForeignKey(rs => rs.UserId);
 
         modelBuilder.Entity<RolePermission>()
             .ToTable("role_permissions");
