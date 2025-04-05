@@ -7,7 +7,6 @@ namespace PetFamily.Domain.Volunteer.UnitTests;
 
 public class VolunteersTest
 {
-
     private Volunteers.Domain.Entity.Volunteer CreateVolunteer()
     {
         return Volunteers.Domain.Entity.Volunteer.Create(
