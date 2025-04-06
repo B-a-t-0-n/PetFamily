@@ -11,7 +11,7 @@ public class DisscusionId : ComparableValueObject
 
     public Guid Value { get; }
 
-    public static DisscusionId NewPetId() => new DisscusionId(Guid.NewGuid());
+    public static DisscusionId NewDisscusionId() => new DisscusionId(Guid.NewGuid());
 
     public static DisscusionId Empty() => new DisscusionId(Guid.Empty);
 

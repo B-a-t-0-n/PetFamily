@@ -11,7 +11,7 @@ public class VolunteerRequestId : ComparableValueObject
 
     public Guid Value { get; }
 
-    public static VolunteerRequestId NewPetId() => new VolunteerRequestId(Guid.NewGuid());
+    public static VolunteerRequestId NewVolunteerRequestId() => new VolunteerRequestId(Guid.NewGuid());
 
     public static VolunteerRequestId Empty() => new VolunteerRequestId(Guid.Empty);
 
