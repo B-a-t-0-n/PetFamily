@@ -22,6 +22,7 @@ public class DisscusionTest
 
         // Assert
         Assert.NotNull(disscusion);
+        Assert.False(disscusion.IsClosed);
         Assert.Equal(2, disscusion.Users.Count);
     }
 

@@ -45,6 +45,9 @@ public class Disscusion : SharedKernel.Entity<DisscusionId>
         if(_users.Any(u => u.Value == message.UserId.Value) == false)
             return UnitResult.Failure(Errors.General.NotFound());
 
+        if(IsClosed)
+            return UnitResult.Failure(Error.Validation("disscusion.is.closed", "disscusion is closed"));
+
         _messages.Add(message);
 
         return UnitResult.Success<Error>();
@@ -69,6 +72,9 @@ public class Disscusion : SharedKernel.Entity<DisscusionId>
         if (message is null)
             return UnitResult.Failure(Errors.General.NotFound());
 
+        if (IsClosed)
+            return UnitResult.Failure(Error.Validation("disscusion.is.closed", "disscusion is closed"));
+
         message.Edit(text, userId);
 
         return UnitResult.Success<Error>();
@@ -82,6 +88,9 @@ public class Disscusion : SharedKernel.Entity<DisscusionId>
         var message = _messages.FirstOrDefault(m => m.Id == messageId);
         if (message is null)
             return UnitResult.Failure(Errors.General.NotFound());
+
+        if (IsClosed)
+            return UnitResult.Failure(Error.Validation("disscusion.is.closed", "disscusion is closed"));
 
         _messages.Remove(message);
 
