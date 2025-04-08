@@ -11,7 +11,7 @@ public class AdminId : ComparableValueObject
 
     public Guid Value { get; }
 
-    public static AdminId NewPetId() => new AdminId(Guid.NewGuid());
+    public static AdminId NewAdminId() => new AdminId(Guid.NewGuid());
 
     public static AdminId Empty() => new AdminId(Guid.Empty);
 
