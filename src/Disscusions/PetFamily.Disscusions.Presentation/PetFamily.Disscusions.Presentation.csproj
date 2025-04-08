@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\PetFamily.Framework\PetFamily.Framework.csproj" />
+    <ProjectReference Include="..\PetFamily.Disscusions.Application\PetFamily.Disscusions.Application.csproj" />
+    <ProjectReference Include="..\PetFamily.Disscusions.Infrastructure\PetFamily.Disscusions.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
